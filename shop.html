@@ -6,6 +6,8 @@
 <title>444 — Shop All Drops</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,700&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Paystack Inline JS -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -19,6 +21,8 @@
   --gold:#c8a96e;
   --gold-light:#e8d4a8;
   --gold-dark:#9a7a45;
+  --green:#1a6e3c;
+  --green-light:#e6f4ed;
   --font-display:'Cormorant Garamond',serif;
   --font-body:'Montserrat',sans-serif;
   --transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
@@ -85,7 +89,7 @@ nav{
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1999;opacity:0;pointer-events:none;transition:opacity 0.4s}
 .overlay.open{opacity:1;pointer-events:all}
 
-/* HERO SLIDER */
+/* HERO */
 .hero{
   position:relative;height:72vh;min-height:480px;
   overflow:hidden;margin-top:72px;
@@ -102,9 +106,7 @@ nav{
   position:absolute;inset:0;
   background:linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.7) 100%);
 }
-.hero-text{
-  position:absolute;bottom:10%;left:6%;color:var(--white);
-}
+.hero-text{position:absolute;bottom:10%;left:6%;color:var(--white)}
 .hero-eyebrow{
   font-size:0.6rem;font-weight:500;letter-spacing:0.38em;
   text-transform:uppercase;color:var(--gold-light);
@@ -118,20 +120,17 @@ nav{
 }
 .hero-title em{font-style:italic;font-weight:700;color:var(--gold-light)}
 .hero-sub{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.6);font-weight:300}
-.slide-dots{
-  position:absolute;bottom:5%;right:5%;display:flex;gap:0.4rem;
-}
+.slide-dots{position:absolute;bottom:5%;right:5%;display:flex;gap:0.4rem}
 .dot{width:28px;height:2px;background:rgba(255,255,255,0.3);cursor:pointer;transition:var(--transition)}
 .dot.active{background:var(--white);width:54px}
 
-/* SHOP AREA */
+/* SHOP */
 .shop-section{padding:4rem 0 6rem}
 .container{width:92%;max-width:1320px;margin:0 auto}
 .shop-header{
   display:flex;align-items:flex-end;justify-content:space-between;
   margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem;
 }
-.shop-title-group{}
 .shop-eyebrow{
   font-size:0.58rem;font-weight:600;letter-spacing:0.35em;
   text-transform:uppercase;color:var(--gold-dark);margin-bottom:0.5rem;
@@ -143,15 +142,10 @@ nav{
   font-weight:400;line-height:1;color:var(--black);
 }
 .shop-title em{font-style:italic;color:var(--gold-dark)}
-.item-count{
-  font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;
-  color:var(--mid-gray);font-weight:500;
-}
+.item-count{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray);font-weight:500}
 
-/* FILTER ROW */
-.filter-row{
-  display:flex;gap:0.5rem;margin-bottom:2.5rem;flex-wrap:wrap;
-}
+/* FILTER */
+.filter-row{display:flex;gap:0.5rem;margin-bottom:2.5rem;flex-wrap:wrap}
 .filter-btn{
   padding:0.5rem 1.2rem;font-family:var(--font-body);
   font-size:0.6rem;font-weight:600;letter-spacing:0.18em;
@@ -159,26 +153,16 @@ nav{
   background:transparent;cursor:pointer;color:var(--dark-gray);
   transition:var(--transition);
 }
-.filter-btn:hover,.filter-btn.active{
-  background:var(--black);color:var(--white);border-color:var(--black);
-}
+.filter-btn:hover,.filter-btn.active{background:var(--black);color:var(--white);border-color:var(--black)}
 
 /* PRODUCTS GRID */
-.products-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1.8rem;
-}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem}
 .product-card{
   background:var(--white);cursor:pointer;
-  transition:transform 0.4s ease,box-shadow 0.4s ease;
-  position:relative;
+  transition:transform 0.4s ease,box-shadow 0.4s ease;position:relative;
 }
 .product-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.12)}
-.card-img-wrap{
-  position:relative;overflow:hidden;
-  aspect-ratio:3/4;background:var(--cream);
-}
+.card-img-wrap{position:relative;overflow:hidden;aspect-ratio:3/4;background:var(--cream)}
 .card-img-wrap img{
   width:100%;height:100%;object-fit:cover;object-position:top center;
   display:block;transition:transform 0.7s ease;
@@ -200,20 +184,13 @@ nav{
 }
 .product-card:hover .card-hover-cta{transform:translateY(0)}
 .card-body{padding:1.1rem 1rem 1.2rem}
-.card-name{
-  font-family:var(--font-display);font-size:1.05rem;font-weight:500;
-  color:var(--black);margin-bottom:0.2rem;line-height:1.2;
-}
-.card-sub{
-  font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;
-  color:var(--mid-gray);margin-bottom:0.6rem;
-}
+.card-name{font-family:var(--font-display);font-size:1.05rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;line-height:1.2}
+.card-sub{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.6rem}
 .card-footer{display:flex;align-items:center;justify-content:space-between}
 .card-price{font-size:0.88rem;font-weight:700;color:var(--black);letter-spacing:0.04em}
 .card-stars{color:var(--gold);font-size:0.65rem}
 
-/* LOADING */
-.loading-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem}
+/* LOADING SKELETON */
 .skeleton{background:var(--white);overflow:hidden;position:relative}
 .skeleton-img{aspect-ratio:3/4;background:var(--light-gray);animation:shimmer 1.5s infinite}
 .skeleton-body{padding:1rem}
@@ -221,13 +198,12 @@ nav{
 .skeleton-line.short{width:60%}
 @keyframes shimmer{0%,100%{opacity:0.5}50%{opacity:1}}
 
-/* ─── PRODUCT MODAL ─── */
+/* PRODUCT MODAL */
 .modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,0.92);
   z-index:3000;opacity:0;pointer-events:none;
   transition:opacity 0.4s ease;
-  display:flex;align-items:center;justify-content:center;
-  padding:1rem;
+  display:flex;align-items:center;justify-content:center;padding:1rem;
 }
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal{
@@ -243,71 +219,27 @@ nav{
   position:absolute;top:1rem;right:1rem;z-index:10;
   width:34px;height:34px;background:var(--black);color:var(--white);
   border:none;cursor:pointer;font-size:0.9rem;
-  display:flex;align-items:center;justify-content:center;
-  transition:background 0.3s;
+  display:flex;align-items:center;justify-content:center;transition:background 0.3s;
 }
 .modal-close:hover{background:var(--gold);color:var(--black)}
-
-/* MODAL IMAGE SECTION */
-.modal-images{
-  position:relative;background:var(--cream);
-  display:flex;flex-direction:column;
-}
-.modal-main-img{
-  flex:1;overflow:hidden;min-height:400px;cursor:zoom-in;
-  position:relative;
-}
-.modal-main-img img{
-  width:100%;height:100%;object-fit:cover;object-position:top center;
-  display:block;transition:transform 0.4s ease;
-}
+.modal-images{position:relative;background:var(--cream);display:flex;flex-direction:column}
+.modal-main-img{flex:1;overflow:hidden;min-height:400px;cursor:zoom-in;position:relative}
+.modal-main-img img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:transform 0.4s ease}
 .modal-main-img:hover img{transform:scale(1.04)}
-.modal-thumbs{
-  display:flex;gap:0.4rem;padding:0.75rem;
-  background:var(--cream);overflow-x:auto;
-  scrollbar-width:none;
-}
+.modal-thumbs{display:flex;gap:0.4rem;padding:0.75rem;background:var(--cream);overflow-x:auto;scrollbar-width:none}
 .modal-thumbs::-webkit-scrollbar{display:none}
-.thumb{
-  width:64px;height:80px;flex-shrink:0;cursor:pointer;
-  border:2px solid transparent;transition:border-color 0.2s;overflow:hidden;
-  background:var(--light-gray);
-}
+.thumb{width:64px;height:80px;flex-shrink:0;cursor:pointer;border:2px solid transparent;transition:border-color 0.2s;overflow:hidden;background:var(--light-gray)}
 .thumb.active{border-color:var(--black)}
 .thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-
-/* MODAL CONTENT */
-.modal-info{
-  padding:2.5rem 2rem 2rem;
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-}
-.modal-tag{
-  font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;
-  color:var(--gold-dark);margin-bottom:0.5rem;
-}
-.modal-name{
-  font-family:var(--font-display);font-size:2rem;font-weight:500;
-  line-height:1.05;margin-bottom:0.6rem;
-}
-.modal-stars-row{
-  display:flex;align-items:center;gap:0.5rem;
-  color:var(--gold);font-size:0.8rem;margin-bottom:0.5rem;
-}
+.modal-info{padding:2.5rem 2rem 2rem;display:flex;flex-direction:column;overflow-y:auto}
+.modal-tag{font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:0.5rem}
+.modal-name{font-family:var(--font-display);font-size:2rem;font-weight:500;line-height:1.05;margin-bottom:0.6rem}
+.modal-stars-row{display:flex;align-items:center;gap:0.5rem;color:var(--gold);font-size:0.8rem;margin-bottom:0.5rem}
 .modal-stars-row span{font-family:var(--font-body);font-size:0.63rem;color:var(--mid-gray)}
-.modal-price{
-  font-size:1.55rem;font-weight:700;letter-spacing:0.04em;
-  margin-bottom:1.2rem;
-}
+.modal-price{font-size:1.55rem;font-weight:700;letter-spacing:0.04em;margin-bottom:1.2rem}
 .modal-price .cur{font-size:0.9rem;font-weight:400;color:var(--mid-gray);vertical-align:super;margin-right:2px}
-.modal-desc{
-  font-size:0.7rem;line-height:2;color:rgba(0,0,0,0.55);
-  margin-bottom:1.4rem;letter-spacing:0.02em;
-}
-.modal-label{
-  font-size:0.58rem;font-weight:700;letter-spacing:0.22em;
-  text-transform:uppercase;color:var(--dark-gray);margin-bottom:0.6rem;
-}
+.modal-desc{font-size:0.7rem;line-height:2;color:rgba(0,0,0,0.55);margin-bottom:1.4rem;letter-spacing:0.02em}
+.modal-label{font-size:0.58rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--dark-gray);margin-bottom:0.6rem}
 .size-grid{display:flex;gap:0.45rem;flex-wrap:wrap;margin-bottom:1.6rem}
 .size-btn{
   width:46px;height:46px;border:1px solid var(--light-gray);
@@ -335,14 +267,14 @@ nav{
 .in-stock-badge{
   display:inline-flex;align-items:center;gap:0.4rem;
   font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;
-  color:#2e7d32;margin-bottom:0.8rem;font-weight:600;
+  color:#1a6e3c;margin-bottom:0.8rem;font-weight:600;
 }
-.in-stock-badge::before{content:'';width:6px;height:6px;background:#2e7d32;border-radius:50%}
+.in-stock-badge::before{content:'';width:6px;height:6px;background:#1a6e3c;border-radius:50%}
 
-/* CART DRAWER */
+/* ─── CART DRAWER ─── */
 .cart-drawer{
-  position:fixed;top:0;right:-460px;
-  width:min(460px,100%);height:100vh;
+  position:fixed;top:0;right:-480px;
+  width:min(480px,100%);height:100vh;
   background:var(--white);z-index:2500;
   display:flex;flex-direction:column;
   transition:right 0.5s cubic-bezier(0.76,0,0.24,1);
@@ -361,29 +293,188 @@ nav{
 .cart-empty-state{text-align:center;padding:4rem 1rem}
 .cart-empty-state i{font-size:2.8rem;color:var(--light-gray);display:block;margin-bottom:1rem}
 .cart-empty-state p{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray)}
+
 .cart-item{
   display:grid;grid-template-columns:74px 1fr auto;
-  gap:1rem;padding:1rem 0;border-bottom:1px solid var(--light-gray);
-  align-items:center;
+  gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--light-gray);
+  align-items:start;
 }
 .cart-item img{width:74px;aspect-ratio:3/4;object-fit:cover;object-position:top center;background:var(--cream)}
 .cart-item-name{font-family:var(--font-display);font-size:0.95rem;font-weight:500;margin-bottom:0.2rem}
-.cart-item-size{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.4rem}
-.cart-item-price{font-size:0.82rem;font-weight:700}
-.cart-rm{background:none;border:none;color:var(--mid-gray);cursor:pointer;font-size:0.75rem;padding:0.2rem;transition:color 0.3s;align-self:start}
+.cart-item-size{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.35rem}
+.cart-item-price{font-size:0.82rem;font-weight:700;margin-bottom:0.35rem}
+
+/* Paid badge on cart item */
+.cart-paid-badge{
+  display:inline-flex;align-items:center;gap:0.35rem;
+  background:var(--green-light);color:var(--green);
+  font-size:0.52rem;font-weight:700;letter-spacing:0.15em;
+  text-transform:uppercase;padding:0.25rem 0.6rem;
+  border:1px solid rgba(26,110,60,0.25);
+}
+.cart-paid-badge i{font-size:0.6rem}
+
+.cart-rm{background:none;border:none;color:var(--mid-gray);cursor:pointer;font-size:0.75rem;padding:0.2rem;transition:color 0.3s}
 .cart-rm:hover{color:var(--black)}
-.cart-foot{padding:1.5rem 2rem 2rem;border-top:1px solid var(--light-gray)}
-.cart-sub-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.2rem}
-.cart-sub-row .lbl{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid-gray)}
-.cart-sub-row .amt{font-family:var(--font-display);font-size:1.3rem;font-weight:600}
+
+/* Cart footer */
+.cart-foot{
+  padding:1.5rem 2rem 2rem;
+  border-top:1px solid var(--light-gray);
+  background:var(--off-white);
+}
+
+/* Order summary in cart */
+.cart-summary{
+  background:var(--white);
+  border:1px solid var(--light-gray);
+  padding:1.2rem 1.2rem 0.8rem;
+  margin-bottom:1.2rem;
+}
+.summary-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:0.35rem 0;
+}
+.summary-row .lbl{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray)}
+.summary-row .val{font-size:0.78rem;font-weight:600;color:var(--black)}
+.summary-divider{height:1px;background:var(--light-gray);margin:0.5rem 0}
+.summary-total-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:0.5rem 0 0.2rem;
+}
+.summary-total-row .lbl{font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--black)}
+.summary-total-row .val{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--black)}
+
+/* Email input for checkout */
+.checkout-email-wrap{
+  margin-bottom:1rem;
+}
+.checkout-email-label{
+  font-size:0.58rem;font-weight:700;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--dark-gray);
+  display:block;margin-bottom:0.4rem;
+}
+.checkout-email-input{
+  width:100%;padding:0.75rem 1rem;
+  border:1px solid var(--light-gray);
+  background:var(--white);
+  font-family:var(--font-body);font-size:0.72rem;
+  letter-spacing:0.04em;color:var(--black);
+  outline:none;transition:border-color 0.3s;
+}
+.checkout-email-input:focus{border-color:var(--gold)}
+.checkout-email-input::placeholder{color:var(--mid-gray)}
+
 .btn-checkout{
-  width:100%;padding:1.05rem;background:var(--black);color:var(--white);
+  width:100%;padding:1.1rem;background:var(--black);color:var(--white);
   border:none;font-family:var(--font-body);font-size:0.65rem;
   font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
   cursor:pointer;transition:background 0.3s;
   display:flex;align-items:center;justify-content:center;gap:0.75rem;
+  position:relative;overflow:hidden;
 }
-.btn-checkout:hover{background:var(--gold);color:var(--black)}
+.btn-checkout::before{
+  content:'';position:absolute;inset:0;
+  background:var(--gold);transform:translateX(-100%);
+  transition:transform 0.4s cubic-bezier(0.76,0,0.24,1);
+}
+.btn-checkout:hover::before{transform:translateX(0)}
+.btn-checkout span{position:relative;z-index:1;display:flex;align-items:center;gap:0.75rem}
+.btn-checkout:disabled{opacity:0.55;cursor:not-allowed}
+.btn-checkout:disabled::before{display:none}
+
+/* Paystack logo in checkout btn */
+.paystack-lock{
+  font-size:0.6rem;opacity:0.7;
+  display:flex;align-items:center;gap:0.3rem;
+}
+
+/* Secure badge */
+.secure-note{
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+  margin-top:0.8rem;
+  font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--mid-gray);
+}
+.secure-note i{color:var(--gold-dark);font-size:0.65rem}
+
+/* PAYMENT SUCCESS OVERLAY */
+.payment-success-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.94);
+  z-index:5000;
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.5s ease;
+}
+.payment-success-overlay.open{opacity:1;pointer-events:all}
+.success-box{
+  background:var(--white);
+  width:100%;max-width:460px;
+  padding:3.5rem 2.5rem;
+  text-align:center;
+  transform:scale(0.9) translateY(20px);
+  transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.payment-success-overlay.open .success-box{transform:scale(1) translateY(0)}
+.success-icon-wrap{
+  width:72px;height:72px;
+  background:var(--green-light);
+  border:2px solid rgba(26,110,60,0.3);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.5rem;
+  font-size:1.8rem;
+  color:var(--green);
+  animation:popIn 0.6s 0.3s both;
+}
+@keyframes popIn{
+  0%{transform:scale(0.5);opacity:0}
+  70%{transform:scale(1.1)}
+  100%{transform:scale(1);opacity:1}
+}
+.success-title{
+  font-family:var(--font-display);
+  font-size:2rem;font-weight:500;
+  color:var(--black);margin-bottom:0.5rem;
+}
+.success-sub{
+  font-size:0.68rem;letter-spacing:0.08em;
+  color:var(--mid-gray);line-height:1.9;
+  margin-bottom:1.5rem;
+}
+.success-ref{
+  background:var(--off-white);
+  border:1px solid var(--light-gray);
+  padding:0.8rem 1.2rem;
+  margin-bottom:2rem;
+  display:flex;flex-direction:column;gap:0.2rem;
+}
+.success-ref .ref-label{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid-gray)}
+.success-ref .ref-value{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--black);letter-spacing:0.05em}
+.success-items-title{
+  font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--dark-gray);margin-bottom:0.8rem;text-align:left;
+}
+.success-items-list{
+  text-align:left;margin-bottom:2rem;
+  display:flex;flex-direction:column;gap:0.5rem;
+}
+.success-item-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:0.68rem;padding:0.4rem 0;
+  border-bottom:1px solid var(--light-gray);
+}
+.success-item-name{color:var(--black);font-weight:500}
+.success-item-price{color:var(--gold-dark);font-weight:700}
+.btn-success-continue{
+  width:100%;padding:1rem;
+  background:var(--black);color:var(--white);
+  border:none;font-family:var(--font-body);font-size:0.65rem;
+  font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  cursor:pointer;transition:background 0.3s;
+}
+.btn-success-continue:hover{background:var(--gold);color:var(--black)}
 
 /* TOAST */
 .toast{
@@ -399,12 +490,11 @@ nav{
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast i{color:var(--gold)}
 
-/* EMPTY STATE */
+/* EMPTY / LOADING STATES */
 .empty-state{text-align:center;padding:5rem 2rem;grid-column:1/-1}
 .empty-state i{font-size:2.5rem;color:var(--light-gray);display:block;margin-bottom:1rem}
 .empty-state p{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray)}
 
-/* WHATSAPP FLOAT */
 .wa-float{
   position:fixed;bottom:2rem;right:2rem;z-index:800;
   width:52px;height:52px;background:#25d366;border-radius:50%;
@@ -418,7 +508,6 @@ nav{
 /* RESPONSIVE */
 @media(max-width:1024px){
   .products-grid{grid-template-columns:repeat(2,1fr)}
-  .loading-grid{grid-template-columns:repeat(2,1fr)}
   .modal{grid-template-columns:1fr}
   .modal-main-img{min-height:280px;max-height:360px}
 }
@@ -427,17 +516,16 @@ nav{
   .nav-center{display:none}
   .hamburger{display:flex}
   .products-grid{grid-template-columns:repeat(2,1fr);gap:1rem}
-  .loading-grid{grid-template-columns:repeat(2,1fr);gap:1rem}
   .hero{height:60vh}
   .shop-header{flex-direction:column;align-items:flex-start}
 }
 @media(max-width:480px){
   .products-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem}
-  .loading-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem}
   .hero-title{font-size:2.6rem}
   .container{width:95%}
   .modal-info{padding:1.8rem 1.4rem 1.4rem}
   .modal-name{font-size:1.6rem}
+  .success-box{padding:2.5rem 1.5rem}
 }
 </style>
 </head>
@@ -474,7 +562,7 @@ nav{
   </ul>
 </div>
 
-<!-- HERO SLIDER -->
+<!-- HERO -->
 <section class="hero">
   <div class="slide active" id="s0">
     <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/main.jpg" alt="444 Drop"
@@ -515,9 +603,10 @@ nav{
       <button class="filter-btn active" data-filter="all" onclick="setFilter(this,'all')">All</button>
     </div>
     <div class="products-grid" id="productsGrid">
-      <div class="loading-grid" id="loadingGrid" style="display:contents">
-        ${Array(6).fill('<div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>').join('')}
-      </div>
+      <!-- Skeleton loaders -->
+      <div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+      <div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+      <div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
     </div>
   </div>
 </section>
@@ -527,9 +616,7 @@ nav{
   <div class="modal" id="modalBox">
     <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
     <div class="modal-images">
-      <div class="modal-main-img" id="mainImgWrap">
-        <img id="mainImg" src="" alt="">
-      </div>
+      <div class="modal-main-img"><img id="mainImg" src="" alt=""></div>
       <div class="modal-thumbs" id="thumbRow"></div>
     </div>
     <div class="modal-info">
@@ -542,15 +629,9 @@ nav{
       </div>
       <p class="modal-price"><span class="cur">GH₵</span><span id="mPrice">—</span></p>
       <p class="in-stock-badge">In Stock</p>
-      <p class="modal-desc" id="mDesc">Premium quality luxury streetwear crafted for cultural leaders.</p>
+      <p class="modal-desc" id="mDesc"></p>
       <p class="modal-label">Select Size</p>
-      <div class="size-grid" id="sizeGrid">
-        <button class="size-btn" onclick="selSize(this)">S</button>
-        <button class="size-btn" onclick="selSize(this)">M</button>
-        <button class="size-btn" onclick="selSize(this)">L</button>
-        <button class="size-btn" onclick="selSize(this)">XL</button>
-        <button class="size-btn" onclick="selSize(this)">2XL</button>
-      </div>
+      <div class="size-grid" id="sizeGrid"></div>
       <div class="modal-actions">
         <button class="btn-add" onclick="addToCart()">
           <i class="fas fa-shopping-bag"></i> Add to Cart
@@ -574,11 +655,56 @@ nav{
     </div>
   </div>
   <div class="cart-foot">
-    <div class="cart-sub-row">
-      <span class="lbl">Subtotal</span>
-      <span class="amt" id="cartTotal">GH₵ 0</span>
+    <div class="cart-summary" id="cartSummary" style="display:none">
+      <div class="summary-row">
+        <span class="lbl">Subtotal</span>
+        <span class="val" id="summarySubtotal">GH₵ 0</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl">Delivery</span>
+        <span class="val" id="summaryDelivery">GH₵ 0</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-total-row">
+        <span class="lbl">Total</span>
+        <span class="val" id="summaryTotal">GH₵ 0</span>
+      </div>
     </div>
-    <button class="btn-checkout">Checkout <i class="fas fa-arrow-right" style="font-size:.7rem"></i></button>
+
+    <div class="checkout-email-wrap" id="emailWrap" style="display:none">
+      <label class="checkout-email-label" for="checkoutEmail">Your Email for Receipt</label>
+      <input type="email" id="checkoutEmail" class="checkout-email-input"
+             placeholder="yourname@email.com" autocomplete="email">
+    </div>
+
+    <button class="btn-checkout" id="checkoutBtn" onclick="initiatePayment()" disabled>
+      <span>
+        <i class="fas fa-lock"></i>
+        Pay with Paystack
+      </span>
+    </button>
+    <div class="secure-note">
+      <i class="fas fa-shield-alt"></i>
+      Secured by Paystack · 256-bit SSL
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT SUCCESS OVERLAY -->
+<div class="payment-success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="success-icon-wrap">
+      <i class="fas fa-check"></i>
+    </div>
+    <h2 class="success-title">Payment Confirmed!</h2>
+    <p class="success-sub">Your order has been received.<br>We'll process and ship your items shortly.</p>
+    <div class="success-ref">
+      <span class="ref-label">Reference</span>
+      <span class="ref-value" id="successRef">—</span>
+    </div>
+    <p class="success-items-title">Items Paid For</p>
+    <div class="success-items-list" id="successItemsList"></div>
+    <button class="btn-success-continue" onclick="closeSuccess()">Continue Shopping</button>
   </div>
 </div>
 
@@ -593,7 +719,7 @@ nav{
   <i class="fab fa-whatsapp"></i>
 </a>
 
-<!-- FIREBASE + JS -->
+<!-- FIREBASE + APP LOGIC -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -609,18 +735,25 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db  = getFirestore(app);
 
+// ── PAYSTACK CONFIG (public key only in frontend)
+const PAYSTACK_PUBLIC_KEY = 'pk_live_981ff8ce8cf5e116ac0d57bcca18dd557af89edc';
+const DELIVERY_FEE = 0; // Set your delivery fee here e.g. 50 for GH₵50
+const FREE_DELIVERY_ABOVE = 500; // Free delivery above this amount
+
+// ── STATE
 let allProducts = [];
 let currentProduct = null;
 let selectedSize = null;
 let cart = JSON.parse(localStorage.getItem('444cart') || '[]');
-let activeFilter = 'all';
+let paidRefs = JSON.parse(localStorage.getItem('444paidRefs') || '[]');
+window._cartRef = { cart, paidRefs };
 
 // ── HERO SLIDER
 let ci = 0;
 const slides = document.querySelectorAll('.slide');
-const dots = document.querySelectorAll('.dot');
+const dots   = document.querySelectorAll('.dot');
 window.goSlide = n => {
   slides[ci].classList.remove('active'); dots[ci].classList.remove('active');
   ci = n;
@@ -629,46 +762,34 @@ window.goSlide = n => {
 setInterval(() => goSlide((ci + 1) % slides.length), 5500);
 
 // ── MOBILE NAV
-document.getElementById('menuBtn').onclick = () => {
-  document.getElementById('mobileMenu').classList.add('open');
-  document.getElementById('overlay').classList.add('open');
-};
-const closeNav = () => {
-  document.getElementById('mobileMenu').classList.remove('open');
-  document.getElementById('overlay').classList.remove('open');
-};
+document.getElementById('menuBtn').onclick  = () => { document.getElementById('mobileMenu').classList.add('open'); document.getElementById('overlay').classList.add('open'); };
+const closeNav = () => { document.getElementById('mobileMenu').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); };
 document.getElementById('menuClose').onclick = closeNav;
-document.getElementById('overlay').onclick = closeNav;
+document.getElementById('overlay').onclick   = closeNav;
 
 // ── LOAD PRODUCTS FROM FIRESTORE
 async function loadProducts() {
   try {
-    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+    const q    = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
     const snap = await getDocs(q);
     allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch (e) {
-    // fallback if no products yet or order field missing
+  } catch {
     try {
       const snap = await getDocs(collection(db, 'products'));
       allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    } catch(e2) {
-      allProducts = [];
-    }
+    } catch { allProducts = []; }
   }
-
   buildFilters();
   renderProducts(allProducts);
   updateCount(allProducts.length);
 }
 
 function buildFilters() {
-  const categories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
-  const row = document.getElementById('filterRow');
-  categories.forEach(cat => {
+  const cats = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+  const row  = document.getElementById('filterRow');
+  cats.forEach(cat => {
     const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.textContent = cat;
-    btn.dataset.filter = cat;
+    btn.className = 'filter-btn'; btn.textContent = cat; btn.dataset.filter = cat;
     btn.onclick = () => setFilter(btn, cat);
     row.appendChild(btn);
   });
@@ -677,7 +798,6 @@ function buildFilters() {
 window.setFilter = (btn, val) => {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  activeFilter = val;
   const filtered = val === 'all' ? allProducts : allProducts.filter(p => p.category === val);
   renderProducts(filtered);
   updateCount(filtered.length);
@@ -690,25 +810,18 @@ function updateCount(n) {
 function renderProducts(list) {
   const grid = document.getElementById('productsGrid');
   grid.innerHTML = '';
-
   if (!list.length) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-box-open"></i>
-        <p>No products available yet</p>
-      </div>`;
+    grid.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No products available yet</p></div>`;
     return;
   }
-
   list.forEach(p => {
-    const primaryImg = (p.images && p.images[0]) || p.image || 'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=600&q=80';
+    const img = (p.images && p.images[0]) || p.image || 'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=600&q=80';
     const card = document.createElement('div');
     card.className = 'product-card';
     card.innerHTML = `
       <div class="card-img-wrap">
-        <img src="${primaryImg}" alt="${p.name}" loading="lazy"
-             onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80'">
-        ${p.badge ? `<span class="card-badge ${p.badge === 'Limited' || p.badge === 'Exclusive' ? 'badge-gold' : 'badge-new'}">${p.badge}</span>` : ''}
+        <img src="${img}" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80'">
+        ${p.badge ? `<span class="card-badge ${p.badge==='Limited'||p.badge==='Exclusive'?'badge-gold':'badge-new'}">${p.badge}</span>` : ''}
         <div class="card-hover-cta"><i class="fas fa-eye" style="margin-right:.4rem"></i>Quick View</div>
       </div>
       <div class="card-body">
@@ -726,23 +839,21 @@ function renderProducts(list) {
 
 // ── MODAL
 window.openModal = p => {
-  currentProduct = p;
-  selectedSize = null;
+  currentProduct = p; selectedSize = null;
   const imgs = (p.images && p.images.length) ? p.images : [p.image || 'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&q=80'];
-
   document.getElementById('mainImg').src = imgs[0];
   document.getElementById('mainImg').alt = p.name;
-  document.getElementById('mTag').textContent = p.category || 'New Drop';
+  document.getElementById('mTag').textContent  = p.category || 'New Drop';
   document.getElementById('mName').textContent = p.name;
   document.getElementById('mPrice').textContent = Number(p.price).toLocaleString();
-  document.getElementById('mDesc').textContent = p.description || 'Premium quality luxury streetwear crafted for cultural leaders. Designed to make a statement — on the street, in the room, everywhere.';
+  document.getElementById('mDesc').textContent  = p.description || 'Premium quality luxury streetwear crafted for cultural leaders. Designed to make a statement.';
 
-  // Thumbs
+  // Thumbnails
   const thumbRow = document.getElementById('thumbRow');
   thumbRow.innerHTML = '';
   imgs.forEach((src, i) => {
     const div = document.createElement('div');
-    div.className = `thumb ${i === 0 ? 'active' : ''}`;
+    div.className = `thumb ${i===0?'active':''}`;
     div.innerHTML = `<img src="${src}" alt="View ${i+1}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=200'">`;
     div.onclick = () => {
       document.getElementById('mainImg').src = src;
@@ -754,7 +865,7 @@ window.openModal = p => {
 
   // Sizes
   const sg = document.getElementById('sizeGrid');
-  const sizes = p.sizes && p.sizes.length ? p.sizes : ['S','M','L','XL','2XL'];
+  const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['S','M','L','XL','2XL'];
   sg.innerHTML = sizes.map(s => `<button class="size-btn" onclick="selSize(this)">${s}</button>`).join('');
 
   document.getElementById('modal').classList.add('open');
@@ -769,24 +880,35 @@ window.selSize = btn => {
 
 document.getElementById('modalClose').onclick = closeModal;
 document.getElementById('modal').onclick = e => { if (e.target === document.getElementById('modal')) closeModal(); };
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  document.body.style.overflow = '';
-}
+function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow=''; }
 
-// ── CART
+// ── CART LOGIC
 window.addToCart = () => {
   if (!currentProduct) return;
-  if (!selectedSize) { toast('Please select a size', false); return; }
-  const imgs = (currentProduct.images && currentProduct.images[0]) || currentProduct.image || '';
+  if (!selectedSize) { showToast('Please select a size', false); return; }
+  const img = (currentProduct.images && currentProduct.images[0]) || currentProduct.image || '';
   const existing = cart.find(i => i.id === currentProduct.id && i.size === selectedSize);
   if (existing) existing.qty++;
-  else cart.push({ id: currentProduct.id, name: currentProduct.name, price: Number(currentProduct.price), size: selectedSize, qty: 1, img: imgs });
+  else cart.push({
+    id: currentProduct.id,
+    name: currentProduct.name,
+    price: Number(currentProduct.price),
+    size: selectedSize,
+    qty: 1,
+    img,
+    paid: false
+  });
   saveCart();
   closeModal();
-  toast(`${currentProduct.name} added to bag`);
-  openCartDrawer();
+  showToast(`${currentProduct.name} added to bag`);
+  openCart();
 };
+
+function openCart() {
+  document.getElementById('cartDrawer').classList.add('open');
+}
+document.getElementById('cartToggle').onclick = openCart;
+document.getElementById('cartClose').onclick  = () => document.getElementById('cartDrawer').classList.remove('open');
 
 function saveCart() {
   localStorage.setItem('444cart', JSON.stringify(cart));
@@ -795,47 +917,162 @@ function saveCart() {
   renderCart();
 }
 
+function calcSubtotal() {
+  return cart.filter(i => !i.paid).reduce((a, i) => a + i.price * i.qty, 0);
+}
+function calcDelivery(sub) {
+  if (sub === 0) return 0;
+  return sub >= FREE_DELIVERY_ABOVE ? 0 : DELIVERY_FEE;
+}
+function calcTotal() {
+  const sub = calcSubtotal();
+  return sub + calcDelivery(sub);
+}
+
 function renderCart() {
   const body = document.getElementById('cartBody');
-  const total = cart.reduce((a, i) => a + i.price * i.qty, 0);
-  document.getElementById('cartTotal').textContent = `GH₵ ${total.toLocaleString()}`;
+  const unpaidItems = cart.filter(i => !i.paid);
+  const paidItems   = cart.filter(i => i.paid);
+  const subtotal    = calcSubtotal();
+  const delivery    = calcDelivery(subtotal);
+  const total       = subtotal + delivery;
+
+  // Update summary
+  const summaryEl  = document.getElementById('cartSummary');
+  const emailWrap  = document.getElementById('emailWrap');
+  const checkoutBtn= document.getElementById('checkoutBtn');
+
+  if (unpaidItems.length > 0) {
+    summaryEl.style.display  = 'block';
+    emailWrap.style.display  = 'block';
+    checkoutBtn.disabled     = false;
+    document.getElementById('summarySubtotal').textContent = `GH₵ ${subtotal.toLocaleString()}`;
+    document.getElementById('summaryDelivery').textContent = delivery === 0
+      ? (subtotal >= FREE_DELIVERY_ABOVE ? 'Free' : 'GH₵ 0')
+      : `GH₵ ${delivery.toLocaleString()}`;
+    document.getElementById('summaryTotal').textContent = `GH₵ ${total.toLocaleString()}`;
+  } else {
+    summaryEl.style.display  = 'none';
+    emailWrap.style.display  = 'none';
+    checkoutBtn.disabled     = true;
+  }
 
   if (!cart.length) {
     body.innerHTML = `<div class="cart-empty-state"><i class="fas fa-shopping-bag"></i><p>Your bag is empty</p></div>`;
     return;
   }
+
   body.innerHTML = cart.map((item, idx) => `
     <div class="cart-item">
-      <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
+      <img src="${item.img}" alt="${item.name}"
+           onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
       <div>
         <p class="cart-item-name">${item.name}</p>
         <p class="cart-item-size">Size: ${item.size} · Qty: ${item.qty}</p>
         <p class="cart-item-price">GH₵ ${(item.price * item.qty).toLocaleString()}</p>
+        ${item.paid
+          ? `<span class="cart-paid-badge"><i class="fas fa-check-circle"></i> Paid</span>`
+          : ''}
       </div>
-      <button class="cart-rm" onclick="removeItem(${idx})"><i class="fas fa-times"></i></button>
+      ${!item.paid
+        ? `<button class="cart-rm" onclick="removeItem(${idx})" title="Remove"><i class="fas fa-times"></i></button>`
+        : ''}
     </div>`).join('');
 }
 
 window.removeItem = idx => { cart.splice(idx, 1); saveCart(); };
 
-function openCartDrawer() {
-  document.getElementById('cartDrawer').classList.add('open');
+// ── PAYSTACK CHECKOUT
+window.initiatePayment = () => {
+  const email = document.getElementById('checkoutEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    showToast('Please enter a valid email address', false);
+    document.getElementById('checkoutEmail').focus();
+    return;
+  }
+
+  const unpaidItems = cart.filter(i => !i.paid);
+  if (!unpaidItems.length) {
+    showToast('No items to pay for', false);
+    return;
+  }
+
+  const total     = calcTotal(); // GH₵ amount
+  const amountKobo = total * 100; // Paystack uses pesewas (smallest unit, same as kobo)
+  const ref       = 'ORD-444-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+  // Build item metadata for Paystack
+  const itemsMeta = unpaidItems.map(i => `${i.name} (${i.size}) x${i.qty} = GH₵${i.price * i.qty}`).join('; ');
+
+  const handler = PaystackPop.setup({
+    key:       PAYSTACK_PUBLIC_KEY,
+    email:     email,
+    amount:    amountKobo,
+    currency:  'GHS',
+    ref:       ref,
+    label:     '444 Brand Order',
+    metadata: {
+      custom_fields: [
+        { display_name: 'Brand', variable_name: 'brand', value: '444 Brand' },
+        { display_name: 'Items', variable_name: 'items', value: itemsMeta },
+        { display_name: 'Total Items', variable_name: 'total_items', value: unpaidItems.reduce((a,i)=>a+i.qty,0) }
+      ]
+    },
+    onSuccess: response => {
+      // Mark all unpaid cart items as paid
+      cart = cart.map(i => i.paid ? i : { ...i, paid: true, payRef: response.reference });
+      paidRefs.push(response.reference);
+      localStorage.setItem('444cart', JSON.stringify(cart));
+      localStorage.setItem('444paidRefs', JSON.stringify(paidRefs));
+      saveCart();
+      showPaymentSuccess(response.reference, unpaidItems);
+    },
+    onCancel: () => {
+      showToast('Payment cancelled. Your cart is still saved.', false);
+    }
+  });
+
+  handler.openIframe();
+};
+
+// ── PAYMENT SUCCESS SCREEN
+function showPaymentSuccess(ref, items) {
+  document.getElementById('successRef').textContent = ref;
+
+  const list = document.getElementById('successItemsList');
+  list.innerHTML = items.map(i => `
+    <div class="success-item-row">
+      <span class="success-item-name">${i.name} <span style="opacity:0.5;font-size:0.62rem">(${i.size}) ×${i.qty}</span></span>
+      <span class="success-item-price">GH₵ ${(i.price * i.qty).toLocaleString()}</span>
+    </div>`).join('');
+
+  document.getElementById('successOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.body.style.overflow = 'hidden';
 }
-document.getElementById('cartToggle').onclick = openCartDrawer;
-document.getElementById('cartClose').onclick = () => document.getElementById('cartDrawer').classList.remove('open');
+
+window.closeSuccess = () => {
+  document.getElementById('successOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  // Keep paid items visible in cart for reference, but clear them after 1 day
+  const now = Date.now();
+  cart = cart.filter(i => !i.paid || (i.paidAt && now - i.paidAt < 86400000));
+  // Actually keep for session — just close
+  showToast('Thank you! Your order is confirmed. 🎉');
+};
 
 // ── TOAST
-function toast(msg, ok = true) {
+function showToast(msg, ok = true) {
   const t = document.getElementById('toast');
   document.getElementById('toastMsg').textContent = msg;
   t.querySelector('i').className = ok ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
   t.querySelector('i').style.color = ok ? 'var(--gold)' : '#e74c3c';
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
+  setTimeout(() => t.classList.remove('show'), 3500);
 }
 
 // ── INIT
-saveCart(); // restore count
+saveCart();
 renderCart();
 loadProducts();
 </script>
