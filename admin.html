@@ -251,21 +251,55 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .form-textarea{resize:vertical;min-height:90px;line-height:1.7}
 .form-select{cursor:pointer}
 
-/* IMAGE URLS */
-.img-list{display:flex;flex-direction:column;gap:0.5rem;margin-top:0.4rem}
-.img-entry{display:flex;gap:0.5rem;align-items:center}
-.img-entry input{flex:1;padding:0.7rem 0.9rem;border:1px solid var(--light);background:var(--off-white);font-family:var(--font-b);font-size:0.72rem;outline:none;transition:border-color 0.3s}
-.img-entry input:focus{border-color:var(--gold)}
-.img-rm{width:32px;height:32px;background:none;border:1px solid var(--light);cursor:pointer;font-size:0.7rem;color:var(--mid);transition:var(--tr)}
-.img-rm:hover{background:var(--red);color:var(--white);border-color:var(--red)}
-.add-img-btn{
-  display:inline-flex;align-items:center;gap:0.5rem;
-  padding:0.55rem 1rem;background:transparent;border:1px dashed var(--mid);
-  font-family:var(--font-b);font-size:0.58rem;font-weight:600;
-  letter-spacing:0.14em;text-transform:uppercase;color:var(--mid);
-  cursor:pointer;transition:var(--tr);margin-top:0.4rem;
+/* IMAGE UPLOAD */
+.img-upload-zone{
+  border:2px dashed var(--light);background:var(--off-white);
+  padding:2rem;text-align:center;cursor:pointer;
+  transition:var(--tr);margin-top:0.4rem;position:relative;
 }
-.add-img-btn:hover{border-color:var(--black);color:var(--black)}
+.img-upload-zone:hover,.img-upload-zone.drag{border-color:var(--gold);background:rgba(200,169,110,0.04)}
+.img-upload-zone i{font-size:1.8rem;color:var(--mid);display:block;margin-bottom:0.6rem}
+.img-upload-zone p{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:0.3rem}
+.img-upload-zone span{font-size:0.56rem;color:rgba(0,0,0,0.35);letter-spacing:0.06em}
+.img-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-preview-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+  gap:0.6rem;margin-top:0.8rem;
+}
+.img-preview-item{
+  position:relative;aspect-ratio:3/4;background:var(--cream);overflow:hidden;
+  border:2px solid transparent;transition:border-color 0.2s;
+}
+.img-preview-item.primary{border-color:var(--gold)}
+.img-preview-item img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.img-preview-item .rm-img{
+  position:absolute;top:3px;right:3px;width:20px;height:20px;
+  background:rgba(0,0,0,0.75);color:var(--white);border:none;
+  cursor:pointer;font-size:0.6rem;display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;
+}
+.img-preview-item .rm-img:hover{background:var(--red)}
+.img-preview-item .primary-tag{
+  position:absolute;bottom:0;left:0;right:0;
+  background:var(--gold);color:var(--black);
+  font-size:0.45rem;font-weight:700;letter-spacing:0.14em;
+  text-transform:uppercase;text-align:center;padding:0.2rem;
+}
+.img-progress{
+  margin-top:0.6rem;display:none;
+}
+.img-progress-bar{
+  height:3px;background:var(--light);position:relative;overflow:hidden;
+}
+.img-progress-bar::after{
+  content:'';position:absolute;left:-50%;width:50%;height:100%;
+  background:var(--gold);animation:progress-slide 1s ease infinite;
+}
+@keyframes progress-slide{0%{left:-50%}100%{left:150%}}
+.img-size-warning{
+  font-size:0.58rem;color:#e67e22;letter-spacing:0.08em;
+  margin-top:0.4rem;display:none;
+}
 
 /* SIZES CHECKBOXES */
 .sizes-wrap{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem}
@@ -365,9 +399,16 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 
 /* MOBILE SIDEBAR */
 .sidebar-toggle{display:none}
+.sidebar-backdrop{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.6);z-index:499;
+  opacity:0;transition:opacity 0.3s;
+}
 @media(max-width:900px){
   .sidebar{position:fixed;left:-240px;z-index:500;transition:left 0.4s ease;top:0}
   .sidebar.open{left:0}
+  .sidebar-backdrop{display:block}
+  .sidebar-backdrop.open{opacity:1;pointer-events:all}
   .sidebar-toggle{
     display:flex;align-items:center;justify-content:center;
     width:36px;height:36px;background:var(--black);color:var(--white);
@@ -402,6 +443,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 
 <!-- ADMIN APP -->
 <div id="adminApp">
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
   <div class="admin-wrap">
 
     <!-- SIDEBAR -->
@@ -438,7 +480,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
     <div class="main-content">
       <div class="top-bar">
         <div style="display:flex;align-items:center;gap:1rem">
-          <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+          <button class="sidebar-toggle" id="sidebarToggle">
             <i class="fas fa-bars"></i>
           </button>
           <h1 class="top-bar-title">444 <span>Dashboard</span></h1>
@@ -596,17 +638,19 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
         </div>
       </div>
       <div class="form-group form-full">
-        <label class="form-label">Product Images (URLs) *</label>
-        <p style="font-size:0.58rem;color:var(--mid);margin-bottom:0.5rem;letter-spacing:0.06em">Add up to 8 image URLs. First image is the main display image. Add GitHub raw links or any direct image URL.</p>
-        <div class="img-list" id="imgList">
-          <div class="img-entry">
-            <input type="url" placeholder="https://raw.githubusercontent.com/..." class="img-url-input">
-            <button class="img-rm" onclick="removeImgEntry(this)"><i class="fas fa-times"></i></button>
-          </div>
+        <label class="form-label">Product Images *</label>
+        <p style="font-size:0.58rem;color:var(--mid);margin-bottom:0.6rem;letter-spacing:0.06em">Upload up to 8 images. First image is the main display image. JPG/PNG/WEBP. Keep each under 800KB for best performance.</p>
+        <div class="img-upload-zone" id="uploadZone">
+          <input type="file" id="imgFileInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Click or drag &amp; drop images here</p>
+          <span>JPG · PNG · WEBP · up to 8 images</span>
         </div>
-        <button class="add-img-btn" onclick="addImgEntry()">
-          <i class="fas fa-plus"></i> Add Another Image
-        </button>
+        <div class="img-progress" id="imgProgress">
+          <div class="img-progress-bar"></div>
+        </div>
+        <p class="img-size-warning" id="sizeWarning">⚠ Some images were skipped — keep each file under 900KB for Firestore storage.</p>
+        <div class="img-preview-grid" id="imgPreviewGrid"></div>
       </div>
     </div>
 
@@ -666,7 +710,17 @@ const db = getFirestore(app);
 let allProducts = [];
 let editingId = null;
 
-// ── AUTH STATE
+// ── SIDEBAR TOGGLE
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarBackdrop').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('open');
+}
+document.getElementById('sidebarToggle').addEventListener('click', openSidebar);
+document.getElementById('sidebarBackdrop').addEventListener('click', closeSidebar);
 onAuthStateChanged(auth, user => {
   if (user) {
     document.getElementById('loginScreen').style.display = 'none';
@@ -793,36 +847,126 @@ window.showSection = id => {
   });
   document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
   event.target.closest('.sidebar-link').classList.add('active');
+  closeSidebar();
+};
+
+// ── IMAGE UPLOAD & BASE64
+let uploadedImages = []; // array of base64 strings
+
+function initUploadZone() {
+  const input = document.getElementById('imgFileInput');
+  const zone  = document.getElementById('uploadZone');
+
+  // drag over styling
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag');
+    handleFiles(e.dataTransfer.files);
+  });
+
+  input.addEventListener('change', () => handleFiles(input.files));
+}
+initUploadZone();
+
+async function handleFiles(fileList) {
+  const MAX = 8;
+  const MAX_BYTES = 900 * 1024; // 900KB per image (Firestore doc limit ~1MB)
+  const files = [...fileList].filter(f => f.type.startsWith('image/'));
+  const slots = MAX - uploadedImages.length;
+  if (slots <= 0) { toast('Maximum 8 images reached', false); return; }
+
+  const toProcess = files.slice(0, slots);
+  let skipped = false;
+
+  document.getElementById('imgProgress').style.display = 'block';
+
+  for (const file of toProcess) {
+    if (file.size > MAX_BYTES) { skipped = true; continue; }
+    const b64 = await fileToBase64(file);
+    // Compress if needed
+    const compressed = await compressImage(b64, file.type, 800);
+    uploadedImages.push(compressed);
+  }
+
+  document.getElementById('imgProgress').style.display = 'none';
+  document.getElementById('sizeWarning').style.display = skipped ? 'block' : 'none';
+  renderPreviews();
+  // reset input so same file can be re-selected
+  document.getElementById('imgFileInput').value = '';
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function compressImage(dataUrl, mimeType, maxDim) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      let { width: w, height: h } = img;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+        else { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      res(canvas.toDataURL('image/jpeg', 0.82));
+    };
+    img.src = dataUrl;
+  });
+}
+
+function renderPreviews() {
+  const grid = document.getElementById('imgPreviewGrid');
+  grid.innerHTML = '';
+  uploadedImages.forEach((b64, i) => {
+    const div = document.createElement('div');
+    div.className = `img-preview-item ${i === 0 ? 'primary' : ''}`;
+    div.innerHTML = `
+      <img src="${b64}" alt="Preview ${i+1}">
+      ${i === 0 ? '<span class="primary-tag">Main</span>' : ''}
+      <button class="rm-img" onclick="removeUploadedImg(${i})"><i class="fas fa-times"></i></button>`;
+    grid.appendChild(div);
+  });
+}
+
+window.removeUploadedImg = i => {
+  uploadedImages.splice(i, 1);
+  renderPreviews();
 };
 
 // ── FORM
 window.openForm = (product = null) => {
   editingId = product ? product.id : null;
+  uploadedImages = [];
   const isEdit = !!product;
   document.getElementById('formTitle').innerHTML = isEdit ? 'Edit <em>Product</em>' : 'Add New <em>Product</em>';
   document.getElementById('formSubtitle').textContent = isEdit ? 'Update product details' : 'Fill in all product details';
   document.getElementById('saveBtn').innerHTML = isEdit ? '<i class="fas fa-save"></i> Update Product' : '<i class="fas fa-save"></i> Save Product';
 
-  // Fill fields
   document.getElementById('fName').value = product?.name || '';
   document.getElementById('fPrice').value = product?.price || '';
   document.getElementById('fCat').value = product?.category || '';
   document.getElementById('fBadge').value = product?.badge || '';
   document.getElementById('fDesc').value = product?.description || '';
 
-  // Sizes
   document.querySelectorAll('.sizeCheck').forEach(cb => {
     cb.checked = product?.sizes ? product.sizes.includes(cb.value) : false;
   });
 
-  // Images
-  const imgList = document.getElementById('imgList');
-  const imgs = product?.images || (product?.image ? [product.image] : ['']);
-  imgList.innerHTML = '';
-  imgs.forEach((url, i) => {
-    addImgEntry(url);
-  });
-  if (!imgs.length) addImgEntry('');
+  // Load existing images into preview
+  const existingImgs = product?.images || (product?.image ? [product.image] : []);
+  uploadedImages = [...existingImgs];
+  renderPreviews();
+  document.getElementById('sizeWarning').style.display = 'none';
+  document.getElementById('imgProgress').style.display = 'none';
 
   document.getElementById('formOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -837,31 +981,15 @@ window.closeForm = () => {
   document.getElementById('formOverlay').classList.remove('open');
   document.body.style.overflow = '';
   editingId = null;
-};
-
-window.addImgEntry = (val = '') => {
-  const list = document.getElementById('imgList');
-  const div = document.createElement('div');
-  div.className = 'img-entry';
-  div.innerHTML = `
-    <input type="url" placeholder="https://raw.githubusercontent.com/..." class="img-url-input" value="${val}">
-    <button class="img-rm" onclick="removeImgEntry(this)"><i class="fas fa-times"></i></button>
-  `;
-  list.appendChild(div);
-};
-
-window.removeImgEntry = btn => {
-  const entries = document.querySelectorAll('.img-entry');
-  if (entries.length > 1) btn.closest('.img-entry').remove();
+  uploadedImages = [];
 };
 
 window.saveProduct = async () => {
-  const name = document.getElementById('fName').value.trim();
+  const name  = document.getElementById('fName').value.trim();
   const price = document.getElementById('fPrice').value;
   if (!name || !price) { toast('Name and price are required', false); return; }
+  if (!uploadedImages.length) { toast('Please upload at least one image', false); return; }
 
-  const images = [...document.querySelectorAll('.img-url-input')]
-    .map(i => i.value.trim()).filter(Boolean);
   const sizes = [...document.querySelectorAll('.sizeCheck:checked')].map(c => c.value);
 
   const data = {
@@ -870,9 +998,9 @@ window.saveProduct = async () => {
     category: document.getElementById('fCat').value.trim(),
     badge: document.getElementById('fBadge').value,
     description: document.getElementById('fDesc').value.trim(),
-    images,
+    images: uploadedImages,          // array of base64 strings
+    image: uploadedImages[0] || '',  // convenience field for first image
     sizes,
-    image: images[0] || '',
     updatedAt: serverTimestamp()
   };
 
@@ -892,7 +1020,12 @@ window.saveProduct = async () => {
     closeForm();
     await loadProducts();
   } catch(e) {
-    toast('Error: ' + e.message, false);
+    // Firestore document size exceeded
+    if (e.message.includes('exceeds') || e.message.includes('size') || e.code === 'invalid-argument') {
+      toast('Images too large for Firestore. Try fewer or smaller images.', false);
+    } else {
+      toast('Error: ' + e.message, false);
+    }
   } finally {
     btn.innerHTML = '<i class="fas fa-save"></i> Save Product';
     btn.disabled = false;
