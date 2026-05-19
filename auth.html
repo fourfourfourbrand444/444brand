@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>444 — Enter</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,700&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#080808;
+  --white:#ffffff;
+  --off-white:#f4f2ee;
+  --cream:#eeeae3;
+  --light:#e2ddd6;
+  --mid:#9a9088;
+  --dark:#2a2520;
+  --gold:#c8a96e;
+  --gold-l:#e8d4a8;
+  --gold-d:#9a7a45;
+  --glass:rgba(8,8,8,0.72);
+  --glass-b:rgba(255,255,255,0.04);
+  --font-d:'Cormorant Garamond',serif;
+  --font-b:'Montserrat',sans-serif;
+  --ease:cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+html,body{height:100%;overflow:hidden;font-family:var(--font-b)}
+
+/* ── BACKGROUND SLIDER ── */
+.bg-slider{
+  position:fixed;inset:0;z-index:0;
+}
+.bg-slide{
+  position:absolute;inset:0;
+  opacity:0;
+  transition:opacity 1.4s var(--ease);
+}
+.bg-slide.active{opacity:1}
+.bg-slide img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  filter:brightness(0.38) contrast(1.12) saturate(0.85);
+  transform:scale(1.08);
+  transition:transform 7s ease;
+}
+.bg-slide.active img{transform:scale(1)}
+
+/* Grain overlay */
+.grain{
+  position:fixed;inset:0;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  opacity:0.6;
+}
+
+/* Gradient vignette */
+.vignette{
+  position:fixed;inset:0;z-index:2;
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.65) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.7) 100%);
+  pointer-events:none;
+}
+
+/* ── MAIN LAYOUT ── */
+.page{
+  position:relative;z-index:10;
+  width:100%;height:100vh;
+  display:flex;align-items:stretch;
+}
+
+/* LEFT BRANDING PANEL */
+.brand-panel{
+  flex:1;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  padding:3rem 3.5rem;
+  position:relative;
+}
+.brand-top{
+  display:flex;align-items:center;gap:0.8rem;
+}
+.brand-logo{
+  font-family:var(--font-d);
+  font-size:2.6rem;font-weight:700;
+  color:var(--white);letter-spacing:0.12em;
+  text-decoration:none;
+  line-height:1;
+}
+.brand-logo span{color:var(--gold)}
+.brand-divider{
+  width:1px;height:28px;
+  background:rgba(255,255,255,0.25);
+  margin:0 0.2rem;
+}
+.brand-tagline-top{
+  font-size:0.55rem;letter-spacing:0.3em;
+  text-transform:uppercase;color:rgba(255,255,255,0.45);
+  font-weight:400;
+}
+
+.brand-center{
+  max-width:500px;
+}
+.brand-eyebrow{
+  font-size:0.6rem;letter-spacing:0.35em;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.brand-eyebrow::before{
+  content:'';display:inline-block;
+  width:36px;height:1px;background:var(--gold);
+}
+.brand-headline{
+  font-family:var(--font-d);
+  font-size:clamp(3rem,5vw,5.5rem);
+  font-weight:300;line-height:0.92;
+  color:var(--white);
+  letter-spacing:-0.01em;
+  margin-bottom:1.8rem;
+}
+.brand-headline em{
+  font-style:italic;font-weight:700;
+  color:var(--gold-l);display:block;
+}
+.brand-body{
+  font-size:0.72rem;letter-spacing:0.1em;
+  line-height:2;color:rgba(255,255,255,0.5);
+  text-transform:uppercase;font-weight:300;
+  max-width:360px;
+}
+
+.brand-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.slide-indicators{
+  display:flex;gap:0.5rem;
+}
+.s-dot{
+  width:28px;height:2px;
+  background:rgba(255,255,255,0.25);
+  cursor:pointer;transition:all 0.4s;
+}
+.s-dot.active{background:var(--white);width:52px}
+.brand-copy{
+  font-size:0.52rem;letter-spacing:0.2em;
+  text-transform:uppercase;color:rgba(255,255,255,0.28);
+}
+
+/* ── AUTH PANEL ── */
+.auth-panel{
+  width:min(480px,100%);
+  background:var(--glass);
+  backdrop-filter:blur(28px) saturate(1.4);
+  -webkit-backdrop-filter:blur(28px) saturate(1.4);
+  border-left:1px solid rgba(255,255,255,0.07);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:3.5rem 3rem;
+  position:relative;
+}
+
+/* TABS */
+.auth-tabs{
+  display:flex;gap:0;
+  margin-bottom:2.8rem;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.auth-tab{
+  flex:1;padding:0 0 1rem;
+  font-family:var(--font-b);
+  font-size:0.6rem;font-weight:700;
+  letter-spacing:0.22em;text-transform:uppercase;
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,255,255,0.35);
+  position:relative;transition:color 0.3s;
+  text-align:left;
+}
+.auth-tab::after{
+  content:'';position:absolute;
+  bottom:-1px;left:0;right:0;
+  height:2px;background:var(--gold);
+  transform:scaleX(0);transition:transform 0.35s var(--ease);
+  transform-origin:left;
+}
+.auth-tab.active{color:var(--white)}
+.auth-tab.active::after{transform:scaleX(1)}
+
+/* FORM PANELS */
+.form-panel{display:none;animation:fadeUp 0.4s var(--ease)}
+.form-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* HEADING */
+.auth-heading{
+  font-family:var(--font-d);
+  font-size:2.2rem;font-weight:400;
+  color:var(--white);margin-bottom:0.4rem;
+  line-height:1.1;
+}
+.auth-heading em{font-style:italic;color:var(--gold-l)}
+.auth-sub{
+  font-size:0.62rem;letter-spacing:0.1em;
+  text-transform:uppercase;color:rgba(255,255,255,0.38);
+  margin-bottom:2.2rem;font-weight:300;
+}
+
+/* SOCIAL BUTTONS */
+.social-btns{
+  display:flex;flex-direction:column;gap:0.65rem;
+  margin-bottom:1.8rem;
+}
+.social-btn{
+  display:flex;align-items:center;gap:1rem;
+  padding:0.9rem 1.2rem;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.04);
+  color:var(--white);
+  font-family:var(--font-b);font-size:0.65rem;
+  font-weight:500;letter-spacing:0.1em;
+  cursor:pointer;transition:all 0.3s;
+  text-align:left;width:100%;
+  position:relative;overflow:hidden;
+}
+.social-btn::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0.05);
+  transform:translateX(-100%);
+  transition:transform 0.35s var(--ease);
+}
+.social-btn:hover::before{transform:translateX(0)}
+.social-btn:hover{border-color:rgba(255,255,255,0.25)}
+.social-btn .btn-icon{
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;position:relative;z-index:1;
+}
+.social-btn .btn-label{position:relative;z-index:1;flex:1}
+.social-btn .btn-arrow{
+  margin-left:auto;font-size:0.65rem;
+  color:rgba(255,255,255,0.3);
+  position:relative;z-index:1;
+  transition:color 0.3s,transform 0.3s;
+}
+.social-btn:hover .btn-arrow{color:var(--gold);transform:translateX(3px)}
+
+/* Google icon SVG inline */
+.google-icon{width:18px;height:18px}
+/* Apple icon */
+.apple-icon{font-size:1.1rem;line-height:1}
+
+/* DIVIDER */
+.or-divider{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:1.8rem;
+}
+.or-divider::before,.or-divider::after{
+  content:'';flex:1;height:1px;
+  background:rgba(255,255,255,0.1);
+}
+.or-divider span{
+  font-size:0.55rem;letter-spacing:0.3em;
+  text-transform:uppercase;color:rgba(255,255,255,0.3);
+  white-space:nowrap;
+}
+
+/* FORM FIELDS */
+.field-group{
+  display:flex;flex-direction:column;gap:0.4rem;
+  margin-bottom:1rem;
+}
+.field-label{
+  font-size:0.55rem;font-weight:700;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);
+}
+.field-wrap{position:relative}
+.field-input{
+  width:100%;padding:0.9rem 1rem 0.9rem 3rem;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:var(--white);
+  font-family:var(--font-b);font-size:0.75rem;
+  letter-spacing:0.04em;outline:none;
+  transition:border-color 0.3s,background 0.3s;
+  -webkit-appearance:none;border-radius:0;
+}
+.field-input::placeholder{color:rgba(255,255,255,0.25)}
+.field-input:focus{
+  border-color:rgba(200,169,110,0.6);
+  background:rgba(255,255,255,0.07);
+}
+.field-icon{
+  position:absolute;left:1rem;top:50%;transform:translateY(-50%);
+  color:rgba(255,255,255,0.3);font-size:0.8rem;
+  pointer-events:none;transition:color 0.3s;
+}
+.field-input:focus ~ .field-icon,
+.field-wrap:focus-within .field-icon{color:var(--gold)}
+.field-eye{
+  position:absolute;right:1rem;top:50%;transform:translateY(-50%);
+  color:rgba(255,255,255,0.3);font-size:0.8rem;
+  cursor:pointer;background:none;border:none;
+  padding:0.2rem;transition:color 0.3s;
+}
+.field-eye:hover{color:var(--gold)}
+
+/* ERROR */
+.field-err{
+  font-size:0.58rem;color:#e74c3c;
+  letter-spacing:0.08em;min-height:16px;
+  margin-top:0.2rem;display:none;
+}
+.field-err.show{display:block}
+
+/* FORGOT */
+.forgot-row{
+  display:flex;justify-content:flex-end;
+  margin-bottom:1.5rem;margin-top:-0.4rem;
+}
+.forgot-link{
+  font-size:0.58rem;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.35);
+  background:none;border:none;cursor:pointer;
+  transition:color 0.3s;font-family:var(--font-b);
+  text-decoration:none;
+}
+.forgot-link:hover{color:var(--gold)}
+
+/* SUBMIT BTN */
+.submit-btn{
+  width:100%;padding:1rem;
+  background:var(--gold);color:var(--black);
+  border:none;font-family:var(--font-b);
+  font-size:0.65rem;font-weight:700;
+  letter-spacing:0.25em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s;
+  display:flex;align-items:center;justify-content:center;gap:0.7rem;
+  position:relative;overflow:hidden;
+  margin-bottom:1.5rem;
+}
+.submit-btn::before{
+  content:'';position:absolute;inset:0;
+  background:var(--gold-l);
+  transform:translateX(-100%);
+  transition:transform 0.4s var(--ease);
+}
+.submit-btn:hover::before{transform:translateX(0)}
+.submit-btn span,.submit-btn i{position:relative;z-index:1}
+.submit-btn:disabled{opacity:0.6;cursor:not-allowed}
+.submit-btn:disabled::before{display:none}
+
+/* SWITCH HINT */
+.switch-hint{
+  text-align:center;font-size:0.6rem;
+  letter-spacing:0.1em;color:rgba(255,255,255,0.3);
+}
+.switch-hint button{
+  background:none;border:none;cursor:pointer;
+  color:var(--gold);font-family:var(--font-b);
+  font-size:0.6rem;letter-spacing:0.1em;font-weight:600;
+  text-decoration:none;transition:color 0.3s;
+  padding:0;
+}
+.switch-hint button:hover{color:var(--gold-l)}
+
+/* TERMS */
+.terms-note{
+  font-size:0.55rem;letter-spacing:0.06em;
+  color:rgba(255,255,255,0.2);line-height:1.8;
+  text-align:center;margin-bottom:1.5rem;
+}
+.terms-note a{color:rgba(255,255,255,0.35);text-decoration:underline}
+
+/* TOAST */
+.auth-toast{
+  position:fixed;bottom:2rem;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  opacity:0;
+  background:var(--black);color:var(--white);
+  padding:0.9rem 1.8rem;
+  font-family:var(--font-b);font-size:0.62rem;
+  letter-spacing:0.14em;text-transform:uppercase;
+  z-index:9999;pointer-events:none;
+  display:flex;align-items:center;gap:0.7rem;
+  border-bottom:2px solid var(--gold);
+  transition:all 0.4s var(--ease);
+  white-space:nowrap;
+}
+.auth-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.auth-toast.err{border-bottom-color:#e74c3c}
+
+/* BACK BTN (forgot) */
+.back-btn{
+  display:flex;align-items:center;gap:0.5rem;
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,255,255,0.4);
+  font-family:var(--font-b);font-size:0.58rem;
+  letter-spacing:0.15em;text-transform:uppercase;
+  margin-bottom:1.8rem;transition:color 0.3s;
+  padding:0;
+}
+.back-btn:hover{color:var(--gold)}
+
+/* SUCCESS STATE */
+.success-state{
+  display:none;text-align:center;padding:2rem 0;
+  animation:fadeUp 0.5s var(--ease);
+}
+.success-state.show{display:block}
+.success-icon{
+  width:64px;height:64px;
+  background:rgba(200,169,110,0.12);
+  border:1px solid rgba(200,169,110,0.3);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.5rem;
+  font-size:1.6rem;color:var(--gold);
+}
+.success-title{
+  font-family:var(--font-d);font-size:1.8rem;
+  color:var(--white);margin-bottom:0.6rem;
+}
+.success-msg{
+  font-size:0.65rem;letter-spacing:0.08em;
+  color:rgba(255,255,255,0.45);line-height:2;
+  margin-bottom:2rem;
+}
+
+/* LOADING SPINNER */
+@keyframes spin{to{transform:rotate(360deg)}}
+.fa-spin{animation:spin 0.8s linear infinite}
+
+/* MOBILE */
+@media(max-width:768px){
+  .brand-panel{display:none}
+  .auth-panel{
+    width:100%;
+    border-left:none;
+    padding:2.5rem 1.6rem;
+    /* show brand logo at top on mobile */
+  }
+  .auth-panel::before{
+    content:'444';
+    font-family:var(--font-d);
+    font-size:2.5rem;font-weight:700;
+    color:var(--white);letter-spacing:0.12em;
+    display:block;margin-bottom:2rem;
+  }
+  .page{overflow-y:auto}
+  html,body{overflow:auto}
+}
+@media(max-width:400px){
+  .auth-panel{padding:2rem 1.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- BG SLIDER -->
+<div class="bg-slider">
+  <div class="bg-slide active" id="bgSlide0">
+    <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/main.jpg" alt=""
+      onerror="this.src='https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=1600&q=80'">
+  </div>
+  <div class="bg-slide" id="bgSlide1">
+    <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/bwf.jpg" alt=""
+      onerror="this.src='https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1600&q=80'">
+  </div>
+  <div class="bg-slide" id="bgSlide2">
+    <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/bwbm.jpg" alt=""
+      onerror="this.src='https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=80'">
+  </div>
+</div>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- BRAND LEFT -->
+  <div class="brand-panel">
+    <div class="brand-top">
+      <a href="shop.html" class="brand-logo">4<span>4</span>4</a>
+      <div class="brand-divider"></div>
+      <span class="brand-tagline-top">Luxury Streetwear</span>
+    </div>
+
+    <div class="brand-center">
+      <p class="brand-eyebrow">Exclusive Access</p>
+      <h1 class="brand-headline">
+        Born From
+        <em>Culture.</em>
+      </h1>
+      <p class="brand-body">Join the inner circle. Members-only access to new drops, exclusive releases and early lookbook previews.</p>
+    </div>
+
+    <div class="brand-bottom">
+      <div class="slide-indicators" id="slideIndicators">
+        <div class="s-dot active" data-idx="0"></div>
+        <div class="s-dot" data-idx="1"></div>
+        <div class="s-dot" data-idx="2"></div>
+      </div>
+      <p class="brand-copy">© 2025 444 Brand</p>
+    </div>
+  </div>
+
+  <!-- AUTH RIGHT -->
+  <div class="auth-panel">
+
+    <!-- TABS -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+
+    <!-- ── LOGIN ── -->
+    <div class="form-panel active" id="panelLogin">
+      <h2 class="auth-heading">Welcome<br><em>Back.</em></h2>
+      <p class="auth-sub">Sign in to your account</p>
+
+      <div class="social-btns">
+        <button class="social-btn" id="googleLoginBtn">
+          <span class="btn-icon">
+            <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+          </span>
+          <span class="btn-label">Continue with Google</span>
+          <i class="fas fa-arrow-right btn-arrow"></i>
+        </button>
+        <button class="social-btn" id="appleLoginBtn">
+          <span class="btn-icon">
+            <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.42c1.32.07 2.23.72 3 .78.9-.12 1.75-.79 3.09-.85 2.07.12 3.6.98 4.59 2.51-3.99 2.4-3.07 7.56.94 9.16-.55 1.47-1.33 2.91-2.62 3.26zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" fill="white"/>
+            </svg>
+          </span>
+          <span class="btn-label">Continue with Apple</span>
+          <i class="fas fa-arrow-right btn-arrow"></i>
+        </button>
+      </div>
+
+      <div class="or-divider"><span>Or continue with email</span></div>
+
+      <div class="field-group">
+        <label class="field-label" for="loginEmail">Email address</label>
+        <div class="field-wrap">
+          <input type="email" class="field-input" id="loginEmail" placeholder="you@email.com" autocomplete="email">
+          <i class="fas fa-envelope field-icon"></i>
+        </div>
+        <p class="field-err" id="loginEmailErr"></p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="loginPass">Password</label>
+        <div class="field-wrap">
+          <input type="password" class="field-input" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+          <i class="fas fa-lock field-icon"></i>
+          <button class="field-eye" type="button" onclick="togglePw('loginPass',this)" tabindex="-1" aria-label="Toggle password">
+            <i class="far fa-eye"></i>
+          </button>
+        </div>
+        <p class="field-err" id="loginPassErr"></p>
+      </div>
+
+      <div class="forgot-row">
+        <button class="forgot-link" onclick="switchTab('forgot')">Forgot password?</button>
+      </div>
+
+      <button class="submit-btn" id="loginBtn">
+        <span>Sign In</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+
+      <p class="switch-hint">
+        Don't have an account? <button onclick="switchTab('signup')">Create one</button>
+      </p>
+    </div>
+
+    <!-- ── SIGNUP ── -->
+    <div class="form-panel" id="panelSignup">
+      <h2 class="auth-heading">Join the<br><em>Circle.</em></h2>
+      <p class="auth-sub">Create your 444 account</p>
+
+      <div class="social-btns">
+        <button class="social-btn" id="googleSignupBtn">
+          <span class="btn-icon">
+            <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+          </span>
+          <span class="btn-label">Sign up with Google</span>
+          <i class="fas fa-arrow-right btn-arrow"></i>
+        </button>
+        <button class="social-btn" id="appleSignupBtn">
+          <span class="btn-icon">
+            <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.42c1.32.07 2.23.72 3 .78.9-.12 1.75-.79 3.09-.85 2.07.12 3.6.98 4.59 2.51-3.99 2.4-3.07 7.56.94 9.16-.55 1.47-1.33 2.91-2.62 3.26zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" fill="white"/>
+            </svg>
+          </span>
+          <span class="btn-label">Sign up with Apple</span>
+          <i class="fas fa-arrow-right btn-arrow"></i>
+        </button>
+      </div>
+
+      <div class="or-divider"><span>Or use your email</span></div>
+
+      <div class="field-group">
+        <label class="field-label" for="signupName">Full name</label>
+        <div class="field-wrap">
+          <input type="text" class="field-input" id="signupName" placeholder="Your name" autocomplete="name">
+          <i class="fas fa-user field-icon"></i>
+        </div>
+        <p class="field-err" id="signupNameErr"></p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="signupEmail">Email address</label>
+        <div class="field-wrap">
+          <input type="email" class="field-input" id="signupEmail" placeholder="you@email.com" autocomplete="email">
+          <i class="fas fa-envelope field-icon"></i>
+        </div>
+        <p class="field-err" id="signupEmailErr"></p>
+      </div>
+
+      <div class="field-group" style="margin-bottom:0.4rem">
+        <label class="field-label" for="signupPass">Password</label>
+        <div class="field-wrap">
+          <input type="password" class="field-input" id="signupPass" placeholder="Min 8 characters" autocomplete="new-password">
+          <i class="fas fa-lock field-icon"></i>
+          <button class="field-eye" type="button" onclick="togglePw('signupPass',this)" tabindex="-1" aria-label="Toggle password">
+            <i class="far fa-eye"></i>
+          </button>
+        </div>
+        <p class="field-err" id="signupPassErr"></p>
+      </div>
+
+      <!-- Password strength -->
+      <div id="pwStrengthWrap" style="margin-bottom:1.2rem;display:none">
+        <div style="display:flex;gap:3px;margin-bottom:0.3rem">
+          <div id="ps1" style="height:2px;flex:1;background:rgba(255,255,255,0.1);transition:background 0.3s"></div>
+          <div id="ps2" style="height:2px;flex:1;background:rgba(255,255,255,0.1);transition:background 0.3s"></div>
+          <div id="ps3" style="height:2px;flex:1;background:rgba(255,255,255,0.1);transition:background 0.3s"></div>
+          <div id="ps4" style="height:2px;flex:1;background:rgba(255,255,255,0.1);transition:background 0.3s"></div>
+        </div>
+        <p id="pwStrengthLabel" style="font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3)"></p>
+      </div>
+
+      <p class="terms-note">By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+
+      <button class="submit-btn" id="signupBtn">
+        <span>Create Account</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+
+      <p class="switch-hint">
+        Already have an account? <button onclick="switchTab('login')">Sign in</button>
+      </p>
+    </div>
+
+    <!-- ── FORGOT PASSWORD ── -->
+    <div class="form-panel" id="panelForgot">
+      <button class="back-btn" onclick="switchTab('login')">
+        <i class="fas fa-arrow-left"></i> Back to Sign In
+      </button>
+
+      <div id="forgotForm">
+        <h2 class="auth-heading">Reset Your<br><em>Password.</em></h2>
+        <p class="auth-sub" style="margin-bottom:2rem">Enter your email and we'll send a reset link</p>
+
+        <div class="field-group">
+          <label class="field-label" for="forgotEmail">Email address</label>
+          <div class="field-wrap">
+            <input type="email" class="field-input" id="forgotEmail" placeholder="you@email.com" autocomplete="email">
+            <i class="fas fa-envelope field-icon"></i>
+          </div>
+          <p class="field-err" id="forgotEmailErr"></p>
+        </div>
+
+        <button class="submit-btn" id="forgotBtn" style="margin-top:1rem">
+          <span>Send Reset Link</span>
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+
+      <div class="success-state" id="forgotSuccess">
+        <div class="success-icon"><i class="fas fa-envelope-open-text"></i></div>
+        <h3 class="success-title">Check Your <em style="font-style:italic;color:var(--gold-l)">Inbox.</em></h3>
+        <p class="success-msg">We've sent a password reset link to your email. Check your inbox and spam folder.</p>
+        <button class="submit-btn" onclick="switchTab('login')" style="max-width:240px;margin:0 auto">
+          <span>Back to Sign In</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /auth-panel -->
+</div><!-- /page -->
+
+<!-- TOAST -->
+<div class="auth-toast" id="authToast">
+  <i class="fas fa-check-circle" id="toastIcon" style="color:var(--gold)"></i>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+  OAuthProvider,
+  signInWithPopup,
+  updateProfile,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDE1KZtXElz9q6JsU65voYRfXuGNg6pDVE",
+  authDomain: "brand-dc8f6.firebaseapp.com",
+  projectId: "brand-dc8f6",
+  storageBucket: "brand-dc8f6.firebasestorage.app",
+  messagingSenderId: "473062980138",
+  appId: "1:473062980138:web:1f6046bcc824589372e153"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+const appleProvider = new OAuthProvider('apple.com');
+
+// Redirect if already logged in
+onAuthStateChanged(auth, user => {
+  if (user) {
+    // Already signed in → go to shop
+    // window.location.href = 'shop.html';
+  }
+});
+
+// ── GOOGLE
+document.getElementById('googleLoginBtn').addEventListener('click', () => socialAuth(googleProvider));
+document.getElementById('googleSignupBtn').addEventListener('click', () => socialAuth(googleProvider));
+document.getElementById('appleLoginBtn').addEventListener('click', () => socialAuth(appleProvider));
+document.getElementById('appleSignupBtn').addEventListener('click', () => socialAuth(appleProvider));
+
+async function socialAuth(provider) {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    showToast(`Welcome, ${result.user.displayName || 'back'}!`, true);
+    setTimeout(() => window.location.href = 'shop.html', 1200);
+  } catch(e) {
+    showToast(friendlyError(e.code), false);
+  }
+}
+
+// ── LOGIN
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+async function doLogin() {
+  clearErrors();
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  let valid = true;
+
+  if (!email || !email.includes('@')) { showErr('loginEmailErr','Enter a valid email'); valid=false; }
+  if (!pass) { showErr('loginPassErr','Enter your password'); valid=false; }
+  if (!valid) return;
+
+  setLoading('loginBtn', true);
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, pass);
+    showToast('Welcome back!', true);
+    setTimeout(() => window.location.href = 'shop.html', 1200);
+  } catch(e) {
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
+      showErr('loginPassErr','Incorrect email or password');
+    } else {
+      showToast(friendlyError(e.code), false);
+    }
+  } finally {
+    setLoading('loginBtn', false, 'Sign In');
+  }
+}
+
+// ── SIGNUP
+document.getElementById('signupBtn').addEventListener('click', doSignup);
+document.getElementById('signupPass').addEventListener('input', () => {
+  const v = document.getElementById('signupPass').value;
+  document.getElementById('pwStrengthWrap').style.display = v.length ? 'block' : 'none';
+  updateStrength(v);
+});
+
+async function doSignup() {
+  clearErrors();
+  const name  = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const pass  = document.getElementById('signupPass').value;
+  let valid = true;
+
+  if (!name) { showErr('signupNameErr','Enter your name'); valid=false; }
+  if (!email || !email.includes('@')) { showErr('signupEmailErr','Enter a valid email'); valid=false; }
+  if (pass.length < 8) { showErr('signupPassErr','Password must be at least 8 characters'); valid=false; }
+  if (!valid) return;
+
+  setLoading('signupBtn', true);
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(result.user, { displayName: name });
+    showToast('Account created! Welcome to 444.', true);
+    setTimeout(() => window.location.href = 'shop.html', 1400);
+  } catch(e) {
+    if (e.code === 'auth/email-already-in-use') {
+      showErr('signupEmailErr','This email is already registered');
+    } else {
+      showToast(friendlyError(e.code), false);
+    }
+  } finally {
+    setLoading('signupBtn', false, 'Create Account');
+  }
+}
+
+// ── FORGOT
+document.getElementById('forgotBtn').addEventListener('click', doForgot);
+document.getElementById('forgotEmail').addEventListener('keydown', e => { if(e.key==='Enter') doForgot(); });
+
+async function doForgot() {
+  clearErrors();
+  const email = document.getElementById('forgotEmail').value.trim();
+  if (!email || !email.includes('@')) { showErr('forgotEmailErr','Enter a valid email'); return; }
+
+  setLoading('forgotBtn', true);
+  try {
+    await sendPasswordResetEmail(auth, email);
+    document.getElementById('forgotForm').style.display = 'none';
+    document.getElementById('forgotSuccess').classList.add('show');
+  } catch(e) {
+    showToast(friendlyError(e.code), false);
+  } finally {
+    setLoading('forgotBtn', false, 'Send Reset Link');
+  }
+}
+
+// ── HELPERS
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function clearErrors() {
+  document.querySelectorAll('.field-err').forEach(e => { e.textContent=''; e.classList.remove('show'); });
+}
+function setLoading(btnId, loading, label='') {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  if (loading) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+  } else {
+    btn.disabled = false;
+    const icons = { loginBtn:'fa-arrow-right', signupBtn:'fa-arrow-right', forgotBtn:'fa-paper-plane' };
+    btn.innerHTML = `<span>${label}</span><i class="fas ${icons[btnId]||'fa-arrow-right'}"></i>`;
+  }
+}
+function friendlyError(code) {
+  const map = {
+    'auth/network-request-failed':'Network error. Check your connection.',
+    'auth/too-many-requests':'Too many attempts. Try again later.',
+    'auth/popup-closed-by-user':'Sign-in popup was closed.',
+    'auth/popup-blocked':'Popup was blocked. Allow popups for this site.',
+    'auth/operation-not-allowed':'This sign-in method is not enabled.',
+    'auth/invalid-email':'Invalid email address.',
+  };
+  return map[code] || 'Something went wrong. Please try again.';
+}
+function showToast(msg, ok=true) {
+  const t = document.getElementById('authToast');
+  document.getElementById('toastMsg').textContent = msg;
+  const icon = document.getElementById('toastIcon');
+  icon.className = ok ? 'fas fa-check-circle' : 'fas fa-times-circle';
+  icon.style.color = ok ? 'var(--gold)' : '#e74c3c';
+  t.classList.toggle('err', !ok);
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+// ── PASSWORD STRENGTH
+function updateStrength(pw) {
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const colors = ['#e74c3c','#e67e22','#f1c40f','#27ae60'];
+  const labels = ['Weak','Fair','Good','Strong'];
+  for (let i=1;i<=4;i++) {
+    document.getElementById('ps'+i).style.background = i<=score ? colors[score-1] : 'rgba(255,255,255,0.1)';
+  }
+  document.getElementById('pwStrengthLabel').textContent = score ? labels[score-1] : '';
+  document.getElementById('pwStrengthLabel').style.color = score ? colors[score-1] : 'rgba(255,255,255,0.3)';
+}
+</script>
+
+<script>
+// ── BG SLIDER
+let bgCurrent = 0;
+const bgSlides = document.querySelectorAll('.bg-slide');
+const bgDots = document.querySelectorAll('.s-dot');
+
+function bgGoTo(n) {
+  bgSlides[bgCurrent].classList.remove('active');
+  bgDots[bgCurrent]?.classList.remove('active');
+  bgCurrent = n % bgSlides.length;
+  bgSlides[bgCurrent].classList.add('active');
+  bgDots[bgCurrent]?.classList.add('active');
+}
+setInterval(() => bgGoTo(bgCurrent + 1), 5000);
+bgDots.forEach(d => d.addEventListener('click', () => bgGoTo(Number(d.dataset.idx))));
+
+// ── TAB SWITCHING
+function switchTab(tab) {
+  ['login','signup','forgot'].forEach(t => {
+    document.getElementById('panel'+cap(t)).classList.toggle('active', t===tab);
+    const tabEl = document.getElementById('tab'+cap(t));
+    if (tabEl) tabEl.classList.toggle('active', t===tab);
+  });
+  if (tab === 'forgot') {
+    // reset forgot state
+    document.getElementById('forgotForm').style.display = '';
+    document.getElementById('forgotSuccess').classList.remove('show');
+  }
+  // tabs only for login/signup
+  document.getElementById('tabLogin').parentElement.style.display = tab === 'forgot' ? 'none' : 'flex';
+}
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+// ── PASSWORD TOGGLE
+function togglePw(fieldId, btn) {
+  const field = document.getElementById(fieldId);
+  const isText = field.type === 'text';
+  field.type = isText ? 'password' : 'text';
+  btn.querySelector('i').className = isText ? 'far fa-eye' : 'far fa-eye-slash';
+}
+</script>
+</body>
+</html>
