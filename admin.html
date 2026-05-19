@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>444 Admin — Product Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -101,10 +101,12 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
   letter-spacing:0.06em;text-transform:uppercase;
   color:rgba(255,255,255,0.5);cursor:pointer;transition:var(--tr);
   border-left:2px solid transparent;text-decoration:none;
+  background:none;border-right:none;border-top:none;border-bottom:none;
+  width:100%;text-align:left;font-family:var(--font-b);
 }
 .sidebar-link i{width:16px;font-size:0.78rem;text-align:center}
 .sidebar-link:hover{color:var(--gold);background:rgba(200,169,110,0.05)}
-.sidebar-link.active{color:var(--gold);border-left-color:var(--gold);background:rgba(200,169,110,0.08)}
+.sidebar-link.active{color:var(--gold);border-left-color:var(--gold) !important;border-left-width:2px !important;background:rgba(200,169,110,0.08)}
 .sidebar-bottom{padding:1.5rem 1.8rem;border-top:1px solid rgba(255,255,255,0.06)}
 .logout-btn{
   display:flex;align-items:center;gap:0.7rem;
@@ -169,7 +171,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 }
 .btn-add-product:hover{background:var(--gold);color:var(--black)}
 
-/* PRODUCTS TABLE/GRID */
+/* PRODUCTS TABLE */
 .products-table{background:var(--white);overflow:hidden}
 .table-head{
   display:grid;grid-template-columns:80px 1fr 120px 120px 100px 100px;
@@ -203,33 +205,111 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .badge-pill.none{background:var(--light);color:var(--mid)}
 .prod-row-actions{display:flex;gap:0.5rem}
 .act-btn{
-  width:32px;height:32px;border:1px solid var(--light);background:transparent;
+  width:36px;height:36px;border:1px solid var(--light);background:transparent;
   cursor:pointer;font-size:0.75rem;color:var(--dark);
   display:flex;align-items:center;justify-content:center;transition:var(--tr);
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
-.act-btn:hover{background:var(--black);color:var(--white);border-color:var(--black)}
-.act-btn.del:hover{background:var(--red);border-color:var(--red)}
+.act-btn:hover,.act-btn:active{background:var(--black);color:var(--white);border-color:var(--black)}
+.act-btn.del:hover,.act-btn.del:active{background:var(--red);border-color:var(--red)}
 
-/* FORM OVERLAY */
-.form-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.88);
-  z-index:4000;opacity:0;pointer-events:none;transition:opacity 0.4s;
-  display:flex;align-items:center;justify-content:center;padding:1rem;
-  overflow-y:auto;
+/* ── IMAGE URL SECTION ── */
+.url-input-row{
+  display:flex;gap:0.5rem;margin-bottom:0.6rem;
 }
-.form-overlay.open{opacity:1;pointer-events:all}
+.url-input-row input{
+  flex:1;padding:0.75rem 1rem;border:1px solid var(--light);
+  background:var(--off-white);font-family:var(--font-b);
+  font-size:0.72rem;color:var(--black);outline:none;
+  transition:border-color 0.3s;
+}
+.url-input-row input:focus{border-color:var(--gold);background:var(--white)}
+.url-input-row input::placeholder{color:var(--mid)}
+.btn-add-url{
+  padding:0.75rem 1rem;background:var(--black);color:var(--white);
+  border:none;cursor:pointer;font-size:0.7rem;font-family:var(--font-b);
+  font-weight:600;letter-spacing:0.1em;white-space:nowrap;
+  transition:background 0.3s;touch-action:manipulation;
+}
+.btn-add-url:hover{background:var(--gold);color:var(--black)}
+.url-help{
+  font-size:0.56rem;color:var(--mid);letter-spacing:0.06em;
+  line-height:1.7;margin-bottom:0.8rem;
+}
+.url-help a{color:var(--gold-d);text-decoration:none}
+.url-help a:hover{text-decoration:underline}
+.img-preview-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+  gap:0.6rem;margin-top:0.6rem;
+}
+.img-preview-item{
+  position:relative;aspect-ratio:3/4;background:var(--cream);overflow:hidden;
+  border:2px solid transparent;transition:border-color 0.2s;
+}
+.img-preview-item.primary{border-color:var(--gold)}
+.img-preview-item img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.img-preview-item .rm-img{
+  position:absolute;top:3px;right:3px;width:24px;height:24px;
+  background:rgba(0,0,0,0.75);color:var(--white);border:none;
+  cursor:pointer;font-size:0.65rem;display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;touch-action:manipulation;z-index:2;
+}
+.img-preview-item .rm-img:hover{background:var(--red)}
+.img-preview-item .primary-tag{
+  position:absolute;bottom:0;left:0;right:0;
+  background:var(--gold);color:var(--black);
+  font-size:0.45rem;font-weight:700;letter-spacing:0.14em;
+  text-transform:uppercase;text-align:center;padding:0.2rem;
+}
+.img-preview-item .img-error{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:0.3rem;background:var(--cream);
+}
+.img-preview-item .img-error i{color:var(--red);font-size:1rem}
+.img-preview-item .img-error span{font-size:0.45rem;color:var(--mid);letter-spacing:0.05em;text-align:center;padding:0 0.3rem}
+.img-no-items{
+  font-size:0.6rem;color:var(--mid);letter-spacing:0.1em;text-align:center;
+  padding:1.5rem;border:1px dashed var(--light);background:var(--off-white);
+}
+
+/* FORM OVERLAY — fixed for mobile */
+.form-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.88);
+  z-index:4000;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.4s;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.form-overlay.open{
+  opacity:1;
+  pointer-events:all;
+}
+.form-overlay-inner{
+  min-height:100%;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:2rem 1rem;
+}
 .form-box{
-  background:var(--white);width:100%;max-width:680px;
-  max-height:92vh;overflow-y:auto;
-  transform:translateY(30px);transition:transform 0.4s ease;
-  padding:2.5rem;position:relative;
+  background:var(--white);
+  width:100%;
+  max-width:680px;
+  transform:translateY(30px);
+  transition:transform 0.4s ease;
+  padding:2.5rem;
+  position:relative;
 }
 .form-overlay.open .form-box{transform:translateY(0)}
 .form-close{
   position:absolute;top:1rem;right:1rem;
-  width:32px;height:32px;background:var(--black);color:var(--white);
+  width:36px;height:36px;background:var(--black);color:var(--white);
   border:none;cursor:pointer;font-size:0.85rem;
   display:flex;align-items:center;justify-content:center;transition:background 0.3s;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;z-index:5;
 }
 .form-close:hover{background:var(--gold);color:var(--black)}
 .form-title{
@@ -246,70 +326,22 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
   padding:0.8rem 1rem;border:1px solid var(--light);background:var(--off-white);
   font-family:var(--font-b);font-size:0.75rem;color:var(--black);
   outline:none;transition:border-color 0.3s;width:100%;
+  -webkit-appearance:none;border-radius:0;
 }
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold);background:var(--white)}
 .form-textarea{resize:vertical;min-height:90px;line-height:1.7}
 .form-select{cursor:pointer}
 
-/* IMAGE UPLOAD */
-.img-upload-zone{
-  border:2px dashed var(--light);background:var(--off-white);
-  padding:2rem;text-align:center;cursor:pointer;
-  transition:var(--tr);margin-top:0.4rem;position:relative;
-}
-.img-upload-zone:hover,.img-upload-zone.drag{border-color:var(--gold);background:rgba(200,169,110,0.04)}
-.img-upload-zone i{font-size:1.8rem;color:var(--mid);display:block;margin-bottom:0.6rem}
-.img-upload-zone p{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:0.3rem}
-.img-upload-zone span{font-size:0.56rem;color:rgba(0,0,0,0.35);letter-spacing:0.06em}
-.img-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.img-preview-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
-  gap:0.6rem;margin-top:0.8rem;
-}
-.img-preview-item{
-  position:relative;aspect-ratio:3/4;background:var(--cream);overflow:hidden;
-  border:2px solid transparent;transition:border-color 0.2s;
-}
-.img-preview-item.primary{border-color:var(--gold)}
-.img-preview-item img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-.img-preview-item .rm-img{
-  position:absolute;top:3px;right:3px;width:20px;height:20px;
-  background:rgba(0,0,0,0.75);color:var(--white);border:none;
-  cursor:pointer;font-size:0.6rem;display:flex;align-items:center;justify-content:center;
-  transition:background 0.2s;
-}
-.img-preview-item .rm-img:hover{background:var(--red)}
-.img-preview-item .primary-tag{
-  position:absolute;bottom:0;left:0;right:0;
-  background:var(--gold);color:var(--black);
-  font-size:0.45rem;font-weight:700;letter-spacing:0.14em;
-  text-transform:uppercase;text-align:center;padding:0.2rem;
-}
-.img-progress{
-  margin-top:0.6rem;display:none;
-}
-.img-progress-bar{
-  height:3px;background:var(--light);position:relative;overflow:hidden;
-}
-.img-progress-bar::after{
-  content:'';position:absolute;left:-50%;width:50%;height:100%;
-  background:var(--gold);animation:progress-slide 1s ease infinite;
-}
-@keyframes progress-slide{0%{left:-50%}100%{left:150%}}
-.img-size-warning{
-  font-size:0.58rem;color:#e67e22;letter-spacing:0.08em;
-  margin-top:0.4rem;display:none;
-}
-
-/* SIZES CHECKBOXES */
+/* SIZES */
 .sizes-wrap{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem}
 .size-check{display:flex;align-items:center;gap:0.3rem;cursor:pointer}
 .size-check input{display:none}
 .size-check-box{
-  width:40px;height:40px;border:1px solid var(--light);
+  width:44px;height:44px;border:1px solid var(--light);
   font-size:0.62rem;font-weight:600;letter-spacing:0.06em;
   display:flex;align-items:center;justify-content:center;
   transition:var(--tr);background:var(--off-white);color:var(--dark);
+  cursor:pointer;touch-action:manipulation;
 }
 .size-check input:checked + .size-check-box{background:var(--black);color:var(--white);border-color:var(--black)}
 
@@ -324,13 +356,14 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
   font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
   cursor:pointer;transition:background 0.3s;
   display:flex;align-items:center;justify-content:center;gap:0.6rem;
+  touch-action:manipulation;
 }
 .btn-save:hover{background:var(--gold);color:var(--black)}
 .btn-cancel{
   padding:0.95rem 1.5rem;background:transparent;border:1px solid var(--light);
   font-family:var(--font-b);font-size:0.65rem;font-weight:600;
   letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;
-  transition:var(--tr);color:var(--dark);
+  transition:var(--tr);color:var(--dark);touch-action:manipulation;
 }
 .btn-cancel:hover{background:var(--off-white)}
 
@@ -354,12 +387,14 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
   padding:0.8rem 1.8rem;background:var(--red);color:var(--white);
   border:none;font-family:var(--font-b);font-size:0.62rem;font-weight:700;
   letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;
+  touch-action:manipulation;
 }
 .btn-confirm-del:hover{background:#a93226}
 .btn-confirm-cancel{
   padding:0.8rem 1.4rem;background:transparent;border:1px solid var(--light);
   font-family:var(--font-b);font-size:0.62rem;font-weight:600;
   letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:var(--tr);color:var(--dark);
+  touch-action:manipulation;
 }
 .btn-confirm-cancel:hover{background:var(--off-white)}
 
@@ -373,6 +408,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
   transition:all 0.4s ease;z-index:9999;
   display:flex;align-items:center;gap:0.6rem;
   border-bottom:2px solid var(--gold);min-width:220px;
+  pointer-events:none;
 }
 .toast.show{transform:translateY(0);opacity:1}
 
@@ -394,36 +430,51 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
   flex:1;padding:0.7rem 0.5rem 0.7rem 0;
   border:none;font-family:var(--font-b);font-size:0.72rem;
   outline:none;background:transparent;color:var(--black);letter-spacing:0.04em;
+  -webkit-appearance:none;
 }
 .search-bar input::placeholder{color:var(--mid)}
 
-/* MOBILE SIDEBAR */
+/* MOBILE */
 .sidebar-toggle{display:none}
 .sidebar-backdrop{
   display:none;position:fixed;inset:0;
   background:rgba(0,0,0,0.6);z-index:499;
   opacity:0;transition:opacity 0.3s;
+  pointer-events:none;
 }
+.sidebar-backdrop.open{opacity:1;pointer-events:all}
+
 @media(max-width:900px){
-  .sidebar{position:fixed;left:-240px;z-index:500;transition:left 0.4s ease;top:0}
-  .sidebar.open{left:0}
+  .sidebar{
+    position:fixed;left:-260px;z-index:500;transition:left 0.35s ease;
+    top:0;height:100%;width:240px;
+  }
+  .sidebar.open{left:0;box-shadow:4px 0 30px rgba(0,0,0,0.5)}
   .sidebar-backdrop{display:block}
-  .sidebar-backdrop.open{opacity:1;pointer-events:all}
   .sidebar-toggle{
     display:flex;align-items:center;justify-content:center;
-    width:36px;height:36px;background:var(--black);color:var(--white);
-    border:none;cursor:pointer;font-size:0.9rem;
+    width:40px;height:40px;background:var(--black);color:var(--white);
+    border:none;cursor:pointer;font-size:0.9rem;flex-shrink:0;
+    touch-action:manipulation;-webkit-tap-highlight-color:transparent;
   }
   .stats-row{grid-template-columns:repeat(2,1fr)}
-  .table-head,.prod-row{grid-template-columns:60px 1fr 90px 80px}
-  .prod-row-badge,.prod-row-actions{display:none}
-  .prod-row-actions{display:flex}
+  .table-head{grid-template-columns:60px 1fr 90px 80px}
+  .table-head span:nth-child(4),.table-head span:nth-child(5),.table-head span:nth-child(6){display:none}
+  .prod-row{grid-template-columns:60px 1fr 90px 80px}
+  .prod-row > div:nth-child(4),.prod-row > div:nth-child(5){display:none}
+  .prod-row-actions{display:flex !important}
   .form-grid{grid-template-columns:1fr}
+  .form-box{padding:1.5rem}
+  .form-submit{flex-direction:column}
+  .btn-cancel{padding:0.9rem}
 }
 @media(max-width:600px){
   .stats-row{grid-template-columns:1fr 1fr}
-  .page-content{padding:1.2rem}
-  .top-bar{padding:0 1.2rem}
+  .page-content{padding:1rem}
+  .top-bar{padding:0 1rem}
+  .top-bar-title{font-size:1.1rem}
+  .admin-tag{display:none}
+  .form-box{padding:1.2rem}
 }
 </style>
 </head>
@@ -436,7 +487,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
     <p class="login-sub">Admin Access Only</p>
     <input type="email" class="login-field" id="loginEmail" placeholder="Admin email" autocomplete="email">
     <input type="password" class="login-field" id="loginPass" placeholder="Password" autocomplete="current-password">
-    <button class="login-btn" onclick="doLogin()">Enter Dashboard</button>
+    <button class="login-btn" id="loginBtn">Enter Dashboard</button>
     <p class="login-err" id="loginErr"></p>
   </div>
 </div>
@@ -454,23 +505,23 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
       </div>
       <nav class="sidebar-nav">
         <p class="sidebar-section">Main</p>
-        <a class="sidebar-link active" onclick="showSection('products')">
+        <button class="sidebar-link active" id="navProducts">
           <i class="fas fa-box"></i> Products
-        </a>
-        <a class="sidebar-link" onclick="showSection('orders')">
+        </button>
+        <button class="sidebar-link" id="navOrders">
           <i class="fas fa-receipt"></i> Orders
-        </a>
+        </button>
         <p class="sidebar-section">Analytics</p>
-        <a class="sidebar-link" onclick="showSection('analytics')">
+        <button class="sidebar-link" id="navAnalytics">
           <i class="fas fa-chart-bar"></i> Overview
-        </a>
+        </button>
         <p class="sidebar-section">Site</p>
         <a href="shop.html" target="_blank" class="sidebar-link">
           <i class="fas fa-external-link-alt"></i> View Shop
         </a>
       </nav>
       <div class="sidebar-bottom">
-        <button class="logout-btn" onclick="doLogout()">
+        <button class="logout-btn" id="logoutBtn">
           <i class="fas fa-sign-out-alt"></i> Sign Out
         </button>
       </div>
@@ -487,7 +538,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
         </div>
         <div class="top-bar-right">
           <span class="admin-tag">Admin</span>
-          <span id="adminEmail" style="font-size:0.62rem;color:var(--mid);letter-spacing:0.06em"></span>
+          <span id="adminEmail" style="font-size:0.62rem;color:var(--mid);letter-spacing:0.06em;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
         </div>
       </div>
 
@@ -524,14 +575,14 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
               <h3>All <em>Products</em></h3>
               <p>Manage your product catalogue</p>
             </div>
-            <button class="btn-add-product" onclick="openForm()">
+            <button class="btn-add-product" id="addProductBtn">
               <i class="fas fa-plus"></i> Add New Product
             </button>
           </div>
 
           <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search products..." oninput="filterTable()">
+            <input type="text" id="searchInput" placeholder="Search products...">
           </div>
 
           <div class="products-table">
@@ -552,7 +603,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
           </div>
         </div>
 
-        <!-- ORDERS PLACEHOLDER -->
+        <!-- ORDERS -->
         <div id="sectionOrders" style="display:none">
           <div class="section-hdr">
             <div class="section-hdr-left">
@@ -566,7 +617,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
           </div>
         </div>
 
-        <!-- ANALYTICS PLACEHOLDER -->
+        <!-- ANALYTICS -->
         <div id="sectionAnalytics" style="display:none">
           <div class="section-hdr">
             <div class="section-hdr-left">
@@ -587,78 +638,75 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 
 <!-- ADD / EDIT FORM OVERLAY -->
 <div class="form-overlay" id="formOverlay">
-  <div class="form-box">
-    <button class="form-close" onclick="closeForm()"><i class="fas fa-times"></i></button>
-    <h2 class="form-title" id="formTitle">Add New <em>Product</em></h2>
-    <p class="form-sub" id="formSubtitle">Fill in all product details</p>
+  <div class="form-overlay-inner">
+    <div class="form-box">
+      <button class="form-close" id="formCloseBtn"><i class="fas fa-times"></i></button>
+      <h2 class="form-title" id="formTitle">Add New <em>Product</em></h2>
+      <p class="form-sub" id="formSubtitle">Fill in all product details</p>
 
-    <div class="form-grid">
-      <div class="form-group form-full">
-        <label class="form-label">Product Name *</label>
-        <input type="text" class="form-input" id="fName" placeholder="e.g. Midnight Oversized Tee">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Price (GH₵) *</label>
-        <input type="number" class="form-input" id="fPrice" placeholder="150">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Category</label>
-        <input type="text" class="form-input" id="fCat" placeholder="e.g. Tees, Hoodies, Accessories" list="catList">
-        <datalist id="catList">
-          <option value="Tees">
-          <option value="Hoodies">
-          <option value="Accessories">
-          <option value="Cargo Pants">
-          <option value="Crewnecks">
-        </datalist>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Badge</label>
-        <select class="form-select" id="fBadge">
-          <option value="">None</option>
-          <option value="New">New</option>
-          <option value="Limited">Limited</option>
-          <option value="Hot">Hot</option>
-          <option value="Exclusive">Exclusive</option>
-          <option value="Sale">Sale</option>
-        </select>
-      </div>
-      <div class="form-group form-full">
-        <label class="form-label">Description</label>
-        <textarea class="form-textarea" id="fDesc" placeholder="Describe the product — materials, fit, details..."></textarea>
-      </div>
-      <div class="form-group form-full">
-        <label class="form-label">Available Sizes</label>
-        <div class="sizes-wrap">
-          ${['XS','S','M','L','XL','2XL','3XL'].map(s => `
-          <label class="size-check">
-            <input type="checkbox" value="${s}" class="sizeCheck">
-            <span class="size-check-box">${s}</span>
-          </label>`).join('')}
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <label class="form-label">Product Name *</label>
+          <input type="text" class="form-input" id="fName" placeholder="e.g. Midnight Oversized Tee">
         </div>
-      </div>
-      <div class="form-group form-full">
-        <label class="form-label">Product Images *</label>
-        <p style="font-size:0.58rem;color:var(--mid);margin-bottom:0.6rem;letter-spacing:0.06em">Upload up to 8 images. First image is the main display image. JPG/PNG/WEBP. Keep each under 800KB for best performance.</p>
-        <div class="img-upload-zone" id="uploadZone">
-          <input type="file" id="imgFileInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
-          <i class="fas fa-cloud-upload-alt"></i>
-          <p>Click or drag &amp; drop images here</p>
-          <span>JPG · PNG · WEBP · up to 8 images</span>
+        <div class="form-group">
+          <label class="form-label">Price (GH₵) *</label>
+          <input type="number" class="form-input" id="fPrice" placeholder="150">
         </div>
-        <div class="img-progress" id="imgProgress">
-          <div class="img-progress-bar"></div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <input type="text" class="form-input" id="fCat" placeholder="e.g. Tees, Hoodies" list="catList">
+          <datalist id="catList">
+            <option value="Tees">
+            <option value="Hoodies">
+            <option value="Accessories">
+            <option value="Cargo Pants">
+            <option value="Crewnecks">
+          </datalist>
         </div>
-        <p class="img-size-warning" id="sizeWarning">⚠ Some images were skipped — keep each file under 900KB for Firestore storage.</p>
-        <div class="img-preview-grid" id="imgPreviewGrid"></div>
-      </div>
-    </div>
+        <div class="form-group">
+          <label class="form-label">Badge</label>
+          <select class="form-select" id="fBadge">
+            <option value="">None</option>
+            <option value="New">New</option>
+            <option value="Limited">Limited</option>
+            <option value="Hot">Hot</option>
+            <option value="Exclusive">Exclusive</option>
+            <option value="Sale">Sale</option>
+          </select>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="fDesc" placeholder="Describe the product — materials, fit, details..."></textarea>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">Available Sizes</label>
+          <div class="sizes-wrap" id="sizesWrap"></div>
+        </div>
 
-    <div class="form-submit">
-      <button class="btn-save" id="saveBtn" onclick="saveProduct()">
-        <i class="fas fa-save"></i> Save Product
-      </button>
-      <button class="btn-cancel" onclick="closeForm()">Cancel</button>
+        <!-- IMAGE URL SECTION -->
+        <div class="form-group form-full">
+          <label class="form-label">Product Images *</label>
+          <p class="url-help">
+            Paste a direct image URL (from Google Drive, Cloudinary, ImgBB, etc). Up to 8 images. First image is the main/cover image.<br>
+            💡 <strong>Free hosting:</strong> upload to <a href="https://imgbb.com" target="_blank">imgbb.com</a> or <a href="https://cloudinary.com" target="_blank">cloudinary.com</a> → copy the direct link.
+          </p>
+          <div class="url-input-row">
+            <input type="url" id="urlInput" placeholder="https://i.ibb.co/example/photo.jpg">
+            <button class="btn-add-url" id="addUrlBtn"><i class="fas fa-plus"></i> Add</button>
+          </div>
+          <div id="imgPreviewGrid">
+            <div class="img-no-items"><i class="fas fa-images" style="display:block;font-size:1.4rem;margin-bottom:0.4rem;color:var(--light)"></i>No images yet — add a URL above</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-submit">
+        <button class="btn-save" id="saveBtn">
+          <i class="fas fa-save"></i> Save Product
+        </button>
+        <button class="btn-cancel" id="cancelBtn">Cancel</button>
+      </div>
     </div>
   </div>
 </div>
@@ -671,7 +719,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
     <p class="confirm-msg">This will permanently remove <strong id="confirmName"></strong> from your store. This action cannot be undone.</p>
     <div class="confirm-actions">
       <button class="btn-confirm-del" id="confirmDelBtn">Delete</button>
-      <button class="btn-confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm-cancel" id="confirmCancelBtn">Cancel</button>
     </div>
   </div>
 </div>
@@ -682,7 +730,6 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
   <span id="toastMsg">Product saved</span>
 </div>
 
-<!-- FIREBASE + JS -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { 
@@ -709,18 +756,19 @@ const db = getFirestore(app);
 
 let allProducts = [];
 let editingId = null;
+let imageUrls = []; // array of URL strings
 
-// ── SIDEBAR TOGGLE
-function openSidebar() {
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('sidebarBackdrop').classList.add('open');
-}
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebarBackdrop').classList.remove('open');
-}
-document.getElementById('sidebarToggle').addEventListener('click', openSidebar);
-document.getElementById('sidebarBackdrop').addEventListener('click', closeSidebar);
+// ── BUILD SIZES
+const SIZES = ['XS','S','M','L','XL','2XL','3XL'];
+const sizesWrap = document.getElementById('sizesWrap');
+SIZES.forEach(s => {
+  const label = document.createElement('label');
+  label.className = 'size-check';
+  label.innerHTML = `<input type="checkbox" value="${s}" class="sizeCheck"><span class="size-check-box">${s}</span>`;
+  sizesWrap.appendChild(label);
+});
+
+// ── AUTH STATE
 onAuthStateChanged(auth, user => {
   if (user) {
     document.getElementById('loginScreen').style.display = 'none';
@@ -734,10 +782,13 @@ onAuthStateChanged(auth, user => {
 });
 
 // ── LOGIN
-window.doLogin = async () => {
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  const err = document.getElementById('loginErr');
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginErr');
   err.textContent = '';
   if (!email || !pass) { err.textContent = 'Please enter email and password'; return; }
   try {
@@ -745,16 +796,40 @@ window.doLogin = async () => {
   } catch(e) {
     err.textContent = 'Invalid credentials. Access denied.';
   }
-};
+}
 
-// Allow Enter key on login
-document.getElementById('loginPass').addEventListener('keydown', e => {
-  if (e.key === 'Enter') window.doLogin();
+// ── LOGOUT
+document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+// ── SIDEBAR TOGGLE (mobile)
+const sidebar          = document.getElementById('sidebar');
+const sidebarBackdrop  = document.getElementById('sidebarBackdrop');
+
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  sidebar.classList.add('open');
+  sidebarBackdrop.classList.add('open');
 });
+sidebarBackdrop.addEventListener('click', closeSidebar);
 
-window.doLogout = async () => {
-  await signOut(auth);
-};
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  sidebarBackdrop.classList.remove('open');
+}
+
+// ── SECTION NAV
+function showSection(id) {
+  ['Products','Orders','Analytics'].forEach(s => {
+    document.getElementById('section'+s).style.display = s.toLowerCase() === id ? 'block' : 'none';
+  });
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  const navMap = { products:'navProducts', orders:'navOrders', analytics:'navAnalytics' };
+  if (navMap[id]) document.getElementById(navMap[id]).classList.add('active');
+  closeSidebar();
+}
+
+document.getElementById('navProducts').addEventListener('click',  () => showSection('products'));
+document.getElementById('navOrders').addEventListener('click',    () => showSection('orders'));
+document.getElementById('navAnalytics').addEventListener('click', () => showSection('analytics'));
 
 // ── LOAD PRODUCTS
 async function loadProducts() {
@@ -782,13 +857,13 @@ function updateStats(list) {
   document.getElementById('statProducts').textContent = list.length;
   const cats = new Set(list.map(p => p.category).filter(Boolean));
   document.getElementById('statCategories').textContent = cats.size;
-  const badged = list.filter(p => p.badge).length;
-  document.getElementById('statFeatured').textContent = badged;
+  document.getElementById('statFeatured').textContent = list.filter(p => p.badge).length;
   if (list.length) {
     const prices = list.map(p => Number(p.price)).filter(Boolean);
-    const min = Math.min(...prices);
-    const max = Math.max(...prices);
-    document.getElementById('statRange').textContent = min === max ? min.toLocaleString() : `${min.toLocaleString()}–${max.toLocaleString()}`;
+    if (prices.length) {
+      const mn = Math.min(...prices), mx = Math.max(...prices);
+      document.getElementById('statRange').textContent = mn === mx ? mn.toLocaleString() : `${mn.toLocaleString()}–${mx.toLocaleString()}`;
+    }
   } else {
     document.getElementById('statRange').textContent = '—';
   }
@@ -797,209 +872,157 @@ function updateStats(list) {
 function renderTable(list) {
   const body = document.getElementById('tableBody');
   if (!list.length) {
-    body.innerHTML = `
-      <div class="table-empty">
-        <i class="fas fa-box-open"></i>
-        <p>No products yet. Add your first product.</p>
-      </div>`;
+    body.innerHTML = `<div class="table-empty"><i class="fas fa-box-open"></i><p>No products yet. Add your first product.</p></div>`;
     return;
   }
   body.innerHTML = list.map(p => {
     const img = (p.images && p.images[0]) || p.image || '';
     const badgeClass = (!p.badge) ? 'none' : (p.badge === 'Limited' || p.badge === 'Exclusive') ? 'gold' : 'new';
     return `
-    <div class="prod-row" data-id="${p.id}">
+    <div class="prod-row">
       <div>
-        ${img ? `<img class="prod-row-img" src="${img}" alt="${p.name}" onerror="this.style.display='none'">` : `<div class="prod-row-img" style="background:var(--cream)"></div>`}
+        ${img ? `<img class="prod-row-img" src="${img}" alt="${escHtml(p.name)}" loading="lazy" onerror="this.style.display='none'">` : `<div class="prod-row-img"></div>`}
       </div>
       <div>
-        <p class="prod-row-name">${p.name || '—'}</p>
-        <p class="prod-row-cat">${p.category || 'Uncategorised'}</p>
+        <p class="prod-row-name">${escHtml(p.name||'—')}</p>
+        <p class="prod-row-cat">${escHtml(p.category||'Uncategorised')}</p>
       </div>
-      <div><p class="prod-row-price">GH₵ ${Number(p.price || 0).toLocaleString()}</p></div>
-      <div class="prod-row-badge">
-        <span class="badge-pill ${badgeClass}">${p.badge || 'None'}</span>
-      </div>
-      <div><p class="prod-row-cat">${p.category || '—'}</p></div>
+      <div><p class="prod-row-price">GH₵ ${Number(p.price||0).toLocaleString()}</p></div>
+      <div class="prod-row-badge"><span class="badge-pill ${badgeClass}">${escHtml(p.badge||'None')}</span></div>
+      <div><p class="prod-row-cat">${escHtml(p.category||'—')}</p></div>
       <div class="prod-row-actions">
-        <button class="act-btn" title="Edit" onclick="editProduct('${p.id}')"><i class="fas fa-pen"></i></button>
-        <button class="act-btn del" title="Delete" onclick="askDelete('${p.id}','${(p.name||'').replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+        <button class="act-btn" data-edit="${p.id}" title="Edit"><i class="fas fa-pen"></i></button>
+        <button class="act-btn del" data-delete="${p.id}" data-name="${escHtml(p.name||'')}" title="Delete"><i class="fas fa-trash"></i></button>
       </div>
     </div>`;
   }).join('');
+
+  // Delegate clicks on table
+  body.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', () => editProduct(btn.dataset.edit));
+  });
+  body.querySelectorAll('[data-delete]').forEach(btn => {
+    btn.addEventListener('click', () => askDelete(btn.dataset.delete, btn.dataset.name));
+  });
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 // ── SEARCH
-window.filterTable = () => {
+document.getElementById('searchInput').addEventListener('input', () => {
   const q = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = allProducts.filter(p =>
-    (p.name || '').toLowerCase().includes(q) ||
-    (p.category || '').toLowerCase().includes(q) ||
-    (p.badge || '').toLowerCase().includes(q)
-  );
-  renderTable(filtered);
-};
+  renderTable(allProducts.filter(p =>
+    (p.name||'').toLowerCase().includes(q) ||
+    (p.category||'').toLowerCase().includes(q) ||
+    (p.badge||'').toLowerCase().includes(q)
+  ));
+});
 
-// ── SECTION NAV
-window.showSection = id => {
-  ['products','orders','analytics'].forEach(s => {
-    document.getElementById('section'+s.charAt(0).toUpperCase()+s.slice(1)).style.display = s === id ? 'block' : 'none';
-  });
-  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-  event.target.closest('.sidebar-link').classList.add('active');
-  closeSidebar();
-};
+// ── IMAGE URLS
+document.getElementById('addUrlBtn').addEventListener('click', addImageUrl);
+document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addImageUrl(); }});
 
-// ── IMAGE UPLOAD & BASE64
-let uploadedImages = []; // array of base64 strings
-
-function initUploadZone() {
-  const input = document.getElementById('imgFileInput');
-  const zone  = document.getElementById('uploadZone');
-
-  // drag over styling
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault(); zone.classList.remove('drag');
-    handleFiles(e.dataTransfer.files);
-  });
-
-  input.addEventListener('change', () => handleFiles(input.files));
-}
-initUploadZone();
-
-async function handleFiles(fileList) {
-  const MAX = 8;
-  const MAX_BYTES = 900 * 1024; // 900KB per image (Firestore doc limit ~1MB)
-  const files = [...fileList].filter(f => f.type.startsWith('image/'));
-  const slots = MAX - uploadedImages.length;
-  if (slots <= 0) { toast('Maximum 8 images reached', false); return; }
-
-  const toProcess = files.slice(0, slots);
-  let skipped = false;
-
-  document.getElementById('imgProgress').style.display = 'block';
-
-  for (const file of toProcess) {
-    if (file.size > MAX_BYTES) { skipped = true; continue; }
-    const b64 = await fileToBase64(file);
-    // Compress if needed
-    const compressed = await compressImage(b64, file.type, 800);
-    uploadedImages.push(compressed);
-  }
-
-  document.getElementById('imgProgress').style.display = 'none';
-  document.getElementById('sizeWarning').style.display = skipped ? 'block' : 'none';
+function addImageUrl() {
+  const input = document.getElementById('urlInput');
+  const url = input.value.trim();
+  if (!url) { showToast('Please enter an image URL', false); return; }
+  if (!url.match(/^https?:\/\/.+/i)) { showToast('URL must start with http:// or https://', false); return; }
+  if (imageUrls.length >= 8) { showToast('Maximum 8 images reached', false); return; }
+  if (imageUrls.includes(url)) { showToast('This URL is already added', false); return; }
+  imageUrls.push(url);
+  input.value = '';
   renderPreviews();
-  // reset input so same file can be re-selected
-  document.getElementById('imgFileInput').value = '';
-}
-
-function fileToBase64(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
-}
-
-function compressImage(dataUrl, mimeType, maxDim) {
-  return new Promise(res => {
-    const img = new Image();
-    img.onload = () => {
-      let { width: w, height: h } = img;
-      if (w > maxDim || h > maxDim) {
-        if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
-        else { w = Math.round(w * maxDim / h); h = maxDim; }
-      }
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      res(canvas.toDataURL('image/jpeg', 0.82));
-    };
-    img.src = dataUrl;
-  });
 }
 
 function renderPreviews() {
   const grid = document.getElementById('imgPreviewGrid');
-  grid.innerHTML = '';
-  uploadedImages.forEach((b64, i) => {
-    const div = document.createElement('div');
-    div.className = `img-preview-item ${i === 0 ? 'primary' : ''}`;
-    div.innerHTML = `
-      <img src="${b64}" alt="Preview ${i+1}">
-      ${i === 0 ? '<span class="primary-tag">Main</span>' : ''}
-      <button class="rm-img" onclick="removeUploadedImg(${i})"><i class="fas fa-times"></i></button>`;
-    grid.appendChild(div);
+  if (!imageUrls.length) {
+    grid.innerHTML = `<div class="img-no-items"><i class="fas fa-images" style="display:block;font-size:1.4rem;margin-bottom:0.4rem;color:var(--light)"></i>No images yet — add a URL above</div>`;
+    return;
+  }
+  grid.innerHTML = imageUrls.map((url, i) => `
+    <div class="img-preview-item ${i===0?'primary':''}">
+      <img src="${escHtml(url)}" alt="Image ${i+1}" loading="lazy"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-error" style="display:none">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Can't load image</span>
+      </div>
+      ${i===0?'<span class="primary-tag">Main</span>':''}
+      <button class="rm-img" data-idx="${i}"><i class="fas fa-times"></i></button>
+    </div>`).join('');
+
+  grid.querySelectorAll('.rm-img').forEach(btn => {
+    btn.addEventListener('click', () => {
+      imageUrls.splice(Number(btn.dataset.idx), 1);
+      renderPreviews();
+    });
   });
 }
 
-window.removeUploadedImg = i => {
-  uploadedImages.splice(i, 1);
-  renderPreviews();
-};
-
 // ── FORM
-window.openForm = (product = null) => {
+document.getElementById('addProductBtn').addEventListener('click', () => openForm());
+document.getElementById('formCloseBtn').addEventListener('click', closeForm);
+document.getElementById('cancelBtn').addEventListener('click', closeForm);
+document.getElementById('saveBtn').addEventListener('click', saveProduct);
+
+function openForm(product = null) {
   editingId = product ? product.id : null;
-  uploadedImages = [];
+  imageUrls = [];
   const isEdit = !!product;
+
   document.getElementById('formTitle').innerHTML = isEdit ? 'Edit <em>Product</em>' : 'Add New <em>Product</em>';
   document.getElementById('formSubtitle').textContent = isEdit ? 'Update product details' : 'Fill in all product details';
   document.getElementById('saveBtn').innerHTML = isEdit ? '<i class="fas fa-save"></i> Update Product' : '<i class="fas fa-save"></i> Save Product';
 
-  document.getElementById('fName').value = product?.name || '';
-  document.getElementById('fPrice').value = product?.price || '';
-  document.getElementById('fCat').value = product?.category || '';
-  document.getElementById('fBadge').value = product?.badge || '';
-  document.getElementById('fDesc').value = product?.description || '';
+  document.getElementById('fName').value    = product?.name        || '';
+  document.getElementById('fPrice').value   = product?.price       || '';
+  document.getElementById('fCat').value     = product?.category    || '';
+  document.getElementById('fBadge').value   = product?.badge       || '';
+  document.getElementById('fDesc').value    = product?.description || '';
+  document.getElementById('urlInput').value = '';
 
   document.querySelectorAll('.sizeCheck').forEach(cb => {
     cb.checked = product?.sizes ? product.sizes.includes(cb.value) : false;
   });
 
-  // Load existing images into preview
-  const existingImgs = product?.images || (product?.image ? [product.image] : []);
-  uploadedImages = [...existingImgs];
+  // Load existing image URLs
+  imageUrls = [...((product?.images || (product?.image ? [product.image] : [])))];
   renderPreviews();
-  document.getElementById('sizeWarning').style.display = 'none';
-  document.getElementById('imgProgress').style.display = 'none';
 
   document.getElementById('formOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-};
+}
 
-window.editProduct = id => {
+function editProduct(id) {
   const p = allProducts.find(x => x.id === id);
   if (p) openForm(p);
-};
+}
 
-window.closeForm = () => {
+function closeForm() {
   document.getElementById('formOverlay').classList.remove('open');
   document.body.style.overflow = '';
   editingId = null;
-  uploadedImages = [];
-};
+  imageUrls = [];
+}
 
-window.saveProduct = async () => {
+async function saveProduct() {
   const name  = document.getElementById('fName').value.trim();
   const price = document.getElementById('fPrice').value;
-  if (!name || !price) { toast('Name and price are required', false); return; }
-  if (!uploadedImages.length) { toast('Please upload at least one image', false); return; }
+  if (!name || !price) { showToast('Name and price are required', false); return; }
+  if (!imageUrls.length) { showToast('Please add at least one image URL', false); return; }
 
   const sizes = [...document.querySelectorAll('.sizeCheck:checked')].map(c => c.value);
-
   const data = {
     name,
     price: Number(price),
-    category: document.getElementById('fCat').value.trim(),
-    badge: document.getElementById('fBadge').value,
+    category:    document.getElementById('fCat').value.trim(),
+    badge:       document.getElementById('fBadge').value,
     description: document.getElementById('fDesc').value.trim(),
-    images: uploadedImages,          // array of base64 strings
-    image: uploadedImages[0] || '',  // convenience field for first image
+    images: imageUrls,
+    image:  imageUrls[0] || '',
     sizes,
     updatedAt: serverTimestamp()
   };
@@ -1011,58 +1034,56 @@ window.saveProduct = async () => {
   try {
     if (editingId) {
       await updateDoc(doc(db, 'products', editingId), data);
-      toast('Product updated successfully');
+      showToast('Product updated successfully');
     } else {
       data.createdAt = serverTimestamp();
       await addDoc(collection(db, 'products'), data);
-      toast('Product added successfully');
+      showToast('Product added successfully');
     }
     closeForm();
     await loadProducts();
   } catch(e) {
-    // Firestore document size exceeded
-    if (e.message.includes('exceeds') || e.message.includes('size') || e.code === 'invalid-argument') {
-      toast('Images too large for Firestore. Try fewer or smaller images.', false);
-    } else {
-      toast('Error: ' + e.message, false);
-    }
+    showToast('Error: ' + e.message, false);
   } finally {
     btn.innerHTML = '<i class="fas fa-save"></i> Save Product';
     btn.disabled = false;
   }
-};
+}
 
 // ── DELETE
 let pendingDeleteId = null;
-window.askDelete = (id, name) => {
+function askDelete(id, name) {
   pendingDeleteId = id;
   document.getElementById('confirmName').textContent = name;
   document.getElementById('confirmOverlay').classList.add('open');
-  document.getElementById('confirmDelBtn').onclick = confirmDelete;
-};
-window.closeConfirm = () => {
+}
+document.getElementById('confirmCancelBtn').addEventListener('click', closeConfirm);
+function closeConfirm() {
   document.getElementById('confirmOverlay').classList.remove('open');
   pendingDeleteId = null;
-};
-async function confirmDelete() {
+}
+document.getElementById('confirmDelBtn').addEventListener('click', async () => {
   if (!pendingDeleteId) return;
   document.getElementById('confirmDelBtn').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
   try {
     await deleteDoc(doc(db, 'products', pendingDeleteId));
-    toast('Product deleted');
+    showToast('Product deleted');
     closeConfirm();
     await loadProducts();
   } catch(e) {
-    toast('Error: ' + e.message, false);
+    showToast('Error: ' + e.message, false);
+  } finally {
+    document.getElementById('confirmDelBtn').innerHTML = 'Delete';
   }
-}
+});
 
 // ── TOAST
-function toast(msg, ok = true) {
+function showToast(msg, ok = true) {
   const t = document.getElementById('toast');
   document.getElementById('toastMsg').textContent = msg;
-  document.getElementById('toastIcon').className = ok ? 'fas fa-check-circle' : 'fas fa-times-circle';
-  document.getElementById('toastIcon').style.color = ok ? 'var(--gold)' : '#e74c3c';
+  const icon = document.getElementById('toastIcon');
+  icon.className = ok ? 'fas fa-check-circle' : 'fas fa-times-circle';
+  icon.style.color = ok ? 'var(--gold)' : '#e74c3c';
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3500);
 }
