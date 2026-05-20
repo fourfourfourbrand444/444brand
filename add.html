@@ -1,75 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>444 Brand Admin</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>444 Brand Admin Panel</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
 <style>
+
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
+font-family:Arial, sans-serif;
 }
 
 body{
-background:#0d0d0d;
+background:#0f0f0f;
 color:white;
-padding:30px;
+padding:25px;
 }
 
 h1{
-margin-bottom:25px;
 font-size:32px;
+margin-bottom:25px;
+}
+
+.stats{
+display:flex;
+gap:15px;
+margin-bottom:25px;
+flex-wrap:wrap;
+}
+
+.stat-card{
+background:#171717;
+padding:20px;
+border-radius:18px;
+flex:1;
+min-width:200px;
+border:1px solid #262626;
+}
+
+.stat-card h2{
+font-size:28px;
+margin-top:10px;
 }
 
 .orders-grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
 gap:20px;
 }
 
 .order-card{
 background:#171717;
-border:1px solid #2a2a2a;
-border-radius:18px;
+border-radius:20px;
 padding:20px;
+border:1px solid #2a2a2a;
 }
 
-.order-top{
+.order-head{
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:15px;
+margin-bottom:20px;
 }
 
 .order-ref{
 font-size:14px;
-opacity:.7;
+opacity:.6;
 }
 
 .status{
 padding:8px 14px;
 border-radius:999px;
-font-size:13px;
+font-size:12px;
 font-weight:bold;
 }
 
 .pending{
-background:#2b2100;
+background:#332600;
 color:#ffcc00;
 }
 
 .paid{
-background:#0d2b16;
+background:#062d1d;
 color:#00ff88;
 }
 
 .customer{
-margin-bottom:15px;
+margin-bottom:20px;
 line-height:1.7;
 font-size:14px;
 }
@@ -81,14 +103,14 @@ margin-bottom:20px;
 .item{
 display:flex;
 justify-content:space-between;
-margin-bottom:10px;
-font-size:14px;
-padding-bottom:10px;
+gap:10px;
+padding:12px 0;
 border-bottom:1px solid #2a2a2a;
+font-size:14px;
 }
 
 .total{
-font-size:20px;
+font-size:22px;
 font-weight:bold;
 margin-bottom:20px;
 }
@@ -101,7 +123,7 @@ flex-wrap:wrap;
 
 button{
 border:none;
-padding:12px 16px;
+padding:12px 15px;
 border-radius:12px;
 cursor:pointer;
 font-weight:bold;
@@ -122,24 +144,67 @@ background:#ff3b30;
 color:white;
 }
 
-.loading{
-text-align:center;
-padding:60px;
-font-size:20px;
-opacity:.7;
-}
-
+.loading,
 .empty{
 text-align:center;
-padding:60px;
-opacity:.6;
+padding:70px;
+opacity:.7;
+font-size:20px;
 }
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.search{
+background:#171717;
+border:1px solid #2a2a2a;
+padding:14px 18px;
+border-radius:14px;
+color:white;
+width:320px;
+outline:none;
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>444 Brand Admin Panel</h1>
+<div class="topbar">
+<h1>444 Brand Admin</h1>
+
+<input
+type="text"
+class="search"
+id="searchInput"
+placeholder="Search orders..."
+>
+</div>
+
+<div class="stats">
+
+<div class="stat-card">
+<div>Total Orders</div>
+<h2 id="totalOrders">0</h2>
+</div>
+
+<div class="stat-card">
+<div>Paid Orders</div>
+<h2 id="paidOrders">0</h2>
+</div>
+
+<div class="stat-card">
+<div>Pending Orders</div>
+<h2 id="pendingOrders">0</h2>
+</div>
+
+</div>
 
 <div id="ordersContainer" class="loading">
 Loading orders...
@@ -155,12 +220,10 @@ collection,
 onSnapshot,
 doc,
 updateDoc,
-deleteDoc,
-query,
-orderBy
+deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* FIREBASE CONFIG */
+/* FIREBASE */
 
 const firebaseConfig = {
 apiKey: "AIzaSyDE1KZtXElz9q6JsU65voYRfXuGNg6pDVE",
@@ -172,38 +235,65 @@ appId: "1:473062980138:web:1f6046bcc824589372e153",
 };
 
 const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const db = getFirestore(app);
 
 const container = document.getElementById("ordersContainer");
 
-/* LOAD ORDERS */
+let allOrders = [];
 
-const q = query(
-collection(db,"orders"),
-orderBy("createdAt","desc")
-);
+/* REALTIME ORDERS */
 
-onSnapshot(q,(snap)=>{
+onSnapshot(collection(db,"orders"), (snap)=>{
 
-const orders = snap.docs.map(d=>({
-id:d.id,
-...d.data()
+allOrders = snap.docs.map(doc=>({
+id:doc.id,
+...doc.data()
 }));
 
-renderOrders(orders);
-
+allOrders.sort((a,b)=>{
+return (b.createdAt?.seconds || 0)
+- (a.createdAt?.seconds || 0);
 });
+
+renderOrders(allOrders);
+updateStats();
+
+}, (err)=>{
+console.error(err);
+
+container.innerHTML = `
+<div class="empty">
+Failed to load orders
+</div>
+`;
+});
+
+/* STATS */
+
+function updateStats(){
+
+document.getElementById("totalOrders").textContent =
+allOrders.length;
+
+document.getElementById("paidOrders").textContent =
+allOrders.filter(o=>o.paymentStatus==="paid").length;
+
+document.getElementById("pendingOrders").textContent =
+allOrders.filter(o=>o.paymentStatus!=="paid").length;
+
+}
 
 /* RENDER */
 
 function renderOrders(orders){
 
 if(!orders.length){
+container.className = "empty";
+
 container.innerHTML = `
-<div class="empty">
 No orders found
-</div>
 `;
+
 return;
 }
 
@@ -211,13 +301,14 @@ container.className = "orders-grid";
 
 container.innerHTML = orders.map(order=>{
 
-const paid = order.paymentStatus === "paid";
+const paid =
+(order.paymentStatus || "").toLowerCase() === "paid";
 
 return `
 
 <div class="order-card">
 
-<div class="order-top">
+<div class="order-head">
 
 <div>
 <div class="order-ref">Order Ref</div>
@@ -231,10 +322,15 @@ ${paid ? 'PAID':'PENDING'}
 </div>
 
 <div class="customer">
+
 <div><strong>${order.customerName || 'No name'}</strong></div>
+
 <div>${order.email || ''}</div>
+
 <div>${order.phone || ''}</div>
+
 <div>${order.address || ''}</div>
+
 </div>
 
 <div class="items">
@@ -242,19 +338,23 @@ ${paid ? 'PAID':'PENDING'}
 ${(order.items || []).map(item=>`
 
 <div class="item">
+
 <div>
 ${item.name}
 <br>
+
 <small>
-${item.size || ''} 
-${item.colorLabel ? '· '+item.colorLabel : ''}
+${item.size || ''}
+${item.colorLabel ? ' · '+item.colorLabel : ''}
 ×${item.qty}
 </small>
+
 </div>
 
 <div>
 GH₵ ${(item.lineTotal || 0).toLocaleString()}
 </div>
+
 </div>
 
 `).join('')}
@@ -267,17 +367,20 @@ GH₵ ${(order.totalAmount || 0).toLocaleString()}
 
 <div class="actions">
 
-<button class="btn-paid"
+<button
+class="btn-paid"
 onclick="markPaid('${order.id}')">
 Mark Paid
 </button>
 
-<button class="btn-pending"
+<button
+class="btn-pending"
 onclick="markPending('${order.id}')">
-Mark Pending
+Pending
 </button>
 
-<button class="btn-delete"
+<button
+class="btn-delete"
 onclick="deleteOrder('${order.id}')">
 Delete
 </button>
@@ -296,6 +399,8 @@ Delete
 
 window.markPaid = async(id)=>{
 
+try{
+
 await updateDoc(doc(db,"orders",id),{
 paymentStatus:"paid",
 adminLocked:true,
@@ -304,9 +409,16 @@ updatedAt:new Date()
 
 alert("Order marked as PAID");
 
+}catch(err){
+console.error(err);
+alert("Failed");
+}
+
 };
 
 window.markPending = async(id)=>{
+
+try{
 
 await updateDoc(doc(db,"orders",id),{
 paymentStatus:"pending",
@@ -316,21 +428,68 @@ updatedAt:new Date()
 
 alert("Order marked as PENDING");
 
+}catch(err){
+console.error(err);
+alert("Failed");
+}
+
 };
 
 window.deleteOrder = async(id)=>{
 
-const confirmDelete = confirm(
-"Delete this order?"
-);
+const confirmDelete =
+confirm("Delete this order?");
 
 if(!confirmDelete) return;
+
+try{
 
 await deleteDoc(doc(db,"orders",id));
 
 alert("Order deleted");
 
+}catch(err){
+console.error(err);
+alert("Delete failed");
+}
+
 };
+
+/* SEARCH */
+
+document
+.getElementById("searchInput")
+.addEventListener("input",(e)=>{
+
+const val =
+e.target.value.toLowerCase();
+
+const filtered =
+allOrders.filter(order=>{
+
+return (
+(order.customerName || '')
+.toLowerCase()
+.includes(val)
+
+||
+
+(order.email || '')
+.toLowerCase()
+.includes(val)
+
+||
+
+(order.paystackRef || '')
+.toLowerCase()
+.includes(val)
+);
+
+});
+
+renderOrders(filtered);
+
+});
 
 </script>
 
