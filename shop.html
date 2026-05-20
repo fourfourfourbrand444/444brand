@@ -131,6 +131,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .size-grid{display:flex;gap:0.45rem;flex-wrap:wrap;margin-bottom:1.6rem}
 .size-btn{width:46px;height:46px;border:1px solid var(--light-gray);background:transparent;font-family:var(--font-body);font-size:0.65rem;font-weight:600;letter-spacing:0.06em;cursor:pointer;transition:var(--transition);color:var(--dark-gray)}
 .size-btn:hover,.size-btn.sel{background:var(--black);color:var(--white);border-color:var(--black)}
+
+/* ── COLOR SECTION ── */
 .color-section{margin-bottom:1.6rem}
 .color-grid{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.6rem}
 .color-swatch{position:relative;width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.25s ease;box-shadow:0 1px 4px rgba(0,0,0,0.15);outline:none}
@@ -138,7 +140,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .color-swatch.sel{border-color:var(--black) !important;transform:scale(1.15);box-shadow:0 0 0 3px rgba(8,8,8,0.15)}
 .color-swatch.light-swatch{border-color:var(--light-gray) !important}
 .color-swatch.sel.light-swatch{border-color:var(--black) !important}
-.color-selected-label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-gray);margin-top:0.5rem;font-weight:500}
+/* Single-color display (read-only chip) */
+.color-single-display{display:flex;align-items:center;gap:0.7rem;margin-top:0.6rem;padding:0.6rem 0.85rem;background:var(--cream);border:1px solid var(--light-gray)}
+.color-single-dot{width:20px;height:20px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
+.color-single-label{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-gray)}
+/* Selected label under swatches */
+.color-selected-label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-gray);margin-top:0.5rem;font-weight:600;min-height:1em}
+/* Hint text when no color selected yet */
+.color-hint{font-size:0.58rem;letter-spacing:0.08em;color:var(--mid-gray);margin-top:0.4rem;font-style:italic}
+
 .modal-actions{display:flex;gap:0.6rem;margin-top:auto}
 .btn-add{flex:1;padding:0.95rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.6rem}
 .btn-add:hover{background:var(--gold);color:var(--black)}
@@ -163,15 +173,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .cart-item.is-paid{border-left:3px solid var(--green);padding-left:0.8rem;background:linear-gradient(to right,rgba(230,244,237,0.4),transparent 40%)}
 .cart-item img{width:74px;aspect-ratio:3/4;object-fit:cover;object-position:top center;background:var(--cream)}
 .cart-item-name{font-family:var(--font-display);font-size:0.95rem;font-weight:500;margin-bottom:0.2rem}
-
-/* ── FIX: cart-item-meta now uses flex to keep color chip inline-aligned ── */
 .cart-item-meta{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;line-height:1.6}
 .cart-color-dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
-/* ── FIX: color name label in cart meta ── */
 .cart-color-name{font-weight:600;color:var(--dark-gray);letter-spacing:0.06em;text-transform:uppercase;font-size:0.57rem}
-/* ── FIX: color pill chip — shows dot + name in a subtle pill ── */
 .cart-color-chip{display:inline-flex;align-items:center;gap:4px;background:var(--cream);border:1px solid var(--light-gray);padding:1px 6px 1px 3px;border-radius:2px;vertical-align:middle}
-
 .cart-item-price{font-size:0.82rem;font-weight:700;margin-bottom:0.35rem}
 .cart-paid-badge{display:inline-flex;align-items:center;gap:0.35rem;background:var(--green-light);color:var(--green);font-size:0.52rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid rgba(26,110,60,0.3);border-radius:2px}
 .cart-paid-badge i{font-size:0.6rem}
@@ -440,13 +445,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
       <p class="modal-price"><span class="cur">GH₵</span><span id="mPrice">—</span></p>
       <p class="in-stock-badge">In Stock</p>
       <p class="modal-desc" id="mDesc"></p>
+
+      <!-- SIZE -->
       <p class="modal-label">Select Size</p>
       <div class="size-grid" id="sizeGrid"></div>
+
+      <!-- COLOR SECTION — always rendered, visibility controlled by JS -->
       <div class="color-section" id="colorSection" style="display:none">
-        <p class="modal-label">Select Color</p>
+        <p class="modal-label" id="colorSectionLabel">Select Color</p>
+        <!-- multi-color swatches -->
         <div class="color-grid" id="colorGrid"></div>
+        <!-- single-color display chip -->
+        <div class="color-single-display" id="colorSingleDisplay" style="display:none">
+          <span class="color-single-dot" id="colorSingleDot"></span>
+          <span class="color-single-label" id="colorSingleLabelText"></span>
+        </div>
+        <!-- selected label (shown after choosing a swatch) -->
         <p class="color-selected-label" id="colorSelectedLabel"></p>
+        <!-- hint when multiple colors but none picked yet -->
+        <p class="color-hint" id="colorHint" style="display:none">Please choose a color above</p>
       </div>
+
       <div class="modal-actions">
         <button class="btn-add" onclick="addToCart()"><i class="fas fa-shopping-bag"></i> Add to Cart</button>
         <button class="btn-wish"><i class="far fa-heart"></i></button>
@@ -657,8 +676,9 @@ let allProducts    = [];
 let currentProduct = null;
 let selectedSize   = null;
 let selectedColor  = null;
-let cart           = JSON.parse(localStorage.getItem('444cart') || '[]');
-let orderHistory   = JSON.parse(localStorage.getItem('444orders') || '[]');
+
+let cart         = JSON.parse(localStorage.getItem('444cart')   || '[]');
+let orderHistory = JSON.parse(localStorage.getItem('444orders') || '[]');
 
 // ── HERO SLIDER ──────────────────────────────────────────────
 let ci = 0;
@@ -752,17 +772,27 @@ function renderProducts(list) {
   });
 }
 
-// ── PRODUCT MODAL ────────────────────────────────────────────
+// ── PRODUCT MODAL ─────────────────────────────────────────────
+// FIX: Color section always visible when product has colors.
+// - 0 colors  → hidden (no color concept)
+// - 1 color   → shown as a read-only chip (user sees what color they're getting)
+// - 2+ colors → shown as interactive swatches (user must pick)
 window.openModal = p => {
-  currentProduct = p; selectedSize = null; selectedColor = null;
-  const imgs = (p.images&&p.images.length) ? p.images
-    : [p.image||'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&q=80'];
-  document.getElementById('mainImg').src  = imgs[0];
-  document.getElementById('mainImg').alt  = p.name;
-  document.getElementById('mTag').textContent   = p.category || 'New Drop';
-  document.getElementById('mName').textContent  = p.name;
-  document.getElementById('mPrice').textContent = Number(p.price).toLocaleString();
-  document.getElementById('mDesc').textContent  = p.description || 'Premium quality luxury streetwear.';
+  currentProduct = p;
+  selectedSize   = null;
+  selectedColor  = null;
+
+  const imgs = (p.images && p.images.length) ? p.images
+    : [p.image || 'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&q=80'];
+
+  document.getElementById('mainImg').src          = imgs[0];
+  document.getElementById('mainImg').alt          = p.name;
+  document.getElementById('mTag').textContent     = p.category || 'New Drop';
+  document.getElementById('mName').textContent    = p.name;
+  document.getElementById('mPrice').textContent   = Number(p.price).toLocaleString();
+  document.getElementById('mDesc').textContent    = p.description || 'Premium quality luxury streetwear.';
+
+  // Thumbs
   const thumbRow = document.getElementById('thumbRow');
   thumbRow.innerHTML = '';
   imgs.forEach((src, i) => {
@@ -776,70 +806,139 @@ window.openModal = p => {
     };
     thumbRow.appendChild(div);
   });
+
+  // Sizes
   const sg    = document.getElementById('sizeGrid');
-  const sizes = (p.sizes&&p.sizes.length) ? p.sizes : ['S','M','L','XL','2XL'];
+  const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['S','M','L','XL','2XL'];
   sg.innerHTML = sizes.map(s => `<button class="size-btn" onclick="selSize(this)">${s}</button>`).join('');
-  const colors  = Array.isArray(p.colors) ? p.colors : [];
-  const colorSection = document.getElementById('colorSection');
-  const colorGrid    = document.getElementById('colorGrid');
-  const colorLabel   = document.getElementById('colorSelectedLabel');
-  colorGrid.innerHTML = ''; colorLabel.textContent = '';
+
+  // ── COLOR SECTION ──────────────────────────────────────────
+  const colors            = Array.isArray(p.colors) ? p.colors : [];
+  const colorSection      = document.getElementById('colorSection');
+  const colorGrid         = document.getElementById('colorGrid');
+  const colorSingleDisp   = document.getElementById('colorSingleDisplay');
+  const colorSingleDot    = document.getElementById('colorSingleDot');
+  const colorSingleLbl    = document.getElementById('colorSingleLabelText');
+  const colorSelectedLbl  = document.getElementById('colorSelectedLabel');
+  const colorHint         = document.getElementById('colorHint');
+  const colorSectionLabel = document.getElementById('colorSectionLabel');
+
+  // Reset
+  colorGrid.innerHTML       = '';
+  colorSelectedLbl.textContent = '';
+  colorSingleDisp.style.display = 'none';
+  colorGrid.style.display       = 'flex';
+  colorHint.style.display       = 'none';
+
   if (colors.length === 0) {
-    colorSection.style.display = 'none'; selectedColor = null;
+    // No colors — hide entire section, no color to select
+    colorSection.style.display = 'none';
+    selectedColor = null;
+
   } else if (colors.length === 1) {
-    colorSection.style.display = 'none'; selectedColor = colors[0];
+    // Exactly one color — show as info chip, auto-select it
+    colorSection.style.display    = 'block';
+    colorSectionLabel.textContent = 'Color';
+    colorGrid.style.display       = 'none';
+    colorSingleDisp.style.display = 'flex';
+    colorSingleDot.style.background = colors[0].hex;
+    colorSingleLbl.textContent    = colors[0].label || colors[0].hex;
+    selectedColor = colors[0]; // auto-selected — no user action needed
+
   } else {
-    colorSection.style.display = 'block';
+    // Multiple colors — show swatches, user must pick
+    colorSection.style.display    = 'block';
+    colorSectionLabel.textContent = 'Select Color';
+    colorGrid.style.display       = 'flex';
+    colorSingleDisp.style.display = 'none';
+    colorHint.style.display       = 'block';
+
     colors.forEach(c => {
       const btn = document.createElement('button');
       btn.className = 'color-swatch';
       if (isLightColor(c.hex)) btn.classList.add('light-swatch');
-      btn.style.background = c.hex; btn.title = c.label;
-      btn.setAttribute('aria-label', c.label);
+      btn.style.background = c.hex;
+      btn.title            = c.label || c.hex;
+      btn.setAttribute('aria-label', c.label || c.hex);
       btn.onclick = () => {
         document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('sel'));
-        btn.classList.add('sel'); selectedColor = c; colorLabel.textContent = c.label;
+        btn.classList.add('sel');
+        selectedColor = c;
+        colorSelectedLbl.textContent = c.label || c.hex;
+        colorHint.style.display      = 'none';
       };
       colorGrid.appendChild(btn);
     });
   }
+
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 };
 
 function isLightColor(hex) {
-  const c = hex.replace('#','');
+  const c = (hex || '').replace('#','');
+  if (c.length < 6) return false;
   const r = parseInt(c.substr(0,2),16), g = parseInt(c.substr(2,2),16), b = parseInt(c.substr(4,2),16);
   return (r*299 + g*587 + b*114) / 1000 > 180;
 }
 
 window.selSize = btn => {
   document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel'); selectedSize = btn.textContent;
+  btn.classList.add('sel');
+  selectedSize = btn.textContent;
 };
+
 document.getElementById('modalClose').onclick = closeModal;
-document.getElementById('modal').onclick = e => { if(e.target===document.getElementById('modal')) closeModal(); };
-function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('modal').onclick = e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+};
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
 
 // ── CART LOGIC ───────────────────────────────────────────────
 window.addToCart = () => {
   if (!currentProduct) return;
   if (!selectedSize) { showToast('Please select a size', false); return; }
+
   const colors = Array.isArray(currentProduct.colors) ? currentProduct.colors : [];
-  if (colors.length >= 2 && !selectedColor) { showToast('Please select a color', false); return; }
-  const img      = (currentProduct.images&&currentProduct.images[0]) || currentProduct.image || '';
+  // Require color selection only when there are 2+ colors
+  if (colors.length >= 2 && !selectedColor) {
+    showToast('Please select a color', false);
+    // Highlight the hint
+    const hint = document.getElementById('colorHint');
+    if (hint) { hint.style.color = 'var(--red)'; setTimeout(() => hint.style.color = '', 2000); }
+    return;
+  }
+
+  const img      = (currentProduct.images && currentProduct.images[0]) || currentProduct.image || '';
   const colorKey = selectedColor ? selectedColor.hex : null;
-  const existing = cart.find(i => i.id===currentProduct.id && i.size===selectedSize && i.colorHex===colorKey);
-  if (existing) existing.qty++;
-  else cart.push({
-    id: currentProduct.id, name: currentProduct.name, price: Number(currentProduct.price),
-    size: selectedSize,
-    colorHex:   selectedColor ? selectedColor.hex   : null,
-    colorLabel: selectedColor ? (selectedColor.label || selectedColor.hex || '') : null,
-    qty: 1, img, paid: false
-  });
-  saveCart(); closeModal();
-  const colorText = selectedColor ? ` in ${selectedColor.label || selectedColor.hex}` : '';
+  const existing = cart.find(i =>
+    i.id === currentProduct.id &&
+    i.size === selectedSize &&
+    i.colorHex === colorKey
+  );
+
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({
+      id:         currentProduct.id,
+      name:       currentProduct.name,
+      price:      Number(currentProduct.price),
+      size:       selectedSize,
+      colorHex:   selectedColor ? selectedColor.hex   : null,
+      colorLabel: selectedColor ? (selectedColor.label || selectedColor.hex || '') : null,
+      qty:        1,
+      img,
+      paid:       false
+    });
+  }
+
+  saveCart();
+  closeModal();
+  const colorText = selectedColor ? ` · ${selectedColor.label || selectedColor.hex}` : '';
   showToast(`${currentProduct.name}${colorText} added to bag`);
   openCart();
 };
@@ -860,24 +959,25 @@ function saveCart() {
   updateOrdersBadge();
 }
 
-// ── FIX: renderCart — color now shown as a pill chip with dot + name ──────────
 function renderCart() {
-  const body       = document.getElementById('cartBody');
-  const unpaid     = cart.filter(i=>!i.paid);
-  const paid       = cart.filter(i=>i.paid);
-  const subtotal   = calcSubtotal();
-  const delivery   = calcDelivery(subtotal);
-  const total      = subtotal + delivery;
-  const summaryEl  = document.getElementById('cartSummary');
-  const checkoutBtn= document.getElementById('proceedCheckoutBtn');
+  const body        = document.getElementById('cartBody');
+  const unpaid      = cart.filter(i=>!i.paid);
+  const paid        = cart.filter(i=>i.paid);
+  const subtotal    = calcSubtotal();
+  const delivery    = calcDelivery(subtotal);
+  const total       = subtotal + delivery;
+  const summaryEl   = document.getElementById('cartSummary');
+  const checkoutBtn = document.getElementById('proceedCheckoutBtn');
 
   if (unpaid.length > 0) {
-    summaryEl.style.display = 'block'; checkoutBtn.disabled = false;
+    summaryEl.style.display  = 'block';
+    checkoutBtn.disabled     = false;
     document.getElementById('summarySubtotal').textContent = `GH₵ ${subtotal.toLocaleString()}`;
     document.getElementById('summaryDelivery').textContent = delivery===0?(subtotal>=FREE_DELIVERY_ABOVE?'Free':'GH₵ 0'):`GH₵ ${delivery.toLocaleString()}`;
     document.getElementById('summaryTotal').textContent    = `GH₵ ${total.toLocaleString()}`;
   } else {
-    summaryEl.style.display = 'none'; checkoutBtn.disabled = true;
+    summaryEl.style.display = 'none';
+    checkoutBtn.disabled    = true;
   }
 
   if (!cart.length) {
@@ -886,10 +986,9 @@ function renderCart() {
   }
 
   const allItems = [...unpaid, ...paid];
-  body.innerHTML = allItems.map((item) => {
+  body.innerHTML = allItems.map(item => {
     const idx = cart.indexOf(item);
 
-    // ── FIX: build color chip — dot + label inside a subtle pill ──
     const resolvedColorLabel = item.colorLabel || (item.colorHex ? item.colorHex : '');
     const colorChipHtml = item.colorHex
       ? `<span class="cart-color-chip">
@@ -898,7 +997,6 @@ function renderCart() {
          </span>`
       : '';
 
-    // Build meta line: "Size · Color chip · Qty"
     const metaParts = [
       `Size: <strong style="color:var(--dark-gray);font-weight:700">${item.size}</strong>`,
       colorChipHtml ? `Color: ${colorChipHtml}` : '',
@@ -968,7 +1066,7 @@ function renderOrdersDrawer() {
   const sorted = [...orderHistory].reverse();
   body.innerHTML = sorted.map(order => {
     const itemsHtml = order.items.map(i => {
-      const colorDot = i.colorHex
+      const colorDot  = i.colorHex
         ? `<span class="order-color-dot" style="background:${i.colorHex}" title="${i.colorLabel||''}"></span>`
         : '';
       const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
@@ -1016,7 +1114,6 @@ window.openCheckoutPanel = () => {
   const delivery = calcDelivery(subtotal);
   const total    = subtotal + delivery;
 
-  // ── FIX: checkout order strip also shows color dot + label ──
   document.getElementById('checkoutOrderItems').innerHTML = unpaid.map(i => {
     const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
     const colorDot  = i.colorHex
@@ -1219,19 +1316,23 @@ async function sendAdminEmail(form, cart, paystackRef, total) {
     return `• ${i.name} (Size: ${i.size}${colorText}) ×${i.qty} = GH₵${(i.price*i.qty).toLocaleString()}`;
   }).join('\n');
   return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-    to_email: ADMIN_EMAIL, order_ref: paystackRef,
-    customer_name: form.name, customer_email: form.email, customer_phone: form.phone,
+    to_email:         ADMIN_EMAIL,
+    order_ref:        paystackRef,
+    customer_name:    form.name,
+    customer_email:   form.email,
+    customer_phone:   form.phone,
     delivery_address: `${form.address}, ${form.city}, ${form.country}`,
-    gps_location: form.gpsLocation||'N/A', order_notes: form.notes||'None',
-    items_list: itemsList,
-    subtotal: `GH₵ ${subtotal.toLocaleString()}`,
-    shipping_fee: `GH₵ ${shipping.toLocaleString()}`,
-    total_amount: `GH₵ ${total.toLocaleString()}`,
-    payment_status: 'Paid',
-    order_date: new Date().toLocaleString('en-GB',{timeZone:'Africa/Accra'}),
-    brand: '444 Brand',
-    customer_city: form.city,
-    items_count: `${unpaid.length} item${unpaid.length!==1?'s':''}`,
+    gps_location:     form.gpsLocation||'N/A',
+    order_notes:      form.notes||'None',
+    items_list:       itemsList,
+    subtotal:         `GH₵ ${subtotal.toLocaleString()}`,
+    shipping_fee:     `GH₵ ${shipping.toLocaleString()}`,
+    total_amount:     `GH₵ ${total.toLocaleString()}`,
+    payment_status:   'Paid',
+    order_date:       new Date().toLocaleString('en-GB',{timeZone:'Africa/Accra'}),
+    brand:            '444 Brand',
+    customer_city:    form.city,
+    items_count:      `${unpaid.length} item${unpaid.length!==1?'s':''}`,
   }, EMAILJS_PUBLIC_KEY);
 }
 
