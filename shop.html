@@ -215,7 +215,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .order-head-right{display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;flex-shrink:0}
 .pill-paid{display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.9rem;font-size:0.52rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;border-radius:2px;background:var(--gold);color:var(--black);white-space:nowrap}
 .pill-locked{display:inline-flex;align-items:center;gap:0.35rem;padding:0.25rem 0.65rem;font-size:0.48rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;background:transparent;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;white-space:nowrap}
-.order-card-body{padding:1.1rem 1.4rem}
+.pill-pending{display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.9rem;font-size:0.52rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;border-radius:2px;background:rgba(255,165,0,0.18);color:#f5a623;border:1px solid rgba(245,166,35,0.4);white-space:nowrap}
+.pill-cancelled{display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.9rem;font-size:0.52rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;border-radius:2px;background:rgba(192,57,43,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.35);white-space:nowrap}
+.order-unpaid-banner{background:rgba(255,140,0,0.08);border-top:1px solid rgba(245,166,35,0.25);padding:0.75rem 1.4rem;display:flex;align-items:center;gap:0.8rem}
+.order-unpaid-banner i{color:#f5a623;font-size:0.85rem;flex-shrink:0}
+.order-unpaid-banner-text{display:flex;flex-direction:column;gap:0.15rem}
+.order-unpaid-banner span{font-size:0.55rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#f5a623}
+.order-unpaid-banner small{font-size:0.55rem;color:rgba(255,255,255,0.35);letter-spacing:0.06em;line-height:1.6}
+.order-cancelled-banner{background:rgba(192,57,43,0.08);border-top:1px solid rgba(231,76,60,0.2);padding:0.75rem 1.4rem;display:flex;align-items:center;gap:0.8rem}
+.order-cancelled-banner i{color:#e74c3c;font-size:0.85rem;flex-shrink:0}
+.order-cancelled-banner span{font-size:0.55rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#e74c3c}
+.order-card-head.paid-head{background:var(--black)}
+.order-card-head.pending-head{background:#1a1205}
+.order-card-head.cancelled-head{background:#180a09}.order-card-body{padding:1.1rem 1.4rem}
 .order-date-line{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
 .order-date-line i{color:var(--gold-dark)}
 .order-items-list{display:flex;flex-direction:column;gap:0;margin-bottom:1rem;border:1px solid var(--light-gray)}
@@ -943,7 +955,6 @@ document.getElementById('ordersEmailInput').addEventListener('keydown', e => { i
 window.lookupOrdersByEmail = async () => {
   const input  = document.getElementById('ordersEmailInput');
   const btn    = document.getElementById('ordersLookupBtn');
-  const status = document.getElementById('ordersLookupStatus');
   const email  = input.value.trim().toLowerCase();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     setLookupStatus('error','Please enter a valid email address'); return;
@@ -955,7 +966,10 @@ window.lookupOrdersByEmail = async () => {
     const orders = await fetchOrdersByEmail(email);
     renderOrders(orders);
     if (orders.length === 0) setLookupStatus('error','No orders found for this email');
-    else setLookupStatus('success',`Found ${orders.length} order${orders.length!==1?'s':''}`);
+    else {
+      const paidCount = orders.filter(o => o.paymentStatus === 'paid').length;
+      setLookupStatus('success', `Found ${orders.length} order${orders.length!==1?'s':''}${paidCount < orders.length ? ` · ${paidCount} paid` : ''}`);
+    }
   } catch(err) {
     console.error(err);
     setLookupStatus('error','Could not reach database. Check your connection and try again.');
@@ -971,20 +985,14 @@ function setLookupStatus(type, msg) {
   el.innerHTML = `<i class="fas ${icons[type]||''}"></i> ${msg}`;
 }
 
-/* ─────────────────────────────────────────────
-   THE CORE FIX: fetch orders directly from Firestore
-   Uses two strategies — with and without orderBy
-───────────────────────────────────────────── */
 async function fetchOrdersByEmail(email) {
   let docs = [];
-  // Strategy 1: with orderBy (needs composite index — created earlier)
   try {
     const q    = query(collection(db,'orders'), where('email','==',email), orderBy('createdAt','desc'));
     const snap = await getDocs(q);
     docs = snap.docs;
   } catch(e) {
-    // Strategy 2: just where, sort client-side
-    const q2   = query(collection(db,'orders'), where('email','==',email));
+    const q2    = query(collection(db,'orders'), where('email','==',email));
     const snap2 = await getDocs(q2);
     docs = snap2.docs.sort((a,b) => {
       const ta = a.data().createdAt?.seconds || 0;
@@ -995,17 +1003,31 @@ async function fetchOrdersByEmail(email) {
   return docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
+/* ── RENDER ORDERS — status-aware ── */
 function renderOrders(orders) {
-  const body = document.getElementById('ordersBody');
+  const body  = document.getElementById('ordersBody');
+  const badge = document.getElementById('ordersCount');
+
   if (!orders.length) {
     body.innerHTML = `<div class="orders-empty"><i class="fas fa-receipt"></i><p>No orders found</p><small>Orders placed with this email will appear here.</small></div>`;
+    badge.style.display = 'none';
     return;
   }
-  // Update badge
-  const badge = document.getElementById('ordersCount');
-  badge.style.display = 'flex'; badge.textContent = orders.length;
+
+  /* Badge only counts PAID orders */
+  const paidCount = orders.filter(o => o.paymentStatus === 'paid').length;
+  if (paidCount > 0) {
+    badge.style.display = 'flex'; badge.textContent = paidCount;
+  } else {
+    badge.style.display = 'none';
+  }
 
   body.innerHTML = orders.map(order => {
+    const status      = (order.paymentStatus || 'pending').toLowerCase();
+    const isPaid      = status === 'paid';
+    const isCancelled = status === 'cancelled';
+
+    /* ── date ── */
     let dateStr = '—';
     try {
       if (order.createdAt) {
@@ -1016,11 +1038,11 @@ function renderOrders(orders) {
       }
     } catch{}
 
+    /* ── items rows ── */
     const itemsHtml = (order.items||[]).map(i => {
-      const colorDot = i.colorHex
-        ? `<span class="order-color-swatch" style="background:${i.colorHex}"></span>` : '';
-      const colorChip = i.colorHex
-        ? `<span class="order-attr-chip">${colorDot} ${i.colorLabel||i.colorHex}</span>` : '';
+      const colorDot  = i.colorHex ? `<span class="order-color-swatch" style="background:${i.colorHex}"></span>` : '';
+      const colorChip = i.colorHex ? `<span class="order-attr-chip">${colorDot} ${i.colorLabel||i.colorHex}</span>` : '';
+      const priceOpacity = isPaid ? '' : 'opacity:0.45';
       return `<div class="order-item-row">
         <img class="order-item-thumb" src="${i.image||i.img||''}" alt="${i.name}" onerror="this.style.display='none'">
         <div class="order-item-info">
@@ -1031,35 +1053,58 @@ function renderOrders(orders) {
             ${i.qty>1?`<span class="order-attr-chip">×${i.qty}</span>`:''}
           </div>
         </div>
-        <div style="text-align:right">
+        <div style="text-align:right;${priceOpacity}">
           <div class="order-item-price">GH₵ ${((i.unitPrice||i.price||0)*i.qty).toLocaleString()}</div>
         </div>
       </div>`;
     }).join('');
 
+    /* ── per-status parts ── */
+    const headClass   = isPaid ? 'paid-head' : isCancelled ? 'cancelled-head' : 'pending-head';
+    const refOpacity  = isPaid ? '' : 'opacity:0.55';
+    const totalBg     = isPaid ? '' : 'background:#111';
+    const totalLabel  = isPaid ? 'Total Paid' : isCancelled ? 'Order Void' : 'Not Charged';
+    const totalStyle  = isPaid ? '' : 'opacity:0.4;text-decoration:line-through';
+    const itemsOpacity = isPaid ? '' : 'opacity:0.6';
+
+    const statusPill = isPaid
+      ? `<span class="pill-paid"><i class="fas fa-check-circle"></i> Paid</span>`
+      : isCancelled
+      ? `<span class="pill-cancelled"><i class="fas fa-times-circle"></i> Cancelled</span>`
+      : `<span class="pill-pending"><i class="fas fa-clock"></i> Awaiting Payment</span>`;
+
+    const bottomBanner = isPaid
+      ? `<div class="order-lock-strip"><i class="fas fa-shield-alt"></i><span>Saved · Order confirmed &amp; locked</span></div>`
+      : isCancelled
+      ? `<div class="order-cancelled-banner"><i class="fas fa-times-circle"></i><span>Payment was not completed — this order is void</span></div>`
+      : `<div class="order-unpaid-banner">
+           <i class="fas fa-exclamation-triangle"></i>
+           <div class="order-unpaid-banner-text">
+             <span>Payment not received</span>
+             <small>This order was started but not paid. Return to the store to checkout again.</small>
+           </div>
+         </div>`;
+
     return `<div class="order-card">
-      <div class="order-card-head">
+      <div class="order-card-head ${headClass}">
         <div class="order-ref-group">
           <p class="order-ref-label">Order Reference</p>
-          <p class="order-ref-val">${order.paystackRef||order.id}</p>
+          <p class="order-ref-val" style="${refOpacity}">${order.paystackRef||order.id}</p>
         </div>
         <div class="order-head-right">
-          <span class="pill-paid"><i class="fas fa-check-circle"></i> Paid</span>
-          <span class="pill-locked"><i class="fas fa-lock"></i> Locked</span>
+          ${statusPill}
+          ${isPaid ? `<span class="pill-locked"><i class="fas fa-lock"></i> Locked</span>` : ''}
         </div>
       </div>
       <div class="order-card-body">
         <p class="order-date-line"><i class="fas fa-calendar-alt"></i>${dateStr}</p>
-        <div class="order-items-list">${itemsHtml}</div>
+        <div class="order-items-list" style="${itemsOpacity}">${itemsHtml}</div>
       </div>
-      <div class="order-total-strip">
-        <span class="lbl">Total Paid</span>
-        <span class="val">GH₵ ${(order.totalAmount||0).toLocaleString()}</span>
+      <div class="order-total-strip" style="${totalBg}">
+        <span class="lbl">${totalLabel}</span>
+        <span class="val" style="${totalStyle}">GH₵ ${(order.totalAmount||0).toLocaleString()}</span>
       </div>
-      <div class="order-lock-strip">
-        <i class="fas fa-shield-alt"></i>
-        <span>Saved to Firestore · Order confirmed</span>
-      </div>
+      ${bottomBanner}
     </div>`;
   }).join('');
 }
@@ -1141,16 +1186,6 @@ function showFormErrors(errors) {
   banner.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-/* ═══════════════════════════════════════════════════════
-   THE BIG FIX:
-   1. Save order to Firestore FIRST (before Paystack opens)
-   2. Open Paystack
-   3. On success → update status to "paid"
-   4. On cancel  → update status to "cancelled"
-   
-   This means even if the phone loses signal after payment,
-   the order is ALREADY in Firestore.
-═══════════════════════════════════════════════════════ */
 window.submitCheckoutAndPay = async () => {
   const form   = readCheckoutForm();
   const errors = validateForm(form);
@@ -1168,25 +1203,23 @@ window.submitCheckoutAndPay = async () => {
 
   localStorage.setItem('444lastEmail', form.email.trim().toLowerCase());
 
-  // ── STEP 1: Save to Firestore NOW (before payment) ──
   btn.disabled = true;
   setProcessing(true,'Preparing your order…','Just a moment');
 
   try {
     await saveOrderToFirestore(form, cartSnapshot, ref, subtotal, delivery, 'pending');
-    console.log('✅ Order pre-saved to Firestore:', ref);
+    console.log('✅ Order pre-saved:', ref);
   } catch(err) {
-    console.error('❌ Could not save order to Firestore:', err);
+    console.error('❌ Firestore save failed:', err);
     setProcessing(false);
     btn.disabled = false;
     showToast('Could not connect to database. Check your internet and try again.', false);
-    return; // Stop — don't open Paystack if we can't save
+    return;
   }
 
   setProcessing(false);
   btn.disabled = false;
 
-  // ── STEP 2: Open Paystack ──
   const handler = PaystackPop.setup({
     key:      PAYSTACK_PUBLIC_KEY,
     email:    form.email.trim(),
@@ -1196,7 +1229,6 @@ window.submitCheckoutAndPay = async () => {
     label:    '444 Brand Order',
 
     onSuccess: async (response) => {
-      // ── STEP 3: Payment confirmed — update status to "paid" ──
       setProcessing(true,'Confirming your payment…','Almost done!');
       try {
         const orderRef = doc(db,'orders',ref);
@@ -1207,24 +1239,18 @@ window.submitCheckoutAndPay = async () => {
           paidAt:        serverTimestamp(),
           updatedAt:     serverTimestamp(),
         });
-        console.log('✅ Order marked as paid:', ref);
+        console.log('✅ Order marked paid:', ref);
       } catch(err) {
-        // Not critical — order is already saved, just status update failed
         console.warn('Status update failed (non-critical):', err);
       }
-
-      // Clear cart
       cart = []; saveCart();
       setProcessing(false);
       showPaymentSuccess(ref, form, cartSnapshot);
-
-      // Admin email in background
       sendAdminEmail(form, cartSnapshot, ref, total).catch(()=>{});
     },
 
     onCancel: async () => {
       btn.disabled = false;
-      // Mark the pre-saved order as cancelled
       try {
         const orderRef = doc(db,'orders',ref);
         await updateDoc(orderRef, { paymentStatus:'cancelled', orderStatus:'cancelled', updatedAt:serverTimestamp() });
@@ -1236,19 +1262,18 @@ window.submitCheckoutAndPay = async () => {
   handler.openIframe();
 };
 
-/* ── Save order to Firestore ── */
 async function saveOrderToFirestore(form, items, ref, subtotal, shipping, status='pending') {
   const orderRef  = doc(db,'orders',ref);
   const orderData = {
-    paystackRef:  ref,
-    email:        form.email.trim().toLowerCase(),
-    customerName: form.name.trim(),
-    phone:        form.phone.trim(),
-    address:      form.address.trim(),
-    city:         form.city.trim(),
-    country:      form.country.trim(),
-    gpsLocation:  form.gps?.trim() || '',
-    orderNotes:   form.notes?.trim() || '',
+    paystackRef:   ref,
+    email:         form.email.trim().toLowerCase(),
+    customerName:  form.name.trim(),
+    phone:         form.phone.trim(),
+    address:       form.address.trim(),
+    city:          form.city.trim(),
+    country:       form.country.trim(),
+    gpsLocation:   form.gps?.trim() || '',
+    orderNotes:    form.notes?.trim() || '',
     items: items.map(item => ({
       productId:  item.id    || '',
       name:       item.name,
@@ -1278,7 +1303,6 @@ async function saveOrderToFirestore(form, items, ref, subtotal, shipping, status
   return orderData;
 }
 
-/* ── Admin email ── */
 async function sendAdminEmail(form, items, ref, total) {
   if (typeof emailjs === 'undefined') return;
   const subtotal  = items.reduce((a,i) => a+i.price*i.qty,0);
@@ -1308,7 +1332,6 @@ async function sendAdminEmail(form, items, ref, total) {
   }, EMAILJS_PUBLIC_KEY);
 }
 
-/* ── Success screen ── */
 function showPaymentSuccess(ref, form, items) {
   document.getElementById('successRef').textContent = ref;
   document.getElementById('successCustomerInfo').innerHTML = `
