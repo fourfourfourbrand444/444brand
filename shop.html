@@ -773,10 +773,6 @@ function renderProducts(list) {
 }
 
 // ── PRODUCT MODAL ─────────────────────────────────────────────
-// FIX: Color section always visible when product has colors.
-// - 0 colors  → hidden (no color concept)
-// - 1 color   → shown as a read-only chip (user sees what color they're getting)
-// - 2+ colors → shown as interactive swatches (user must pick)
 window.openModal = p => {
   currentProduct = p;
   selectedSize   = null;
@@ -823,30 +819,24 @@ window.openModal = p => {
   const colorHint         = document.getElementById('colorHint');
   const colorSectionLabel = document.getElementById('colorSectionLabel');
 
-  // Reset
-  colorGrid.innerHTML       = '';
+  colorGrid.innerHTML          = '';
   colorSelectedLbl.textContent = '';
   colorSingleDisp.style.display = 'none';
   colorGrid.style.display       = 'flex';
   colorHint.style.display       = 'none';
 
   if (colors.length === 0) {
-    // No colors — hide entire section, no color to select
     colorSection.style.display = 'none';
     selectedColor = null;
-
   } else if (colors.length === 1) {
-    // Exactly one color — show as info chip, auto-select it
     colorSection.style.display    = 'block';
     colorSectionLabel.textContent = 'Color';
     colorGrid.style.display       = 'none';
     colorSingleDisp.style.display = 'flex';
     colorSingleDot.style.background = colors[0].hex;
     colorSingleLbl.textContent    = colors[0].label || colors[0].hex;
-    selectedColor = colors[0]; // auto-selected — no user action needed
-
+    selectedColor = colors[0];
   } else {
-    // Multiple colors — show swatches, user must pick
     colorSection.style.display    = 'block';
     colorSectionLabel.textContent = 'Select Color';
     colorGrid.style.display       = 'flex';
@@ -903,10 +893,8 @@ window.addToCart = () => {
   if (!selectedSize) { showToast('Please select a size', false); return; }
 
   const colors = Array.isArray(currentProduct.colors) ? currentProduct.colors : [];
-  // Require color selection only when there are 2+ colors
   if (colors.length >= 2 && !selectedColor) {
     showToast('Please select a color', false);
-    // Highlight the hint
     const hint = document.getElementById('colorHint');
     if (hint) { hint.style.color = 'var(--red)'; setTimeout(() => hint.style.color = '', 2000); }
     return;
@@ -953,6 +941,7 @@ document.getElementById('cartClose').onclick  = () => document.getElementById('c
 
 function saveCart() {
   localStorage.setItem('444cart', JSON.stringify(cart));
+  // FIX: only count unpaid items for the cart badge
   const unpaidCount = cart.filter(i=>!i.paid).reduce((a,i)=>a+i.qty,0);
   document.getElementById('cartCount').textContent = unpaidCount;
   renderCart();
@@ -985,9 +974,12 @@ function renderCart() {
     return;
   }
 
+  // FIX: use stable index from full cart array to avoid wrong item removal
   const allItems = [...unpaid, ...paid];
   body.innerHTML = allItems.map(item => {
-    const idx = cart.indexOf(item);
+    const idx = cart.findIndex(c =>
+      c.id === item.id && c.size === item.size && c.colorHex === item.colorHex && c.paid === item.paid
+    );
 
     const resolvedColorLabel = item.colorLabel || (item.colorHex ? item.colorHex : '');
     const colorChipHtml = item.colorHex
@@ -1201,15 +1193,19 @@ window.submitCheckoutAndPay = () => {
   const errors = validateForm(form);
   if (errors.length) { showFormErrors(errors); return; }
   showFormErrors([]);
-  const unpaid = cart.filter(i=>!i.paid);
-  if (!unpaid.length) { showToast('Your cart is empty', false); return; }
+
+  // FIX: snapshot unpaid items BEFORE any mutation
+  const unpaidSnapshot = cart.filter(i => !i.paid).map(i => ({ ...i }));
+  if (!unpaidSnapshot.length) { showToast('Your cart is empty', false); return; }
+
   const total     = calcTotal();
   const amountPes = Math.round(total * 100);
   const ref       = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
-  const itemsMeta = unpaid.map(i => {
+  const itemsMeta = unpaidSnapshot.map(i => {
     const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
     return `${i.name} (${i.size}${resolvedLabel?' · '+resolvedLabel:''}) ×${i.qty}`;
   }).join('; ');
+
   const btn = document.getElementById('btnPayNow');
   btn.disabled = true;
 
@@ -1227,94 +1223,132 @@ window.submitCheckoutAndPay = () => {
         { display_name:'Brand',          variable_name:'brand',          value:'444 Brand' },
       ]
     },
+
     onSuccess: async (response) => {
-      btn.disabled = false; showProcessing(true);
-      try {
-        await saveOrderToFirestore(form, cart, response.reference, response);
-        sendAdminEmail(form, cart, response.reference, total).catch(console.warn);
-        const subtotal = calcSubtotal();
-        const shipping = calcDelivery(subtotal);
-        orderHistory.push({
-          ref:   response.reference,
-          date:  new Date().toLocaleString('en-GB', { timeZone:'Africa/Accra', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
-          total: subtotal + shipping,
-          items: unpaid.map(i => ({
-            name:       i.name,
-            size:       i.size,
-            colorHex:   i.colorHex   || null,
-            colorLabel: i.colorLabel || null,
-            unitPrice:  i.price,
-            qty:        i.qty,
-            img:        i.img,
-          })),
-          customer: { name:form.name, email:form.email, phone:form.phone }
-        });
-        localStorage.setItem('444orders', JSON.stringify(orderHistory));
-        cart = cart.map(i => i.paid ? i : { ...i, paid:true, payRef:response.reference });
-        localStorage.setItem('444cart', JSON.stringify(cart));
-        saveCart();
-        showProcessing(false);
-        showPaymentSuccess(response.reference, form, unpaid);
-      } catch(err) {
-        showProcessing(false); console.error(err);
-        showPaymentSuccess(response.reference, form, unpaid);
-        showToast('Order received. Contact us if you need help.', false);
-      }
+      btn.disabled = false;
+      showProcessing(true);
+
+      // FIX 1: Mark cart as paid IMMEDIATELY after Paystack confirms
+      // This must happen before Firestore — payment is real, persist it now
+      cart = cart.map(i => i.paid ? i : { ...i, paid: true, payRef: response.reference });
+      localStorage.setItem('444cart', JSON.stringify(cart));
+
+      // FIX 2: Save order history IMMEDIATELY using the pre-captured snapshot
+      const subtotal = unpaidSnapshot.reduce((a, i) => a + i.price * i.qty, 0);
+      const shipping = calcDelivery(subtotal);
+      orderHistory.push({
+        ref:   response.reference,
+        date:  new Date().toLocaleString('en-GB', { timeZone:'Africa/Accra', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+        total: subtotal + shipping,
+        items: unpaidSnapshot.map(i => ({
+          name:       i.name,
+          size:       i.size,
+          colorHex:   i.colorHex   || null,
+          colorLabel: i.colorLabel || null,
+          unitPrice:  i.price,
+          qty:        i.qty,
+          img:        i.img,
+        })),
+        customer: { name: form.name, email: form.email, phone: form.phone }
+      });
+      localStorage.setItem('444orders', JSON.stringify(orderHistory));
+
+      // FIX 3: Update UI immediately — badge + cart render
+      saveCart();
+      updateOrdersBadge();
+
+      // FIX 4: Show success screen with the pre-captured snapshot (items before paid mutation)
+      showProcessing(false);
+      showPaymentSuccess(response.reference, form, unpaidSnapshot);
+
+      // FIX 5: Firestore + email run in background — failures don't break the UX
+      saveOrderToFirestore(form, unpaidSnapshot, response.reference, response, subtotal, shipping)
+        .catch(err => console.error('Firestore save failed (order is still confirmed):', err));
+      sendAdminEmail(form, unpaidSnapshot, response.reference, subtotal + shipping)
+        .catch(err => console.warn('Admin email failed:', err));
     },
-    onCancel: () => { btn.disabled=false; showToast('Payment cancelled. Your cart is still saved.', false); }
+
+    onCancel: () => {
+      btn.disabled = false;
+      showToast('Payment cancelled. Your cart is still saved.', false);
+    }
   });
+
   handler.openIframe();
 };
 
 // ── SAVE TO FIRESTORE ────────────────────────────────────────
-async function saveOrderToFirestore(form, cart, paystackRef, paystackResponse) {
+// FIX: now receives pre-captured unpaidSnapshot + pre-calculated totals
+async function saveOrderToFirestore(form, unpaidSnapshot, paystackRef, paystackResponse, subtotal, shipping) {
+  const total    = subtotal + shipping;
   const orderRef = doc(db, 'orders', paystackRef);
+
   return await runTransaction(db, async (tx) => {
     const snap = await tx.get(orderRef);
-    if (snap.exists()) return { alreadyExists:true };
-    const unpaid   = cart.filter(i=>!i.paid);
-    const subtotal = calcSubtotal();
-    const shipping = calcDelivery(subtotal);
-    const total    = subtotal + shipping;
+    if (snap.exists()) return { alreadyExists: true };
+
     const orderData = {
       paystackRef,
-      customerName: form.name.trim(), email: form.email.trim().toLowerCase(),
-      phone: form.phone.trim(), address: form.address.trim(),
-      city: form.city.trim(), country: form.country.trim(),
-      gpsLocation: form.gpsLocation?.trim()||'', orderNotes: form.notes?.trim()||'',
-      items: unpaid.map(item => ({
-        productId: item.id||'', name: item.name, image: item.img||'',
-        size: item.size, colorHex: item.colorHex||'', colorLabel: item.colorLabel||'',
-        qty: item.qty, unitPrice: item.price, lineTotal: item.price * item.qty,
+      customerName: form.name.trim(),
+      email:        form.email.trim().toLowerCase(),
+      phone:        form.phone.trim(),
+      address:      form.address.trim(),
+      city:         form.city.trim(),
+      country:      form.country.trim(),
+      gpsLocation:  form.gpsLocation?.trim() || '',
+      orderNotes:   form.notes?.trim() || '',
+      items: unpaidSnapshot.map(item => ({
+        productId: item.id   || '',
+        name:      item.name,
+        image:     item.img  || '',
+        size:      item.size,
+        colorHex:  item.colorHex   || '',
+        colorLabel:item.colorLabel || '',
+        qty:       item.qty,
+        unitPrice: item.price,
+        lineTotal: item.price * item.qty,
       })),
-      subtotal, shippingFee:shipping, totalAmount:total, currency:'GHS',
-      paymentStatus:'paid', paymentMethod:'paystack', paystackData:paystackResponse||{},
-      orderStatus:'confirmed',
-      orderHistory:[{ status:'confirmed', timestamp:new Date().toISOString(), note:'Order confirmed via Paystack' }],
-      brand:'444 Brand', source:'web', createdAt:serverTimestamp(), updatedAt:serverTimestamp(),
+      subtotal, shippingFee: shipping, totalAmount: total, currency: 'GHS',
+      paymentStatus: 'paid', paymentMethod: 'paystack',
+      paystackData:  paystackResponse || {},
+      orderStatus:   'confirmed',
+      orderHistory:  [{ status:'confirmed', timestamp: new Date().toISOString(), note:'Order confirmed via Paystack' }],
+      brand: '444 Brand', source: 'web',
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
     };
+
     tx.set(orderRef, orderData);
-    const notifRef = doc(db,'orderNotifications',paystackRef);
+
+    const notifRef = doc(db, 'orderNotifications', paystackRef);
     tx.set(notifRef, {
-      paystackRef, customerName:orderData.customerName, email:orderData.email,
-      phone:orderData.phone, totalAmount:orderData.totalAmount,
-      itemCount:orderData.items.length, createdAt:serverTimestamp(), read:false,
+      paystackRef,
+      customerName: orderData.customerName,
+      email:        orderData.email,
+      phone:        orderData.phone,
+      totalAmount:  orderData.totalAmount,
+      itemCount:    orderData.items.length,
+      createdAt:    serverTimestamp(),
+      read:         false,
     });
-    return { alreadyExists:false, orderId:paystackRef };
+
+    return { alreadyExists: false, orderId: paystackRef };
   });
 }
 
 // ── ADMIN EMAIL ───────────────────────────────────────────────
-async function sendAdminEmail(form, cart, paystackRef, total) {
+// FIX: now receives pre-captured unpaidSnapshot + pre-calculated total
+async function sendAdminEmail(form, unpaidSnapshot, paystackRef, total) {
   if (typeof emailjs === 'undefined') return;
-  const unpaid   = cart.filter(i=>!i.paid);
-  const subtotal = calcSubtotal();
-  const shipping = calcDelivery(subtotal);
-  const itemsList = unpaid.map(i => {
+
+  const subtotal = unpaidSnapshot.reduce((a, i) => a + i.price * i.qty, 0);
+  const shipping = total - subtotal;
+
+  const itemsList = unpaidSnapshot.map(i => {
     const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
     const colorText = resolvedLabel ? ` | Color: ${resolvedLabel}` : '';
-    return `• ${i.name} (Size: ${i.size}${colorText}) ×${i.qty} = GH₵${(i.price*i.qty).toLocaleString()}`;
+    return `• ${i.name} (Size: ${i.size}${colorText}) ×${i.qty} = GH₵${(i.price * i.qty).toLocaleString()}`;
   }).join('\n');
+
   return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
     to_email:         ADMIN_EMAIL,
     order_ref:        paystackRef,
@@ -1322,17 +1356,17 @@ async function sendAdminEmail(form, cart, paystackRef, total) {
     customer_email:   form.email,
     customer_phone:   form.phone,
     delivery_address: `${form.address}, ${form.city}, ${form.country}`,
-    gps_location:     form.gpsLocation||'N/A',
-    order_notes:      form.notes||'None',
+    gps_location:     form.gpsLocation || 'N/A',
+    order_notes:      form.notes       || 'None',
     items_list:       itemsList,
     subtotal:         `GH₵ ${subtotal.toLocaleString()}`,
     shipping_fee:     `GH₵ ${shipping.toLocaleString()}`,
     total_amount:     `GH₵ ${total.toLocaleString()}`,
     payment_status:   'Paid',
-    order_date:       new Date().toLocaleString('en-GB',{timeZone:'Africa/Accra'}),
+    order_date:       new Date().toLocaleString('en-GB', { timeZone:'Africa/Accra' }),
     brand:            '444 Brand',
     customer_city:    form.city,
-    items_count:      `${unpaid.length} item${unpaid.length!==1?'s':''}`,
+    items_count:      `${unpaidSnapshot.length} item${unpaidSnapshot.length !== 1 ? 's' : ''}`,
   }, EMAILJS_PUBLIC_KEY);
 }
 
@@ -1389,7 +1423,11 @@ function showToast(msg, ok=true) {
   setTimeout(() => t.classList.remove('show'), 3800);
 }
 
-saveCart(); renderCart(); loadProducts(); updateOrdersBadge();
+// ── INIT ─────────────────────────────────────────────────────
+saveCart();
+renderCart();
+loadProducts();
+updateOrdersBadge();
 </script>
 </body>
 </html>
