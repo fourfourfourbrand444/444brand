@@ -33,6 +33,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .nav-btn{background:none;border:none;color:rgba(255,255,255,0.75);font-size:0.95rem;cursor:pointer;transition:color 0.3s;position:relative;text-decoration:none}
 .nav-btn:hover{color:var(--gold)}
 .cart-badge{position:absolute;top:-7px;right:-8px;width:15px;height:15px;background:var(--gold);color:var(--black);font-size:0.5rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center}
+/* Orders badge — gold-green to distinguish from cart */
+.orders-badge{position:absolute;top:-7px;right:-8px;width:15px;height:15px;background:var(--green);color:var(--white);font-size:0.5rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;display:none}
 .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px}
 .hamburger span{display:block;width:22px;height:1px;background:rgba(255,255,255,0.8)}
 
@@ -130,28 +132,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .size-grid{display:flex;gap:0.45rem;flex-wrap:wrap;margin-bottom:1.6rem}
 .size-btn{width:46px;height:46px;border:1px solid var(--light-gray);background:transparent;font-family:var(--font-body);font-size:0.65rem;font-weight:600;letter-spacing:0.06em;cursor:pointer;transition:var(--transition);color:var(--dark-gray)}
 .size-btn:hover,.size-btn.sel{background:var(--black);color:var(--white);border-color:var(--black)}
-
-/* ── COLOR SWATCHES ── */
 .color-section{margin-bottom:1.6rem}
 .color-grid{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.6rem}
-.color-swatch{
-  position:relative;width:32px;height:32px;
-  border-radius:50%;cursor:pointer;
-  border:2px solid transparent;
-  transition:all 0.25s ease;
-  box-shadow:0 1px 4px rgba(0,0,0,0.15);
-  outline:none;
-}
+.color-swatch{position:relative;width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.25s ease;box-shadow:0 1px 4px rgba(0,0,0,0.15);outline:none}
 .color-swatch:hover{transform:scale(1.15)}
 .color-swatch.sel{border-color:var(--black) !important;transform:scale(1.15);box-shadow:0 0 0 3px rgba(8,8,8,0.15)}
-/* White swatch needs a visible border always */
 .color-swatch.light-swatch{border-color:var(--light-gray) !important}
 .color-swatch.sel.light-swatch{border-color:var(--black) !important}
-.color-selected-label{
-  font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--dark-gray);margin-top:0.5rem;font-weight:500;
-}
-
+.color-selected-label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-gray);margin-top:0.5rem;font-weight:500}
 .modal-actions{display:flex;gap:0.6rem;margin-top:auto}
 .btn-add{flex:1;padding:0.95rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.6rem}
 .btn-add:hover{background:var(--gold);color:var(--black)}
@@ -172,19 +160,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .cart-empty-state{text-align:center;padding:4rem 1rem}
 .cart-empty-state i{font-size:2.8rem;color:var(--light-gray);display:block;margin-bottom:1rem}
 .cart-empty-state p{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray)}
-.cart-item{display:grid;grid-template-columns:74px 1fr auto;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--light-gray);align-items:start}
+
+/* CART ITEM — paid items get a green left border */
+.cart-item{display:grid;grid-template-columns:74px 1fr auto;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--light-gray);align-items:start;position:relative}
+.cart-item.is-paid{border-left:3px solid var(--green);padding-left:0.8rem;background:linear-gradient(to right,rgba(230,244,237,0.4),transparent 40%)}
 .cart-item img{width:74px;aspect-ratio:3/4;object-fit:cover;object-position:top center;background:var(--cream)}
 .cart-item-name{font-family:var(--font-display);font-size:0.95rem;font-weight:500;margin-bottom:0.2rem}
 .cart-item-meta{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
-/* ── Color dot in cart ── */
-.cart-color-dot{
-  display:inline-block;width:10px;height:10px;
-  border-radius:50%;vertical-align:middle;
-  border:1px solid rgba(0,0,0,0.15);flex-shrink:0;
-}
+.cart-color-dot{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:middle;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
 .cart-item-price{font-size:0.82rem;font-weight:700;margin-bottom:0.35rem}
-.cart-paid-badge{display:inline-flex;align-items:center;gap:0.35rem;background:var(--green-light);color:var(--green);font-size:0.52rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid rgba(26,110,60,0.25)}
+
+/* ── PAID BADGE (cart) ── */
+.cart-paid-badge{display:inline-flex;align-items:center;gap:0.35rem;background:var(--green-light);color:var(--green);font-size:0.52rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid rgba(26,110,60,0.3);border-radius:2px}
 .cart-paid-badge i{font-size:0.6rem}
+
+/* lock icon for paid items — replaces delete btn */
+.cart-lock{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--green);opacity:0.6;font-size:0.8rem;flex-shrink:0}
+
 .cart-rm{background:none;border:none;color:var(--mid-gray);cursor:pointer;font-size:0.75rem;padding:0.2rem;transition:color 0.3s}
 .cart-rm:hover{color:var(--black)}
 .cart-foot{padding:1.5rem 2rem 2rem;border-top:1px solid var(--light-gray);background:var(--off-white)}
@@ -205,13 +197,53 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .secure-note{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.8rem;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray)}
 .secure-note i{color:var(--gold-dark);font-size:0.65rem}
 
+/* ── ORDERS DRAWER ── */
+.orders-drawer{position:fixed;top:0;right:-520px;width:min(520px,100%);height:100vh;background:var(--white);z-index:2600;display:flex;flex-direction:column;transition:right 0.5s cubic-bezier(0.76,0,0.24,1);box-shadow:-30px 0 80px rgba(0,0,0,0.2)}
+.orders-drawer.open{right:0}
+.orders-head{display:flex;align-items:center;justify-content:space-between;padding:1.8rem 2rem;border-bottom:1px solid var(--light-gray);background:var(--black)}
+.orders-head h2{font-family:var(--font-display);font-size:1.6rem;font-weight:400;color:var(--white)}
+.orders-head h2 em{font-style:italic;color:var(--gold-light)}
+.orders-x{background:none;border:none;font-size:1.1rem;cursor:pointer;color:rgba(255,255,255,0.7);padding:0.4rem;transition:color 0.3s}
+.orders-x:hover{color:var(--gold)}
+.orders-body{flex:1;overflow-y:auto;padding:1.5rem 2rem}
+.orders-empty{text-align:center;padding:4rem 1rem}
+.orders-empty i{font-size:2.8rem;color:var(--light-gray);display:block;margin-bottom:1rem}
+.orders-empty p{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.4rem}
+.orders-empty small{font-size:0.6rem;color:var(--light-gray);letter-spacing:0.08em}
+
+/* Individual order card */
+.order-card{border:1px solid var(--light-gray);margin-bottom:1.2rem;overflow:hidden}
+.order-card-head{background:var(--black);padding:0.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.order-ref-label{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.2rem}
+.order-ref-val{font-family:var(--font-display);font-size:0.85rem;font-weight:600;color:var(--gold-light);letter-spacing:0.04em;word-break:break-all}
+.order-status-pill{display:inline-flex;align-items:center;gap:0.35rem;padding:0.3rem 0.75rem;font-size:0.52rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;border-radius:2px;flex-shrink:0;white-space:nowrap}
+.pill-confirmed{background:var(--green-light);color:var(--green);border:1px solid rgba(26,110,60,0.3)}
+.pill-confirmed::before{content:'';width:5px;height:5px;background:var(--green);border-radius:50%;display:inline-block}
+.order-card-body{padding:1rem 1.1rem}
+.order-date-line{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.4rem}
+.order-date-line i{color:var(--gold-dark);font-size:0.65rem}
+.order-items-list{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.9rem}
+.order-item-row{display:flex;justify-content:space-between;align-items:center;font-size:0.65rem;padding:0.4rem 0;border-bottom:1px solid var(--light-gray)}
+.order-item-row:last-child{border-bottom:none}
+.order-item-name{color:var(--black);font-weight:500;display:flex;align-items:center;gap:0.4rem;flex:1}
+.order-item-meta{font-size:0.58rem;color:var(--mid-gray);letter-spacing:0.06em;margin-left:0.3rem}
+.order-item-price{color:var(--gold-dark);font-weight:700;flex-shrink:0;margin-left:0.5rem}
+.order-color-dot{display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
+.order-total-strip{background:var(--off-white);border:1px solid var(--light-gray);padding:0.7rem 1rem;display:flex;justify-content:space-between;align-items:baseline}
+.order-total-strip .lbl{font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--dark-gray)}
+.order-total-strip .val{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--black)}
+.orders-foot{padding:1.2rem 2rem 2rem;border-top:1px solid var(--light-gray);background:var(--off-white)}
+.btn-clear-orders{width:100%;padding:0.8rem;background:transparent;color:var(--mid-gray);border:1px solid var(--light-gray);font-family:var(--font-body);font-size:0.6rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:var(--transition)}
+.btn-clear-orders:hover{background:var(--red);color:var(--white);border-color:var(--red)}
+.orders-note{text-align:center;margin-top:0.75rem;font-size:0.58rem;color:var(--mid-gray);letter-spacing:0.06em;line-height:1.7}
+
 /* CHECKOUT PANEL */
 .checkout-panel{position:fixed;top:0;right:-520px;width:min(520px,100%);height:100vh;background:var(--white);z-index:3500;display:flex;flex-direction:column;transition:right 0.55s cubic-bezier(0.76,0,0.24,1);box-shadow:-40px 0 100px rgba(0,0,0,0.25)}
 .checkout-panel.open{right:0}
 .checkout-panel-head{display:flex;align-items:center;justify-content:space-between;padding:1.6rem 2rem;border-bottom:1px solid var(--light-gray);background:var(--black);flex-shrink:0}
 .checkout-panel-head h2{font-family:var(--font-display);font-size:1.5rem;font-weight:400;color:var(--white)}
 .checkout-panel-head h2 em{color:var(--gold-light);font-style:italic}
-.checkout-back{background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:1rem;padding:0.4rem;transition:color 0.3s;display:flex;align-items:center;gap:0.4rem;font-family:var(--font-body);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase}
+.checkout-back{background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;padding:0.4rem;transition:color 0.3s;display:flex;align-items:center;gap:0.4rem;font-family:var(--font-body);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase}
 .checkout-back:hover{color:var(--gold)}
 .checkout-order-strip{background:var(--off-white);border-bottom:1px solid var(--light-gray);padding:1rem 2rem;flex-shrink:0}
 .checkout-order-strip-title{font-size:0.55rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.6rem}
@@ -219,7 +251,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .checkout-order-item{display:flex;justify-content:space-between;align-items:center;font-size:0.65rem;color:var(--dark-gray)}
 .checkout-order-item .item-n{font-weight:500;display:flex;align-items:center;gap:0.4rem}
 .checkout-order-item .item-p{font-weight:700;color:var(--black)}
-/* small dot in checkout strip */
 .co-color-dot{display:inline-block;width:8px;height:8px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
 .checkout-order-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:0.7rem;padding-top:0.7rem;border-top:1px solid var(--light-gray)}
 .checkout-order-total-row .lbl{font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--dark-gray)}
@@ -277,14 +308,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .success-items-list{text-align:left;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:0.5rem}
 .success-item-row{display:flex;justify-content:space-between;align-items:center;font-size:0.68rem;padding:0.4rem 0;border-bottom:1px solid var(--light-gray)}
 .success-item-name{color:var(--black);font-weight:500;display:flex;align-items:center;gap:0.4rem}
-/* color dot in success */
 .success-color-dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
 .success-item-price{color:var(--gold-dark);font-weight:700}
 .success-customer-info{background:var(--off-white);border:1px solid var(--light-gray);padding:1rem 1.2rem;margin-bottom:1.5rem;text-align:left}
 .success-customer-info .sci-row{display:flex;gap:0.5rem;font-size:0.62rem;color:var(--dark-gray);margin-bottom:0.3rem;align-items:baseline}
 .success-customer-info .sci-row i{color:var(--gold-dark);font-size:0.65rem;width:14px;flex-shrink:0}
-.btn-success-continue{width:100%;padding:1rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
+/* success actions row */
+.success-actions{display:flex;gap:0.6rem}
+.btn-success-continue{flex:1;padding:1rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
 .btn-success-continue:hover{background:var(--gold);color:var(--black)}
+.btn-view-orders{flex:1;padding:1rem;background:var(--green);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.5rem}
+.btn-view-orders:hover{background:var(--green-light);color:var(--green)}
 
 /* PROCESSING */
 .processing-overlay{position:fixed;inset:0;background:rgba(8,8,8,0.88);z-index:6000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;opacity:0;pointer-events:none;transition:opacity 0.3s}
@@ -303,7 +337,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 /* RESPONSIVE */
 @media(max-width:1024px){.products-grid{grid-template-columns:repeat(2,1fr)}.modal{grid-template-columns:1fr}.modal-main-img{min-height:280px;max-height:360px}}
 @media(max-width:768px){nav{padding:0 1.2rem}.nav-center{display:none}.hamburger{display:flex}.products-grid{grid-template-columns:repeat(2,1fr);gap:1rem}.hero{height:60vh}.shop-header{flex-direction:column;align-items:flex-start}.form-row{grid-template-columns:1fr}}
-@media(max-width:480px){.products-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem}.hero-title{font-size:2.6rem}.container{width:95%}.modal-info{padding:1.8rem 1.4rem 1.4rem}.modal-name{font-size:1.6rem}.success-box{padding:2.5rem 1.5rem}.checkout-form-scroll{padding:1.4rem 1.2rem 1rem}.checkout-panel-foot{padding:1rem 1.2rem 1.5rem}}
+@media(max-width:480px){.products-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem}.hero-title{font-size:2.6rem}.container{width:95%}.modal-info{padding:1.8rem 1.4rem 1.4rem}.modal-name{font-size:1.6rem}.success-box{padding:2.5rem 1.5rem}.checkout-form-scroll{padding:1.4rem 1.2rem 1rem}.checkout-panel-foot{padding:1rem 1.2rem 1.5rem}.success-actions{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -319,6 +353,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
   </ul>
   <div class="nav-right">
     <a href="#" class="nav-btn"><i class="fas fa-search"></i></a>
+    <!-- ORDERS icon -->
+    <button class="nav-btn" id="ordersToggle" title="My Orders">
+      <i class="fas fa-receipt"></i>
+      <span class="orders-badge" id="ordersCount">0</span>
+    </button>
     <button class="nav-btn" id="cartToggle">
       <i class="fas fa-shopping-bag"></i>
       <span class="cart-badge" id="cartCount">0</span>
@@ -406,18 +445,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
       <p class="modal-price"><span class="cur">GH₵</span><span id="mPrice">—</span></p>
       <p class="in-stock-badge">In Stock</p>
       <p class="modal-desc" id="mDesc"></p>
-
-      <!-- SIZE -->
       <p class="modal-label">Select Size</p>
       <div class="size-grid" id="sizeGrid"></div>
-
-      <!-- COLOR — shown only when product has ≥2 colors -->
       <div class="color-section" id="colorSection" style="display:none">
         <p class="modal-label">Select Color</p>
         <div class="color-grid" id="colorGrid"></div>
         <p class="color-selected-label" id="colorSelectedLabel"></p>
       </div>
-
       <div class="modal-actions">
         <button class="btn-add" onclick="addToCart()"><i class="fas fa-shopping-bag"></i> Add to Cart</button>
         <button class="btn-wish"><i class="far fa-heart"></i></button>
@@ -449,6 +483,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
       <span><i class="fas fa-arrow-right"></i> Proceed to Checkout</span>
     </button>
     <div class="secure-note"><i class="fas fa-shield-alt"></i>Secured by Paystack · 256-bit SSL</div>
+  </div>
+</div>
+
+<!-- ORDERS DRAWER -->
+<div class="orders-drawer" id="ordersDrawer">
+  <div class="orders-head">
+    <h2>My <em>Orders</em></h2>
+    <button class="orders-x" id="ordersClose"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="orders-body" id="ordersBody">
+    <div class="orders-empty">
+      <i class="fas fa-receipt"></i>
+      <p>No confirmed orders yet</p>
+      <small>Completed purchases will appear here</small>
+    </div>
+  </div>
+  <div class="orders-foot">
+    <button class="btn-clear-orders" id="btnClearOrders" onclick="clearOrderHistory()" style="display:none">
+      <i class="fas fa-trash" style="margin-right:.5rem"></i>Clear Order History
+    </button>
+    <p class="orders-note">Orders are stored on this device. Contact us via WhatsApp if you need support for any order.</p>
   </div>
 </div>
 
@@ -547,7 +602,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
   <div class="success-box">
     <div class="success-icon-wrap"><i class="fas fa-check"></i></div>
     <h2 class="success-title">Order Confirmed!</h2>
-    <p class="success-sub">Your payment was successful and your order has been received. We'll be in touch shortly.</p>
+    <p class="success-sub">Your payment was successful and your order has been received. We'll be in touch shortly with delivery updates.</p>
     <div class="success-ref">
       <span class="ref-label">Order Reference</span>
       <span class="ref-value" id="successRef">—</span>
@@ -555,7 +610,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
     <div class="success-customer-info" id="successCustomerInfo"></div>
     <p class="success-items-title">Items Confirmed</p>
     <div class="success-items-list" id="successItemsList"></div>
-    <button class="btn-success-continue" onclick="closeSuccess()">Continue Shopping</button>
+    <div class="success-actions">
+      <button class="btn-view-orders" onclick="closeSuccessViewOrders()"><i class="fas fa-receipt"></i> My Orders</button>
+      <button class="btn-success-continue" onclick="closeSuccess()">Continue Shopping</button>
+    </div>
   </div>
 </div>
 
@@ -603,8 +661,10 @@ const FREE_DELIVERY_ABOVE = 500;
 let allProducts    = [];
 let currentProduct = null;
 let selectedSize   = null;
-let selectedColor  = null;  // { hex, label } or null
+let selectedColor  = null;
 let cart           = JSON.parse(localStorage.getItem('444cart') || '[]');
+// Orders history stored separately — array of order objects
+let orderHistory   = JSON.parse(localStorage.getItem('444orders') || '[]');
 
 // ── HERO SLIDER ──────────────────────────────────────────────
 let ci = 0;
@@ -701,18 +761,14 @@ function renderProducts(list) {
 // ── PRODUCT MODAL ────────────────────────────────────────────
 window.openModal = p => {
   currentProduct = p; selectedSize = null; selectedColor = null;
-
   const imgs = (p.images&&p.images.length) ? p.images
     : [p.image||'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&q=80'];
-
   document.getElementById('mainImg').src  = imgs[0];
   document.getElementById('mainImg').alt  = p.name;
   document.getElementById('mTag').textContent   = p.category || 'New Drop';
   document.getElementById('mName').textContent  = p.name;
   document.getElementById('mPrice').textContent = Number(p.price).toLocaleString();
   document.getElementById('mDesc').textContent  = p.description || 'Premium quality luxury streetwear.';
-
-  // Thumbnails
   const thumbRow = document.getElementById('thumbRow');
   thumbRow.innerHTML = '';
   imgs.forEach((src, i) => {
@@ -726,69 +782,47 @@ window.openModal = p => {
     };
     thumbRow.appendChild(div);
   });
-
-  // Sizes
   const sg    = document.getElementById('sizeGrid');
   const sizes = (p.sizes&&p.sizes.length) ? p.sizes : ['S','M','L','XL','2XL'];
   sg.innerHTML = sizes.map(s => `<button class="size-btn" onclick="selSize(this)">${s}</button>`).join('');
-
-  // ── Colors ──────────────────────────────────────────────────
-  // colors saved as [{hex:"#000000", label:"Jet Black"}, ...]
   const colors  = Array.isArray(p.colors) ? p.colors : [];
   const colorSection = document.getElementById('colorSection');
   const colorGrid    = document.getElementById('colorGrid');
   const colorLabel   = document.getElementById('colorSelectedLabel');
-  colorGrid.innerHTML = '';
-  colorLabel.textContent = '';
-
+  colorGrid.innerHTML = ''; colorLabel.textContent = '';
   if (colors.length === 0) {
-    // No colors defined — hide section entirely
-    colorSection.style.display = 'none';
-    selectedColor = null;
+    colorSection.style.display = 'none'; selectedColor = null;
   } else if (colors.length === 1) {
-    // Only one color — auto-select silently, no UI shown
-    colorSection.style.display = 'none';
-    selectedColor = colors[0];
+    colorSection.style.display = 'none'; selectedColor = colors[0];
   } else {
-    // Multiple colors — show swatches
     colorSection.style.display = 'block';
-    colors.forEach((c, i) => {
+    colors.forEach(c => {
       const btn = document.createElement('button');
       btn.className = 'color-swatch';
-      // Detect light colors to add a visible border
       if (isLightColor(c.hex)) btn.classList.add('light-swatch');
-      btn.style.background = c.hex;
-      btn.title = c.label;
+      btn.style.background = c.hex; btn.title = c.label;
       btn.setAttribute('aria-label', c.label);
       btn.onclick = () => {
         document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('sel'));
-        btn.classList.add('sel');
-        selectedColor = c;
-        colorLabel.textContent = c.label;
+        btn.classList.add('sel'); selectedColor = c; colorLabel.textContent = c.label;
       };
       colorGrid.appendChild(btn);
     });
   }
-
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 };
 
-// Helper: detect light hex colors so we can add a visible ring
 function isLightColor(hex) {
   const c = hex.replace('#','');
-  const r = parseInt(c.substr(0,2),16);
-  const g = parseInt(c.substr(2,2),16);
-  const b = parseInt(c.substr(4,2),16);
+  const r = parseInt(c.substr(0,2),16), g = parseInt(c.substr(2,2),16), b = parseInt(c.substr(4,2),16);
   return (r*299 + g*587 + b*114) / 1000 > 180;
 }
 
 window.selSize = btn => {
   document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
-  selectedSize = btn.textContent;
+  btn.classList.add('sel'); selectedSize = btn.textContent;
 };
-
 document.getElementById('modalClose').onclick = closeModal;
 document.getElementById('modal').onclick = e => { if(e.target===document.getElementById('modal')) closeModal(); };
 function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = ''; }
@@ -797,30 +831,18 @@ function closeModal() { document.getElementById('modal').classList.remove('open'
 window.addToCart = () => {
   if (!currentProduct) return;
   if (!selectedSize) { showToast('Please select a size', false); return; }
-
-  // Require color if product has ≥2 colors
   const colors = Array.isArray(currentProduct.colors) ? currentProduct.colors : [];
-  if (colors.length >= 2 && !selectedColor) {
-    showToast('Please select a color', false); return;
-  }
-
+  if (colors.length >= 2 && !selectedColor) { showToast('Please select a color', false); return; }
   const img      = (currentProduct.images&&currentProduct.images[0]) || currentProduct.image || '';
   const colorKey = selectedColor ? selectedColor.hex : null;
   const existing = cart.find(i => i.id===currentProduct.id && i.size===selectedSize && i.colorHex===colorKey);
   if (existing) existing.qty++;
   else cart.push({
-    id:         currentProduct.id,
-    name:       currentProduct.name,
-    price:      Number(currentProduct.price),
-    size:       selectedSize,
-    colorHex:   selectedColor ? selectedColor.hex   : null,
-    colorLabel: selectedColor ? selectedColor.label : null,
-    qty:        1,
-    img,
-    paid:       false
+    id: currentProduct.id, name: currentProduct.name, price: Number(currentProduct.price),
+    size: selectedSize, colorHex: selectedColor ? selectedColor.hex : null,
+    colorLabel: selectedColor ? selectedColor.label : null, qty: 1, img, paid: false
   });
-  saveCart();
-  closeModal();
+  saveCart(); closeModal();
   const colorText = selectedColor ? ` in ${selectedColor.label}` : '';
   showToast(`${currentProduct.name}${colorText} added to bag`);
   openCart();
@@ -836,13 +858,17 @@ document.getElementById('cartClose').onclick  = () => document.getElementById('c
 
 function saveCart() {
   localStorage.setItem('444cart', JSON.stringify(cart));
-  document.getElementById('cartCount').textContent = cart.reduce((a,i)=>a+i.qty,0);
+  // Cart badge: only unpaid items count
+  const unpaidCount = cart.filter(i=>!i.paid).reduce((a,i)=>a+i.qty,0);
+  document.getElementById('cartCount').textContent = unpaidCount;
   renderCart();
+  updateOrdersBadge();
 }
 
 function renderCart() {
   const body       = document.getElementById('cartBody');
   const unpaid     = cart.filter(i=>!i.paid);
+  const paid       = cart.filter(i=>i.paid);
   const subtotal   = calcSubtotal();
   const delivery   = calcDelivery(subtotal);
   const total      = subtotal + delivery;
@@ -852,7 +878,7 @@ function renderCart() {
   if (unpaid.length > 0) {
     summaryEl.style.display = 'block'; checkoutBtn.disabled = false;
     document.getElementById('summarySubtotal').textContent = `GH₵ ${subtotal.toLocaleString()}`;
-    document.getElementById('summaryDelivery').textContent = delivery===0 ? (subtotal>=FREE_DELIVERY_ABOVE?'Free':'GH₵ 0') : `GH₵ ${delivery.toLocaleString()}`;
+    document.getElementById('summaryDelivery').textContent = delivery===0?(subtotal>=FREE_DELIVERY_ABOVE?'Free':'GH₵ 0'):`GH₵ ${delivery.toLocaleString()}`;
     document.getElementById('summaryTotal').textContent    = `GH₵ ${total.toLocaleString()}`;
   } else {
     summaryEl.style.display = 'none'; checkoutBtn.disabled = true;
@@ -863,27 +889,122 @@ function renderCart() {
     return;
   }
 
-  body.innerHTML = cart.map((item, idx) => {
-    // Color display in cart
+  // Show unpaid first, then paid (locked) items
+  const allItems = [...unpaid, ...paid];
+  body.innerHTML = allItems.map((item) => {
+    // find original index in cart array for removal
+    const idx = cart.indexOf(item);
     const colorChip = item.colorHex
-      ? `<span class="cart-color-dot" style="background:${item.colorHex}" title="${item.colorLabel||''}"></span> ${item.colorLabel||''}`
+      ? `<span class="cart-color-dot" style="background:${item.colorHex}" title="${item.colorLabel||''}"></span>${item.colorLabel||''}`
       : '';
-    const sizeMeta = `Size: ${item.size}${item.colorHex ? ' · ' : ''} ${colorChip} · Qty: ${item.qty}`;
+    const sizeMeta = `Size: ${item.size}${item.colorHex ? ' · ' : ''}${colorChip}${item.qty > 1 ? ` · Qty: ${item.qty}` : ''}`;
+
+    if (item.paid) {
+      // PAID ITEM — locked, cannot be deleted
+      return `
+        <div class="cart-item is-paid">
+          <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
+          <div>
+            <p class="cart-item-name">${item.name}</p>
+            <p class="cart-item-meta">${sizeMeta}</p>
+            <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
+            <span class="cart-paid-badge"><i class="fas fa-check-circle"></i> Paid &amp; Confirmed</span>
+          </div>
+          <div class="cart-lock" title="Paid orders cannot be removed"><i class="fas fa-lock"></i></div>
+        </div>`;
+    } else {
+      return `
+        <div class="cart-item">
+          <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
+          <div>
+            <p class="cart-item-name">${item.name}</p>
+            <p class="cart-item-meta">${sizeMeta}</p>
+            <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
+          </div>
+          <button class="cart-rm" onclick="removeItem(${idx})"><i class="fas fa-times"></i></button>
+        </div>`;
+    }
+  }).join('');
+}
+
+window.removeItem = idx => {
+  // Safety: only allow removing unpaid items
+  if (cart[idx] && !cart[idx].paid) { cart.splice(idx,1); saveCart(); }
+};
+
+// ── ORDERS DRAWER ────────────────────────────────────────────
+function updateOrdersBadge() {
+  const badge = document.getElementById('ordersCount');
+  if (orderHistory.length > 0) {
+    badge.style.display = 'flex';
+    badge.textContent   = orderHistory.length;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function openOrdersDrawer() {
+  renderOrdersDrawer();
+  document.getElementById('ordersDrawer').classList.add('open');
+}
+document.getElementById('ordersToggle').onclick = openOrdersDrawer;
+document.getElementById('ordersClose').onclick  = () => document.getElementById('ordersDrawer').classList.remove('open');
+
+function renderOrdersDrawer() {
+  const body     = document.getElementById('ordersBody');
+  const clearBtn = document.getElementById('btnClearOrders');
+
+  if (!orderHistory.length) {
+    body.innerHTML = `<div class="orders-empty"><i class="fas fa-receipt"></i><p>No confirmed orders yet</p><small>Completed purchases will appear here</small></div>`;
+    clearBtn.style.display = 'none';
+    return;
+  }
+
+  clearBtn.style.display = 'block';
+
+  // Most recent first
+  const sorted = [...orderHistory].reverse();
+  body.innerHTML = sorted.map(order => {
+    const itemsHtml = order.items.map(i => {
+      const colorDot = i.colorHex
+        ? `<span class="order-color-dot" style="background:${i.colorHex}" title="${i.colorLabel||''}"></span>`
+        : '';
+      const colorText = i.colorLabel ? ` · ${i.colorLabel}` : '';
+      return `<div class="order-item-row">
+        <span class="order-item-name">${colorDot}${i.name}<span class="order-item-meta">(${i.size}${colorText}) ×${i.qty}</span></span>
+        <span class="order-item-price">GH₵ ${(i.unitPrice*i.qty).toLocaleString()}</span>
+      </div>`;
+    }).join('');
+
     return `
-      <div class="cart-item">
-        <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
-        <div>
-          <p class="cart-item-name">${item.name}</p>
-          <p class="cart-item-meta">${sizeMeta}</p>
-          <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
-          ${item.paid ? `<span class="cart-paid-badge"><i class="fas fa-check-circle"></i> Paid</span>` : ''}
+      <div class="order-card">
+        <div class="order-card-head">
+          <div>
+            <p class="order-ref-label">Order Reference</p>
+            <p class="order-ref-val">${order.ref}</p>
+          </div>
+          <span class="order-status-pill pill-confirmed">Confirmed</span>
         </div>
-        ${!item.paid ? `<button class="cart-rm" onclick="removeItem(${idx})"><i class="fas fa-times"></i></button>` : ''}
+        <div class="order-card-body">
+          <p class="order-date-line"><i class="fas fa-calendar-alt"></i>${order.date}</p>
+          <div class="order-items-list">${itemsHtml}</div>
+          <div class="order-total-strip">
+            <span class="lbl">Total Paid</span>
+            <span class="val">GH₵ ${order.total.toLocaleString()}</span>
+          </div>
+        </div>
       </div>`;
   }).join('');
 }
 
-window.removeItem = idx => { cart.splice(idx,1); saveCart(); };
+window.clearOrderHistory = () => {
+  if (!confirm('Clear all order history from this device? This cannot be undone.\n\nYour orders are still saved in our system.')) return;
+  orderHistory = [];
+  localStorage.setItem('444orders', '[]');
+  updateOrdersBadge();
+  renderOrdersDrawer();
+  showToast('Order history cleared');
+};
 
 // ── CHECKOUT PANEL ───────────────────────────────────────────
 window.openCheckoutPanel = () => {
@@ -891,11 +1012,8 @@ window.openCheckoutPanel = () => {
   const subtotal = calcSubtotal();
   const delivery = calcDelivery(subtotal);
   const total    = subtotal + delivery;
-
   document.getElementById('checkoutOrderItems').innerHTML = unpaid.map(i => {
-    const colorDot = i.colorHex
-      ? `<span class="co-color-dot" style="background:${i.colorHex}"></span>`
-      : '';
+    const colorDot  = i.colorHex ? `<span class="co-color-dot" style="background:${i.colorHex}"></span>` : '';
     const colorText = i.colorLabel ? ` · ${i.colorLabel}` : '';
     return `<div class="checkout-order-item">
       <span class="item-n">${colorDot}${i.name} <span style="opacity:.5">(${i.size}${colorText}) ×${i.qty}</span></span>
@@ -975,26 +1093,18 @@ window.submitCheckoutAndPay = () => {
   const errors = validateForm(form);
   if (errors.length) { showFormErrors(errors); return; }
   showFormErrors([]);
-
   const unpaid = cart.filter(i=>!i.paid);
   if (!unpaid.length) { showToast('Your cart is empty', false); return; }
-
-  const total       = calcTotal();
-  const amountPes   = Math.round(total * 100);
-  const ref         = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
-  // Include color in Paystack metadata
-  const itemsMeta   = unpaid.map(i => `${i.name} (${i.size}${i.colorLabel?' · '+i.colorLabel:''}) ×${i.qty}`).join('; ');
-
+  const total     = calcTotal();
+  const amountPes = Math.round(total * 100);
+  const ref       = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
+  const itemsMeta = unpaid.map(i => `${i.name} (${i.size}${i.colorLabel?' · '+i.colorLabel:''}) ×${i.qty}`).join('; ');
   const btn = document.getElementById('btnPayNow');
   btn.disabled = true;
 
   const handler = PaystackPop.setup({
-    key:      PAYSTACK_PUBLIC_KEY,
-    email:    form.email.trim(),
-    amount:   amountPes,
-    currency: 'GHS',
-    ref,
-    label:    '444 Brand Order',
+    key: PAYSTACK_PUBLIC_KEY, email: form.email.trim(), amount: amountPes, currency: 'GHS', ref,
+    label: '444 Brand Order',
     metadata: {
       custom_fields: [
         { display_name:'Customer Name',  variable_name:'customer_name',  value:form.name },
@@ -1011,6 +1121,26 @@ window.submitCheckoutAndPay = () => {
       try {
         await saveOrderToFirestore(form, cart, response.reference, response);
         sendAdminEmail(form, cart, response.reference, total).catch(console.warn);
+        // ── Save to local order history ──────────────────────
+        const subtotal = calcSubtotal();
+        const shipping = calcDelivery(subtotal);
+        orderHistory.push({
+          ref:   response.reference,
+          date:  new Date().toLocaleString('en-GB', { timeZone:'Africa/Accra', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+          total: subtotal + shipping,
+          items: unpaid.map(i => ({
+            name:       i.name,
+            size:       i.size,
+            colorHex:   i.colorHex   || null,
+            colorLabel: i.colorLabel || null,
+            unitPrice:  i.price,
+            qty:        i.qty,
+            img:        i.img,
+          })),
+          customer: { name:form.name, email:form.email, phone:form.phone }
+        });
+        localStorage.setItem('444orders', JSON.stringify(orderHistory));
+        // Mark cart items as paid
         cart = cart.map(i => i.paid ? i : { ...i, paid:true, payRef:response.reference });
         localStorage.setItem('444cart', JSON.stringify(cart));
         saveCart();
@@ -1039,31 +1169,20 @@ async function saveOrderToFirestore(form, cart, paystackRef, paystackResponse) {
     const total    = subtotal + shipping;
     const orderData = {
       paystackRef,
-      customerName: form.name.trim(),
-      email:        form.email.trim().toLowerCase(),
-      phone:        form.phone.trim(),
-      address:      form.address.trim(),
-      city:         form.city.trim(),
-      country:      form.country.trim(),
-      gpsLocation:  form.gpsLocation?.trim()||'',
-      orderNotes:   form.notes?.trim()||'',
+      customerName: form.name.trim(), email: form.email.trim().toLowerCase(),
+      phone: form.phone.trim(), address: form.address.trim(),
+      city: form.city.trim(), country: form.country.trim(),
+      gpsLocation: form.gpsLocation?.trim()||'', orderNotes: form.notes?.trim()||'',
       items: unpaid.map(item => ({
-        productId:  item.id||'',
-        name:       item.name,
-        image:      item.img||'',
-        size:       item.size,
-        colorHex:   item.colorHex||'',    // ← color saved to Firestore
-        colorLabel: item.colorLabel||'',  // ← color label saved
-        qty:        item.qty,
-        unitPrice:  item.price,
-        lineTotal:  item.price * item.qty,
+        productId: item.id||'', name: item.name, image: item.img||'',
+        size: item.size, colorHex: item.colorHex||'', colorLabel: item.colorLabel||'',
+        qty: item.qty, unitPrice: item.price, lineTotal: item.price * item.qty,
       })),
       subtotal, shippingFee:shipping, totalAmount:total, currency:'GHS',
       paymentStatus:'paid', paymentMethod:'paystack', paystackData:paystackResponse||{},
       orderStatus:'confirmed',
       orderHistory:[{ status:'confirmed', timestamp:new Date().toISOString(), note:'Order confirmed via Paystack' }],
-      brand:'444 Brand', source:'web',
-      createdAt:serverTimestamp(), updatedAt:serverTimestamp(),
+      brand:'444 Brand', source:'web', createdAt:serverTimestamp(), updatedAt:serverTimestamp(),
     };
     tx.set(orderRef, orderData);
     const notifRef = doc(db,'orderNotifications',paystackRef);
@@ -1079,37 +1198,28 @@ async function saveOrderToFirestore(form, cart, paystackRef, paystackResponse) {
 // ── ADMIN EMAIL ───────────────────────────────────────────────
 async function sendAdminEmail(form, cart, paystackRef, total) {
   if (typeof emailjs === 'undefined') return;
-  const unpaid    = cart.filter(i=>!i.paid);
-  const subtotal  = calcSubtotal();
-  const shipping  = calcDelivery(subtotal);
-  // Each item line includes color
+  const unpaid   = cart.filter(i=>!i.paid);
+  const subtotal = calcSubtotal();
+  const shipping = calcDelivery(subtotal);
   const itemsList = unpaid.map(i => {
     const colorText = i.colorLabel ? ` | Color: ${i.colorLabel}` : '';
     return `• ${i.name} (Size: ${i.size}${colorText}) ×${i.qty} = GH₵${(i.price*i.qty).toLocaleString()}`;
   }).join('\n');
-
-  return emailjs.send(
-    EMAILJS_SERVICE_ID,
-    EMAILJS_TEMPLATE_ID,
-    {
-      to_email:         ADMIN_EMAIL,
-      order_ref:        paystackRef,
-      customer_name:    form.name,
-      customer_email:   form.email,
-      customer_phone:   form.phone,
-      delivery_address: `${form.address}, ${form.city}, ${form.country}`,
-      gps_location:     form.gpsLocation||'N/A',
-      order_notes:      form.notes||'None',
-      items_list:       itemsList,          // ← color is inside each line
-      subtotal:         `GH₵ ${subtotal.toLocaleString()}`,
-      shipping_fee:     `GH₵ ${shipping.toLocaleString()}`,
-      total_amount:     `GH₵ ${total.toLocaleString()}`,
-      payment_status:   'Paid',
-      order_date:       new Date().toLocaleString('en-GB',{timeZone:'Africa/Accra'}),
-      brand:            '444 Brand',
-    },
-    EMAILJS_PUBLIC_KEY
-  );
+  return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    to_email: ADMIN_EMAIL, order_ref: paystackRef,
+    customer_name: form.name, customer_email: form.email, customer_phone: form.phone,
+    delivery_address: `${form.address}, ${form.city}, ${form.country}`,
+    gps_location: form.gpsLocation||'N/A', order_notes: form.notes||'None',
+    items_list: itemsList,
+    subtotal: `GH₵ ${subtotal.toLocaleString()}`,
+    shipping_fee: `GH₵ ${shipping.toLocaleString()}`,
+    total_amount: `GH₵ ${total.toLocaleString()}`,
+    payment_status: 'Paid',
+    order_date: new Date().toLocaleString('en-GB',{timeZone:'Africa/Accra'}),
+    brand: '444 Brand',
+    customer_city: form.city,
+    items_count: `${unpaid.length} item${unpaid.length!==1?'s':''}`,
+  }, EMAILJS_PUBLIC_KEY);
 }
 
 // ── SUCCESS SCREEN ────────────────────────────────────────────
@@ -1124,9 +1234,7 @@ function showPaymentSuccess(ref, form, items) {
     ${form.notes ? `<div class="sci-row"><i class="fas fa-sticky-note"></i>${form.notes}</div>` : ''}
   `;
   document.getElementById('successItemsList').innerHTML = items.map(i => {
-    const colorDot = i.colorHex
-      ? `<span class="success-color-dot" style="background:${i.colorHex}"></span>`
-      : '';
+    const colorDot  = i.colorHex ? `<span class="success-color-dot" style="background:${i.colorHex}"></span>` : '';
     const colorText = i.colorLabel ? ` · ${i.colorLabel}` : '';
     return `<div class="success-item-row">
       <span class="success-item-name">${colorDot}${i.name} <span style="opacity:.5;font-size:.62rem">(${i.size}${colorText}) ×${i.qty}</span></span>
@@ -1136,12 +1244,20 @@ function showPaymentSuccess(ref, form, items) {
   document.getElementById('successOverlay').classList.add('open');
   document.getElementById('checkoutPanel').classList.remove('open');
   document.body.style.overflow = 'hidden';
+  updateOrdersBadge();
 }
 
 window.closeSuccess = () => {
   document.getElementById('successOverlay').classList.remove('open');
   document.body.style.overflow = '';
   showToast('Thank you! Your 444 order is confirmed. 🎉');
+};
+
+// View orders directly from success screen
+window.closeSuccessViewOrders = () => {
+  document.getElementById('successOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  openOrdersDrawer();
 };
 
 function showProcessing(show, msg='Saving your order…') {
@@ -1159,7 +1275,7 @@ function showToast(msg, ok=true) {
   setTimeout(() => t.classList.remove('show'), 3800);
 }
 
-saveCart(); renderCart(); loadProducts();
+saveCart(); renderCart(); loadProducts(); updateOrdersBadge();
 </script>
 </body>
 </html>
