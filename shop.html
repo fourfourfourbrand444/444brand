@@ -131,8 +131,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .size-grid{display:flex;gap:0.45rem;flex-wrap:wrap;margin-bottom:1.6rem}
 .size-btn{width:46px;height:46px;border:1px solid var(--light-gray);background:transparent;font-family:var(--font-body);font-size:0.65rem;font-weight:600;letter-spacing:0.06em;cursor:pointer;transition:var(--transition);color:var(--dark-gray)}
 .size-btn:hover,.size-btn.sel{background:var(--black);color:var(--white);border-color:var(--black)}
-
-/* ── COLOR SECTION ── */
 .color-section{margin-bottom:1.6rem}
 .color-grid{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.6rem}
 .color-swatch{position:relative;width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.25s ease;box-shadow:0 1px 4px rgba(0,0,0,0.15);outline:none}
@@ -140,15 +138,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .color-swatch.sel{border-color:var(--black) !important;transform:scale(1.15);box-shadow:0 0 0 3px rgba(8,8,8,0.15)}
 .color-swatch.light-swatch{border-color:var(--light-gray) !important}
 .color-swatch.sel.light-swatch{border-color:var(--black) !important}
-/* Single-color display (read-only chip) */
 .color-single-display{display:flex;align-items:center;gap:0.7rem;margin-top:0.6rem;padding:0.6rem 0.85rem;background:var(--cream);border:1px solid var(--light-gray)}
 .color-single-dot{width:20px;height:20px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
 .color-single-label{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-gray)}
-/* Selected label under swatches */
 .color-selected-label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-gray);margin-top:0.5rem;font-weight:600;min-height:1em}
-/* Hint text when no color selected yet */
 .color-hint{font-size:0.58rem;letter-spacing:0.08em;color:var(--mid-gray);margin-top:0.4rem;font-style:italic}
-
 .modal-actions{display:flex;gap:0.6rem;margin-top:auto}
 .btn-add{flex:1;padding:0.95rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.6rem}
 .btn-add:hover{background:var(--gold);color:var(--black)}
@@ -180,7 +174,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .cart-item-price{font-size:0.82rem;font-weight:700;margin-bottom:0.35rem}
 .cart-paid-badge{display:inline-flex;align-items:center;gap:0.35rem;background:var(--green-light);color:var(--green);font-size:0.52rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid rgba(26,110,60,0.3);border-radius:2px}
 .cart-paid-badge i{font-size:0.6rem}
-.cart-lock{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--green);opacity:0.6;font-size:0.8rem;flex-shrink:0}
+.cart-lock{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--green);opacity:0.7;font-size:0.9rem;flex-shrink:0;cursor:default}
 .cart-rm{background:none;border:none;color:var(--mid-gray);cursor:pointer;font-size:0.75rem;padding:0.2rem;transition:color 0.3s}
 .cart-rm:hover{color:var(--black)}
 .cart-foot{padding:1.5rem 2rem 2rem;border-top:1px solid var(--light-gray);background:var(--off-white)}
@@ -201,43 +195,75 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .secure-note{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.8rem;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray)}
 .secure-note i{color:var(--gold-dark);font-size:0.65rem}
 
-/* ORDERS DRAWER */
-.orders-drawer{position:fixed;top:0;right:-520px;width:min(520px,100%);height:100vh;background:var(--white);z-index:2600;display:flex;flex-direction:column;transition:right 0.5s cubic-bezier(0.76,0,0.24,1);box-shadow:-30px 0 80px rgba(0,0,0,0.2)}
+/* ── ORDERS DRAWER ── */
+.orders-drawer{position:fixed;top:0;right:-560px;width:min(560px,100%);height:100vh;background:var(--white);z-index:2600;display:flex;flex-direction:column;transition:right 0.5s cubic-bezier(0.76,0,0.24,1);box-shadow:-30px 0 80px rgba(0,0,0,0.2)}
 .orders-drawer.open{right:0}
-.orders-head{display:flex;align-items:center;justify-content:space-between;padding:1.8rem 2rem;border-bottom:1px solid var(--light-gray);background:var(--black)}
+
+.orders-head{display:flex;align-items:center;justify-content:space-between;padding:1.8rem 2rem;border-bottom:2px solid var(--gold);background:var(--black)}
+.orders-head-left{display:flex;flex-direction:column;gap:0.3rem}
 .orders-head h2{font-family:var(--font-display);font-size:1.6rem;font-weight:400;color:var(--white)}
 .orders-head h2 em{font-style:italic;color:var(--gold-light)}
+.orders-head-sub{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
 .orders-x{background:none;border:none;font-size:1.1rem;cursor:pointer;color:rgba(255,255,255,0.7);padding:0.4rem;transition:color 0.3s}
 .orders-x:hover{color:var(--gold)}
-.orders-body{flex:1;overflow-y:auto;padding:1.5rem 2rem}
-.orders-empty{text-align:center;padding:4rem 1rem}
-.orders-empty i{font-size:2.8rem;color:var(--light-gray);display:block;margin-bottom:1rem}
-.orders-empty p{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.4rem}
-.orders-empty small{font-size:0.6rem;color:var(--light-gray);letter-spacing:0.08em}
-.order-card{border:1px solid var(--light-gray);margin-bottom:1.2rem;overflow:hidden}
-.order-card-head{background:var(--black);padding:0.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.order-ref-label{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.2rem}
-.order-ref-val{font-family:var(--font-display);font-size:0.85rem;font-weight:600;color:var(--gold-light);letter-spacing:0.04em;word-break:break-all}
-.order-status-pill{display:inline-flex;align-items:center;gap:0.35rem;padding:0.3rem 0.75rem;font-size:0.52rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;border-radius:2px;flex-shrink:0;white-space:nowrap}
-.pill-confirmed{background:var(--green-light);color:var(--green);border:1px solid rgba(26,110,60,0.3)}
-.pill-confirmed::before{content:'';width:5px;height:5px;background:var(--green);border-radius:50%;display:inline-block}
-.order-card-body{padding:1rem 1.1rem}
-.order-date-line{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.4rem}
-.order-date-line i{color:var(--gold-dark);font-size:0.65rem}
-.order-items-list{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.9rem}
-.order-item-row{display:flex;justify-content:space-between;align-items:center;font-size:0.65rem;padding:0.4rem 0;border-bottom:1px solid var(--light-gray)}
+
+.orders-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 1rem;gap:1rem}
+.orders-loading-spinner{width:32px;height:32px;border:2px solid rgba(200,169,110,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite}
+.orders-loading p{font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--mid-gray)}
+
+.orders-body{flex:1;overflow-y:auto;padding:0}
+.orders-empty{text-align:center;padding:5rem 2rem}
+.orders-empty i{font-size:3rem;color:var(--light-gray);display:block;margin-bottom:1.2rem}
+.orders-empty p{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.5rem}
+.orders-empty small{font-size:0.6rem;color:var(--light-gray);letter-spacing:0.08em;line-height:1.8;display:block}
+
+/* order card */
+.order-card{border-bottom:1px solid var(--light-gray);overflow:hidden}
+.order-card-head{background:var(--black);padding:1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.order-ref-group{display:flex;flex-direction:column;gap:0.3rem;flex:1;min-width:0}
+.order-ref-label{font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.1rem}
+.order-ref-val{font-family:var(--font-display);font-size:0.85rem;font-weight:600;color:var(--gold-light);letter-spacing:0.04em;word-break:break-all;line-height:1.3}
+.order-head-right{display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;flex-shrink:0}
+
+/* PAID pill — the main new badge */
+.pill-paid{display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.9rem;font-size:0.52rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;border-radius:2px;background:var(--gold);color:var(--black);border:none;white-space:nowrap}
+.pill-paid i{font-size:0.6rem}
+.pill-locked{display:inline-flex;align-items:center;gap:0.35rem;padding:0.25rem 0.65rem;font-size:0.48rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;background:transparent;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:2px;white-space:nowrap}
+.pill-locked i{font-size:0.55rem}
+
+.order-card-body{padding:1.1rem 1.4rem}
+.order-date-line{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.order-date-line i{color:var(--gold-dark)}
+
+/* order items inside the order card */
+.order-items-list{display:flex;flex-direction:column;gap:0;margin-bottom:1rem;border:1px solid var(--light-gray)}
+.order-item-row{display:grid;grid-template-columns:54px 1fr auto;gap:0.8rem;align-items:center;padding:0.7rem 0.9rem;border-bottom:1px solid var(--light-gray)}
 .order-item-row:last-child{border-bottom:none}
-.order-item-name{color:var(--black);font-weight:500;display:flex;align-items:center;gap:0.4rem;flex:1}
-.order-item-meta{font-size:0.58rem;color:var(--mid-gray);letter-spacing:0.06em;margin-left:0.3rem}
-.order-item-price{color:var(--gold-dark);font-weight:700;flex-shrink:0;margin-left:0.5rem}
-.order-color-dot{display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
-.order-total-strip{background:var(--off-white);border:1px solid var(--light-gray);padding:0.7rem 1rem;display:flex;justify-content:space-between;align-items:baseline}
-.order-total-strip .lbl{font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--dark-gray)}
-.order-total-strip .val{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--black)}
-.orders-foot{padding:1.2rem 2rem 2rem;border-top:1px solid var(--light-gray);background:var(--off-white)}
-.btn-clear-orders{width:100%;padding:0.8rem;background:transparent;color:var(--mid-gray);border:1px solid var(--light-gray);font-family:var(--font-body);font-size:0.6rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:var(--transition)}
-.btn-clear-orders:hover{background:var(--red);color:var(--white);border-color:var(--red)}
-.orders-note{text-align:center;margin-top:0.75rem;font-size:0.58rem;color:var(--mid-gray);letter-spacing:0.06em;line-height:1.7}
+.order-item-thumb{width:54px;aspect-ratio:3/4;object-fit:cover;object-position:top center;background:var(--cream)}
+.order-item-info{display:flex;flex-direction:column;gap:0.25rem}
+.order-item-name{font-family:var(--font-display);font-size:0.9rem;font-weight:500;color:var(--black);line-height:1.2}
+.order-item-attrs{display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap}
+.order-attr-chip{display:inline-flex;align-items:center;gap:3px;background:var(--off-white);border:1px solid var(--light-gray);padding:2px 7px;font-size:0.52rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-gray)}
+.order-color-swatch{width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,0.12);display:inline-block;flex-shrink:0}
+.order-item-price{font-size:0.82rem;font-weight:700;color:var(--black);white-space:nowrap;text-align:right}
+.order-item-qty{font-size:0.6rem;color:var(--mid-gray);font-weight:500}
+
+.order-total-strip{background:var(--black);padding:0.9rem 1.4rem;display:flex;justify-content:space-between;align-items:center}
+.order-total-strip .lbl{font-size:0.58rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5)}
+.order-total-strip .val{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--gold-light)}
+
+/* lock strip at bottom of each card */
+.order-lock-strip{background:var(--green-light);border-top:1px solid rgba(26,110,60,0.2);padding:0.6rem 1.4rem;display:flex;align-items:center;gap:0.6rem}
+.order-lock-strip i{color:var(--green);font-size:0.75rem}
+.order-lock-strip span{font-size:0.55rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--green)}
+
+.orders-foot{padding:1.2rem 1.4rem 2rem;border-top:1px solid var(--light-gray);background:var(--off-white)}
+.orders-admin-note{background:var(--white);border:1px solid var(--light-gray);padding:0.9rem 1.1rem;margin-bottom:1rem;display:flex;gap:0.7rem;align-items:flex-start}
+.orders-admin-note i{color:var(--gold-dark);font-size:0.75rem;margin-top:1px;flex-shrink:0}
+.orders-admin-note p{font-size:0.58rem;line-height:1.8;color:var(--mid-gray);letter-spacing:0.03em}
+.orders-admin-note strong{color:var(--dark-gray);font-weight:700}
+.orders-wa-btn{width:100%;padding:0.85rem;background:#25d366;color:var(--white);border:none;font-family:var(--font-body);font-size:0.6rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.6rem}
+.orders-wa-btn:hover{background:#1ebe5a}
 
 /* CHECKOUT PANEL */
 .checkout-panel{position:fixed;top:0;right:-520px;width:min(520px,100%);height:100vh;background:var(--white);z-index:3500;display:flex;flex-direction:column;transition:right 0.55s cubic-bezier(0.76,0,0.24,1);box-shadow:-40px 0 100px rgba(0,0,0,0.25)}
@@ -297,15 +323,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 /* SUCCESS OVERLAY */
 .payment-success-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.94);z-index:5000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.5s ease}
 .payment-success-overlay.open{opacity:1;pointer-events:all}
-.success-box{background:var(--white);width:100%;max-width:480px;padding:3.5rem 2.5rem;text-align:center;transform:scale(0.9) translateY(20px);transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);max-height:90vh;overflow-y:auto}
+.success-box{background:var(--white);width:100%;max-width:500px;padding:3.5rem 2.5rem;text-align:center;transform:scale(0.9) translateY(20px);transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);max-height:90vh;overflow-y:auto}
 .payment-success-overlay.open .success-box{transform:scale(1) translateY(0)}
-.success-icon-wrap{width:72px;height:72px;background:var(--green-light);border:2px solid rgba(26,110,60,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.8rem;color:var(--green);animation:popIn 0.6s 0.3s both}
+.success-icon-wrap{width:76px;height:76px;background:var(--green-light);border:2px solid rgba(26,110,60,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.9rem;color:var(--green);animation:popIn 0.6s 0.3s both}
 @keyframes popIn{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
-.success-title{font-family:var(--font-display);font-size:2rem;font-weight:500;color:var(--black);margin-bottom:0.5rem}
-.success-sub{font-size:0.68rem;letter-spacing:0.08em;color:var(--mid-gray);line-height:1.9;margin-bottom:1.5rem}
-.success-ref{background:var(--off-white);border:1px solid var(--light-gray);padding:0.8rem 1.2rem;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:0.2rem}
-.success-ref .ref-label{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid-gray)}
-.success-ref .ref-value{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--black);letter-spacing:0.05em}
+.success-title{font-family:var(--font-display);font-size:2.2rem;font-weight:500;color:var(--black);margin-bottom:0.4rem}
+.success-sub{font-size:0.68rem;letter-spacing:0.06em;color:var(--mid-gray);line-height:1.9;margin-bottom:1.5rem}
+.success-ref{background:var(--black);padding:0.9rem 1.4rem;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:0.25rem;text-align:left}
+.success-ref .ref-label{font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.45)}
+.success-ref .ref-value{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--gold-light);letter-spacing:0.06em;word-break:break-all}
+.success-paid-banner{background:var(--green-light);border:1px solid rgba(26,110,60,0.25);padding:0.75rem 1.1rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:0.6rem}
+.success-paid-banner i{color:var(--green);font-size:0.9rem}
+.success-paid-banner span{font-size:0.6rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--green)}
 .success-items-title{font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--dark-gray);margin-bottom:0.8rem;text-align:left}
 .success-items-list{text-align:left;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:0.5rem}
 .success-item-row{display:flex;justify-content:space-between;align-items:center;font-size:0.68rem;padding:0.4rem 0;border-bottom:1px solid var(--light-gray)}
@@ -319,14 +348,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .btn-success-continue{flex:1;padding:1rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
 .btn-success-continue:hover{background:var(--gold);color:var(--black)}
 .btn-view-orders{flex:1;padding:1rem;background:var(--green);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.5rem}
-.btn-view-orders:hover{background:var(--green-light);color:var(--green)}
+.btn-view-orders:hover{background:#155a30}
 
 /* PROCESSING */
-.processing-overlay{position:fixed;inset:0;background:rgba(8,8,8,0.88);z-index:6000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.processing-overlay{position:fixed;inset:0;background:rgba(8,8,8,0.92);z-index:6000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;opacity:0;pointer-events:none;transition:opacity 0.3s}
 .processing-overlay.open{opacity:1;pointer-events:all}
-.processing-spinner{width:48px;height:48px;border:2px solid rgba(200,169,110,0.25);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite}
+.processing-spinner{width:52px;height:52px;border:2px solid rgba(200,169,110,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.processing-msg{font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.75)}
+.processing-steps{display:flex;flex-direction:column;gap:0.5rem;align-items:center}
+.processing-msg{font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.8)}
+.processing-sub{font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
 
 /* TOAST */
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--black);color:var(--white);padding:0.9rem 1.8rem;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;transition:transform 0.4s ease;z-index:9999;display:flex;align-items:center;gap:0.6rem;border-bottom:2px solid var(--gold)}
@@ -338,7 +369,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 /* RESPONSIVE */
 @media(max-width:1024px){.products-grid{grid-template-columns:repeat(2,1fr)}.modal{grid-template-columns:1fr}.modal-main-img{min-height:280px;max-height:360px}}
 @media(max-width:768px){nav{padding:0 1.2rem}.nav-center{display:none}.hamburger{display:flex}.products-grid{grid-template-columns:repeat(2,1fr);gap:1rem}.hero{height:60vh}.shop-header{flex-direction:column;align-items:flex-start}.form-row{grid-template-columns:1fr}}
-@media(max-width:480px){.products-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem}.hero-title{font-size:2.6rem}.container{width:95%}.modal-info{padding:1.8rem 1.4rem 1.4rem}.modal-name{font-size:1.6rem}.success-box{padding:2.5rem 1.5rem}.checkout-form-scroll{padding:1.4rem 1.2rem 1rem}.checkout-panel-foot{padding:1rem 1.2rem 1.5rem}.success-actions{flex-direction:column}}
+@media(max-width:480px){.products-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem}.hero-title{font-size:2.6rem}.container{width:95%}.modal-info{padding:1.8rem 1.4rem 1.4rem}.modal-name{font-size:1.6rem}.success-box{padding:2.5rem 1.5rem}.checkout-form-scroll{padding:1.4rem 1.2rem 1rem}.checkout-panel-foot{padding:1rem 1.2rem 1.5rem}.success-actions{flex-direction:column}.order-item-row{grid-template-columns:44px 1fr auto}}
 </style>
 </head>
 <body>
@@ -445,27 +476,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
       <p class="modal-price"><span class="cur">GH₵</span><span id="mPrice">—</span></p>
       <p class="in-stock-badge">In Stock</p>
       <p class="modal-desc" id="mDesc"></p>
-
-      <!-- SIZE -->
       <p class="modal-label">Select Size</p>
       <div class="size-grid" id="sizeGrid"></div>
-
-      <!-- COLOR SECTION — always rendered, visibility controlled by JS -->
       <div class="color-section" id="colorSection" style="display:none">
         <p class="modal-label" id="colorSectionLabel">Select Color</p>
-        <!-- multi-color swatches -->
         <div class="color-grid" id="colorGrid"></div>
-        <!-- single-color display chip -->
         <div class="color-single-display" id="colorSingleDisplay" style="display:none">
           <span class="color-single-dot" id="colorSingleDot"></span>
           <span class="color-single-label" id="colorSingleLabelText"></span>
         </div>
-        <!-- selected label (shown after choosing a swatch) -->
         <p class="color-selected-label" id="colorSelectedLabel"></p>
-        <!-- hint when multiple colors but none picked yet -->
         <p class="color-hint" id="colorHint" style="display:none">Please choose a color above</p>
       </div>
-
       <div class="modal-actions">
         <button class="btn-add" onclick="addToCart()"><i class="fas fa-shopping-bag"></i> Add to Cart</button>
         <button class="btn-wish"><i class="far fa-heart"></i></button>
@@ -481,10 +503,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
     <button class="cart-x" id="cartClose"><i class="fas fa-times"></i></button>
   </div>
   <div class="cart-body" id="cartBody">
-    <div class="cart-empty-state">
-      <i class="fas fa-shopping-bag"></i>
-      <p>Your bag is empty</p>
-    </div>
+    <div class="cart-empty-state"><i class="fas fa-shopping-bag"></i><p>Your bag is empty</p></div>
   </div>
   <div class="cart-foot">
     <div class="cart-summary" id="cartSummary" style="display:none">
@@ -503,21 +522,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 <!-- ORDERS DRAWER -->
 <div class="orders-drawer" id="ordersDrawer">
   <div class="orders-head">
-    <h2>My <em>Orders</em></h2>
+    <div class="orders-head-left">
+      <h2>My <em>Orders</em></h2>
+      <span class="orders-head-sub">Purchase history · Read-only</span>
+    </div>
     <button class="orders-x" id="ordersClose"><i class="fas fa-times"></i></button>
   </div>
   <div class="orders-body" id="ordersBody">
     <div class="orders-empty">
       <i class="fas fa-receipt"></i>
       <p>No confirmed orders yet</p>
-      <small>Completed purchases will appear here</small>
+      <small>Completed purchases appear here after payment is confirmed by Paystack.</small>
     </div>
   </div>
   <div class="orders-foot">
-    <button class="btn-clear-orders" id="btnClearOrders" onclick="clearOrderHistory()" style="display:none">
-      <i class="fas fa-trash" style="margin-right:.5rem"></i>Clear Order History
+    <div class="orders-admin-note">
+      <i class="fas fa-shield-alt"></i>
+      <p>Orders are <strong>permanently stored</strong> and locked after payment confirmation. Only 444 admin can modify or remove orders. Contact us via WhatsApp for any order enquiries.</p>
+    </div>
+    <button class="orders-wa-btn" onclick="window.open('https://wa.me/233530399523','_blank')">
+      <i class="fab fa-whatsapp"></i> Contact Us on WhatsApp
     </button>
-    <p class="orders-note">Orders are stored on this device. Contact us via WhatsApp if you need support for any order.</p>
   </div>
 </div>
 
@@ -607,7 +632,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
     <button class="btn-pay-now" id="btnPayNow" onclick="submitCheckoutAndPay()">
       <span class="btn-inner"><i class="fas fa-lock"></i>Pay with Paystack<span class="pay-total-inline" id="btnPayTotal">GH₵ 0</span></span>
     </button>
-    <div class="checkout-secure"><i class="fas fa-shield-alt"></i>256-bit SSL · Secured by Paystack</div>
+    <div class="checkout-secure"><i class="fas fa-shield-alt"></i>256-bit SSL · Secured by Paystack · Orders saved only after payment confirmed</div>
   </div>
 </div>
 
@@ -616,10 +641,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
   <div class="success-box">
     <div class="success-icon-wrap"><i class="fas fa-check"></i></div>
     <h2 class="success-title">Order Confirmed!</h2>
-    <p class="success-sub">Your payment was successful and your order has been received. We'll be in touch shortly with delivery updates.</p>
+    <p class="success-sub">Your payment was successful and your order has been securely saved. We'll reach out with delivery updates.</p>
     <div class="success-ref">
       <span class="ref-label">Order Reference</span>
       <span class="ref-value" id="successRef">—</span>
+    </div>
+    <div class="success-paid-banner">
+      <i class="fas fa-lock"></i>
+      <span>Paid &amp; Permanently Saved — Order is Locked</span>
     </div>
     <div class="success-customer-info" id="successCustomerInfo"></div>
     <p class="success-items-title">Items Confirmed</p>
@@ -634,7 +663,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 <!-- PROCESSING -->
 <div class="processing-overlay" id="processingOverlay">
   <div class="processing-spinner"></div>
-  <p class="processing-msg">Saving your order…</p>
+  <div class="processing-steps">
+    <p class="processing-msg" id="processingMsg">Confirming your payment…</p>
+    <p class="processing-sub" id="processingSub">Please do not close this page</p>
+  </div>
 </div>
 
 <!-- TOAST -->
@@ -644,12 +676,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 <a href="https://wa.me/233530399523" class="wa-float" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
 <script type="module">
-import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getFirestore, collection, doc, setDoc, getDoc,
-  serverTimestamp, runTransaction, query, orderBy, getDocs
+  getFirestore, collection, doc, setDoc, getDoc, getDocs,
+  serverTimestamp, runTransaction, query, orderBy, where
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+/* ── CONFIG ─────────────────────────────────────────────────── */
 const firebaseConfig = {
   apiKey:"AIzaSyDE1KZtXElz9q6JsU65voYRfXuGNg6pDVE",
   authDomain:"brand-dc8f6.firebaseapp.com",
@@ -672,15 +705,19 @@ const ADMIN_EMAIL         = '444brandgh@gmail.com';
 const DELIVERY_FEE        = 0;
 const FREE_DELIVERY_ABOVE = 500;
 
+/* ── STATE ──────────────────────────────────────────────────── */
 let allProducts    = [];
 let currentProduct = null;
 let selectedSize   = null;
 let selectedColor  = null;
 
-let cart         = JSON.parse(localStorage.getItem('444cart')   || '[]');
+// Cart: unpaid items only (staging area before payment)
+let cart = JSON.parse(localStorage.getItem('444cart') || '[]').filter(i => !i.paid);
+
+// Order history: confirmed paid orders — loaded from Firestore + localStorage
 let orderHistory = JSON.parse(localStorage.getItem('444orders') || '[]');
 
-// ── HERO SLIDER ──────────────────────────────────────────────
+/* ── HERO SLIDER ────────────────────────────────────────────── */
 let ci = 0;
 const slides = document.querySelectorAll('.slide');
 const dots   = document.querySelectorAll('.dot');
@@ -690,7 +727,7 @@ window.goSlide = n => {
 };
 setInterval(() => goSlide((ci+1) % slides.length), 5500);
 
-// ── MOBILE NAV ───────────────────────────────────────────────
+/* ── MOBILE NAV ─────────────────────────────────────────────── */
 document.getElementById('menuBtn').onclick = () => {
   document.getElementById('mobileMenu').classList.add('open');
   document.getElementById('overlay').classList.add('open');
@@ -702,7 +739,7 @@ const closeNav = () => {
 document.getElementById('menuClose').onclick = closeNav;
 document.getElementById('overlay').onclick   = closeNav;
 
-// ── LOAD PRODUCTS ────────────────────────────────────────────
+/* ── LOAD PRODUCTS ──────────────────────────────────────────── */
 async function loadProducts() {
   try {
     const q    = query(collection(db,'products'), orderBy('createdAt','desc'));
@@ -772,7 +809,7 @@ function renderProducts(list) {
   });
 }
 
-// ── PRODUCT MODAL ─────────────────────────────────────────────
+/* ── PRODUCT MODAL ──────────────────────────────────────────── */
 window.openModal = p => {
   currentProduct = p;
   selectedSize   = null;
@@ -781,14 +818,13 @@ window.openModal = p => {
   const imgs = (p.images && p.images.length) ? p.images
     : [p.image || 'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&q=80'];
 
-  document.getElementById('mainImg').src          = imgs[0];
-  document.getElementById('mainImg').alt          = p.name;
-  document.getElementById('mTag').textContent     = p.category || 'New Drop';
-  document.getElementById('mName').textContent    = p.name;
-  document.getElementById('mPrice').textContent   = Number(p.price).toLocaleString();
-  document.getElementById('mDesc').textContent    = p.description || 'Premium quality luxury streetwear.';
+  document.getElementById('mainImg').src        = imgs[0];
+  document.getElementById('mainImg').alt        = p.name;
+  document.getElementById('mTag').textContent   = p.category || 'New Drop';
+  document.getElementById('mName').textContent  = p.name;
+  document.getElementById('mPrice').textContent = Number(p.price).toLocaleString();
+  document.getElementById('mDesc').textContent  = p.description || 'Premium quality luxury streetwear.';
 
-  // Thumbs
   const thumbRow = document.getElementById('thumbRow');
   thumbRow.innerHTML = '';
   imgs.forEach((src, i) => {
@@ -803,12 +839,10 @@ window.openModal = p => {
     thumbRow.appendChild(div);
   });
 
-  // Sizes
   const sg    = document.getElementById('sizeGrid');
   const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['S','M','L','XL','2XL'];
   sg.innerHTML = sizes.map(s => `<button class="size-btn" onclick="selSize(this)">${s}</button>`).join('');
 
-  // ── COLOR SECTION ──────────────────────────────────────────
   const colors            = Array.isArray(p.colors) ? p.colors : [];
   const colorSection      = document.getElementById('colorSection');
   const colorGrid         = document.getElementById('colorGrid');
@@ -842,7 +876,6 @@ window.openModal = p => {
     colorGrid.style.display       = 'flex';
     colorSingleDisp.style.display = 'none';
     colorHint.style.display       = 'block';
-
     colors.forEach(c => {
       const btn = document.createElement('button');
       btn.className = 'color-swatch';
@@ -866,10 +899,10 @@ window.openModal = p => {
 };
 
 function isLightColor(hex) {
-  const c = (hex || '').replace('#','');
+  const c = (hex||'').replace('#','');
   if (c.length < 6) return false;
-  const r = parseInt(c.substr(0,2),16), g = parseInt(c.substr(2,2),16), b = parseInt(c.substr(4,2),16);
-  return (r*299 + g*587 + b*114) / 1000 > 180;
+  const r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),b=parseInt(c.substr(4,2),16);
+  return (r*299+g*587+b*114)/1000 > 180;
 }
 
 window.selSize = btn => {
@@ -887,27 +920,22 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-// ── CART LOGIC ───────────────────────────────────────────────
+/* ── CART ───────────────────────────────────────────────────── */
 window.addToCart = () => {
   if (!currentProduct) return;
   if (!selectedSize) { showToast('Please select a size', false); return; }
-
   const colors = Array.isArray(currentProduct.colors) ? currentProduct.colors : [];
   if (colors.length >= 2 && !selectedColor) {
     showToast('Please select a color', false);
     const hint = document.getElementById('colorHint');
-    if (hint) { hint.style.color = 'var(--red)'; setTimeout(() => hint.style.color = '', 2000); }
+    if (hint) { hint.style.color = 'var(--red)'; setTimeout(() => hint.style.color='', 2000); }
     return;
   }
-
   const img      = (currentProduct.images && currentProduct.images[0]) || currentProduct.image || '';
   const colorKey = selectedColor ? selectedColor.hex : null;
   const existing = cart.find(i =>
-    i.id === currentProduct.id &&
-    i.size === selectedSize &&
-    i.colorHex === colorKey
+    i.id === currentProduct.id && i.size === selectedSize && i.colorHex === colorKey
   );
-
   if (existing) {
     existing.qty++;
   } else {
@@ -920,10 +948,8 @@ window.addToCart = () => {
       colorLabel: selectedColor ? (selectedColor.label || selectedColor.hex || '') : null,
       qty:        1,
       img,
-      paid:       false
     });
   }
-
   saveCart();
   closeModal();
   const colorText = selectedColor ? ` · ${selectedColor.label || selectedColor.hex}` : '';
@@ -931,7 +957,7 @@ window.addToCart = () => {
   openCart();
 };
 
-function calcSubtotal() { return cart.filter(i=>!i.paid).reduce((a,i)=>a+i.price*i.qty,0); }
+function calcSubtotal() { return cart.reduce((a,i)=>a+i.price*i.qty,0); }
 function calcDelivery(sub) { if(sub===0)return 0; return sub>=FREE_DELIVERY_ABOVE?0:DELIVERY_FEE; }
 function calcTotal()    { const s=calcSubtotal(); return s+calcDelivery(s); }
 
@@ -941,24 +967,19 @@ document.getElementById('cartClose').onclick  = () => document.getElementById('c
 
 function saveCart() {
   localStorage.setItem('444cart', JSON.stringify(cart));
-  // FIX: only count unpaid items for the cart badge
-  const unpaidCount = cart.filter(i=>!i.paid).reduce((a,i)=>a+i.qty,0);
-  document.getElementById('cartCount').textContent = unpaidCount;
+  document.getElementById('cartCount').textContent = cart.reduce((a,i)=>a+i.qty,0);
   renderCart();
-  updateOrdersBadge();
 }
 
 function renderCart() {
   const body        = document.getElementById('cartBody');
-  const unpaid      = cart.filter(i=>!i.paid);
-  const paid        = cart.filter(i=>i.paid);
   const subtotal    = calcSubtotal();
   const delivery    = calcDelivery(subtotal);
   const total       = subtotal + delivery;
   const summaryEl   = document.getElementById('cartSummary');
   const checkoutBtn = document.getElementById('proceedCheckoutBtn');
 
-  if (unpaid.length > 0) {
+  if (cart.length > 0) {
     summaryEl.style.display  = 'block';
     checkoutBtn.disabled     = false;
     document.getElementById('summarySubtotal').textContent = `GH₵ ${subtotal.toLocaleString()}`;
@@ -974,13 +995,7 @@ function renderCart() {
     return;
   }
 
-  // FIX: use stable index from full cart array to avoid wrong item removal
-  const allItems = [...unpaid, ...paid];
-  body.innerHTML = allItems.map(item => {
-    const idx = cart.findIndex(c =>
-      c.id === item.id && c.size === item.size && c.colorHex === item.colorHex && c.paid === item.paid
-    );
-
+  body.innerHTML = cart.map((item, idx) => {
     const resolvedColorLabel = item.colorLabel || (item.colorHex ? item.colorHex : '');
     const colorChipHtml = item.colorHex
       ? `<span class="cart-color-chip">
@@ -988,45 +1003,30 @@ function renderCart() {
            <span class="cart-color-name">${resolvedColorLabel}</span>
          </span>`
       : '';
-
     const metaParts = [
       `Size: <strong style="color:var(--dark-gray);font-weight:700">${item.size}</strong>`,
       colorChipHtml ? `Color: ${colorChipHtml}` : '',
       item.qty > 1  ? `Qty: ${item.qty}` : '',
     ].filter(Boolean).join(' &nbsp;·&nbsp; ');
 
-    if (item.paid) {
-      return `
-        <div class="cart-item is-paid">
-          <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
-          <div>
-            <p class="cart-item-name">${item.name}</p>
-            <p class="cart-item-meta">${metaParts}</p>
-            <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
-            <span class="cart-paid-badge"><i class="fas fa-check-circle"></i> Paid &amp; Confirmed</span>
-          </div>
-          <div class="cart-lock" title="Paid orders cannot be removed"><i class="fas fa-lock"></i></div>
-        </div>`;
-    } else {
-      return `
-        <div class="cart-item">
-          <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
-          <div>
-            <p class="cart-item-name">${item.name}</p>
-            <p class="cart-item-meta">${metaParts}</p>
-            <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
-          </div>
-          <button class="cart-rm" onclick="removeItem(${idx})"><i class="fas fa-times"></i></button>
-        </div>`;
-    }
+    return `
+      <div class="cart-item">
+        <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
+        <div>
+          <p class="cart-item-name">${item.name}</p>
+          <p class="cart-item-meta">${metaParts}</p>
+          <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
+        </div>
+        <button class="cart-rm" onclick="removeItem(${idx})" title="Remove item"><i class="fas fa-times"></i></button>
+      </div>`;
   }).join('');
 }
 
 window.removeItem = idx => {
-  if (cart[idx] && !cart[idx].paid) { cart.splice(idx,1); saveCart(); }
+  if (cart[idx]) { cart.splice(idx,1); saveCart(); }
 };
 
-// ── ORDERS DRAWER ────────────────────────────────────────────
+/* ── ORDERS DRAWER ──────────────────────────────────────────── */
 function updateOrdersBadge() {
   const badge = document.getElementById('ordersCount');
   if (orderHistory.length > 0) {
@@ -1045,68 +1045,83 @@ document.getElementById('ordersToggle').onclick = openOrdersDrawer;
 document.getElementById('ordersClose').onclick  = () => document.getElementById('ordersDrawer').classList.remove('open');
 
 function renderOrdersDrawer() {
-  const body     = document.getElementById('ordersBody');
-  const clearBtn = document.getElementById('btnClearOrders');
+  const body = document.getElementById('ordersBody');
 
   if (!orderHistory.length) {
-    body.innerHTML = `<div class="orders-empty"><i class="fas fa-receipt"></i><p>No confirmed orders yet</p><small>Completed purchases will appear here</small></div>`;
-    clearBtn.style.display = 'none';
+    body.innerHTML = `
+      <div class="orders-empty">
+        <i class="fas fa-receipt"></i>
+        <p>No confirmed orders yet</p>
+        <small>Completed purchases appear here after payment is confirmed by Paystack. Orders are permanently saved and cannot be deleted by users.</small>
+      </div>`;
     return;
   }
 
-  clearBtn.style.display = 'block';
-  const sorted = [...orderHistory].reverse();
+  const sorted = [...orderHistory].sort((a,b) => new Date(b.savedAt||0) - new Date(a.savedAt||0));
+
   body.innerHTML = sorted.map(order => {
     const itemsHtml = order.items.map(i => {
       const colorDot  = i.colorHex
-        ? `<span class="order-color-dot" style="background:${i.colorHex}" title="${i.colorLabel||''}"></span>`
+        ? `<span class="order-color-swatch" style="background:${i.colorHex}" title="${i.colorLabel||''}"></span>`
         : '';
       const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
-      const colorText = i.colorHex ? ` · ${colorDot} ${resolvedLabel}` : '';
-      return `<div class="order-item-row">
-        <span class="order-item-name">${i.name}<span class="order-item-meta">(${i.size}${colorText}) ×${i.qty}</span></span>
-        <span class="order-item-price">GH₵ ${(i.unitPrice*i.qty).toLocaleString()}</span>
-      </div>`;
+      const colorChip = i.colorHex
+        ? `<span class="order-attr-chip">${colorDot} ${resolvedLabel}</span>`
+        : '';
+      return `
+        <div class="order-item-row">
+          <img class="order-item-thumb" src="${i.img||''}" alt="${i.name}"
+               onerror="this.style.display='none'">
+          <div class="order-item-info">
+            <span class="order-item-name">${i.name}</span>
+            <div class="order-item-attrs">
+              <span class="order-attr-chip">Size: ${i.size}</span>
+              ${colorChip}
+              ${i.qty > 1 ? `<span class="order-attr-chip">×${i.qty}</span>` : ''}
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="order-item-price">GH₵ ${(i.unitPrice*i.qty).toLocaleString()}</div>
+            <div class="order-item-qty">${i.qty > 1 ? `${i.qty} × GH₵${i.unitPrice.toLocaleString()}` : ''}</div>
+          </div>
+        </div>`;
     }).join('');
 
     return `
       <div class="order-card">
         <div class="order-card-head">
-          <div>
+          <div class="order-ref-group">
             <p class="order-ref-label">Order Reference</p>
             <p class="order-ref-val">${order.ref}</p>
           </div>
-          <span class="order-status-pill pill-confirmed">Confirmed</span>
+          <div class="order-head-right">
+            <span class="pill-paid"><i class="fas fa-check-circle"></i> Paid</span>
+            <span class="pill-locked"><i class="fas fa-lock"></i> Locked</span>
+          </div>
         </div>
         <div class="order-card-body">
           <p class="order-date-line"><i class="fas fa-calendar-alt"></i>${order.date}</p>
           <div class="order-items-list">${itemsHtml}</div>
-          <div class="order-total-strip">
-            <span class="lbl">Total Paid</span>
-            <span class="val">GH₵ ${order.total.toLocaleString()}</span>
-          </div>
+        </div>
+        <div class="order-total-strip">
+          <span class="lbl">Total Paid</span>
+          <span class="val">GH₵ ${order.total.toLocaleString()}</span>
+        </div>
+        <div class="order-lock-strip">
+          <i class="fas fa-shield-alt"></i>
+          <span>Saved to Firestore · Cannot be deleted by user</span>
         </div>
       </div>`;
   }).join('');
 }
 
-window.clearOrderHistory = () => {
-  if (!confirm('Clear all order history from this device? This cannot be undone.\n\nYour orders are still saved in our system.')) return;
-  orderHistory = [];
-  localStorage.setItem('444orders', '[]');
-  updateOrdersBadge();
-  renderOrdersDrawer();
-  showToast('Order history cleared');
-};
-
-// ── CHECKOUT PANEL ───────────────────────────────────────────
+/* ── CHECKOUT PANEL ─────────────────────────────────────────── */
 window.openCheckoutPanel = () => {
-  const unpaid   = cart.filter(i=>!i.paid);
   const subtotal = calcSubtotal();
   const delivery = calcDelivery(subtotal);
   const total    = subtotal + delivery;
 
-  document.getElementById('checkoutOrderItems').innerHTML = unpaid.map(i => {
+  document.getElementById('checkoutOrderItems').innerHTML = cart.map(i => {
     const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
     const colorDot  = i.colorHex
       ? `<span class="co-color-dot" style="background:${i.colorHex}" title="${resolvedLabel}"></span>`
@@ -1132,7 +1147,6 @@ window.closeCheckoutPanel = () => {
   document.getElementById('cartDrawer').classList.add('open');
 };
 
-// GPS
 window.detectGPS = () => {
   const btn = document.getElementById('gpsDetectBtn');
   if (!navigator.geolocation) { showToast('Geolocation not supported', false); return; }
@@ -1187,30 +1201,39 @@ function showFormErrors(errors) {
   banner.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 
-// ── SUBMIT & PAY ──────────────────────────────────────────────
+/* ══════════════════════════════════════════════════════════════
+   SUBMIT & PAY — CORE FLOW
+   Order is ONLY saved (Firestore + localStorage) AFTER
+   Paystack fires onSuccess. No payment = no order record.
+══════════════════════════════════════════════════════════════ */
 window.submitCheckoutAndPay = () => {
   const form   = readCheckoutForm();
   const errors = validateForm(form);
   if (errors.length) { showFormErrors(errors); return; }
   showFormErrors([]);
 
-  // FIX: snapshot unpaid items BEFORE any mutation
-  const unpaidSnapshot = cart.filter(i => !i.paid).map(i => ({ ...i }));
-  if (!unpaidSnapshot.length) { showToast('Your cart is empty', false); return; }
+  if (!cart.length) { showToast('Your cart is empty', false); return; }
+
+  // Snapshot the cart BEFORE Paystack opens (items to purchase)
+  const cartSnapshot = cart.map(i => ({ ...i }));
 
   const total     = calcTotal();
   const amountPes = Math.round(total * 100);
   const ref       = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
-  const itemsMeta = unpaidSnapshot.map(i => {
-    const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
-    return `${i.name} (${i.size}${resolvedLabel?' · '+resolvedLabel:''}) ×${i.qty}`;
+  const itemsMeta = cartSnapshot.map(i => {
+    const label = i.colorLabel || (i.colorHex ? i.colorHex : '');
+    return `${i.name} (${i.size}${label?' · '+label:''}) ×${i.qty}`;
   }).join('; ');
 
   const btn = document.getElementById('btnPayNow');
   btn.disabled = true;
 
   const handler = PaystackPop.setup({
-    key: PAYSTACK_PUBLIC_KEY, email: form.email.trim(), amount: amountPes, currency: 'GHS', ref,
+    key: PAYSTACK_PUBLIC_KEY,
+    email: form.email.trim(),
+    amount: amountPes,
+    currency: 'GHS',
+    ref,
     label: '444 Brand Order',
     metadata: {
       custom_fields: [
@@ -1224,23 +1247,38 @@ window.submitCheckoutAndPay = () => {
       ]
     },
 
+    /* ─── PAYMENT CONFIRMED BY PAYSTACK ─── */
     onSuccess: async (response) => {
       btn.disabled = false;
-      showProcessing(true);
+      setProcessing(true, 'Saving your order…', 'Do not close this page');
 
-      // FIX 1: Mark cart as paid IMMEDIATELY after Paystack confirms
-      // This must happen before Firestore — payment is real, persist it now
-      cart = cart.map(i => i.paid ? i : { ...i, paid: true, payRef: response.reference });
-      localStorage.setItem('444cart', JSON.stringify(cart));
-
-      // FIX 2: Save order history IMMEDIATELY using the pre-captured snapshot
-      const subtotal = unpaidSnapshot.reduce((a, i) => a + i.price * i.qty, 0);
+      const subtotal = cartSnapshot.reduce((a,i) => a+i.price*i.qty, 0);
       const shipping = calcDelivery(subtotal);
-      orderHistory.push({
-        ref:   response.reference,
-        date:  new Date().toLocaleString('en-GB', { timeZone:'Africa/Accra', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
-        total: subtotal + shipping,
-        items: unpaidSnapshot.map(i => ({
+      const paidRef  = response.reference;
+
+      /* STEP 1 — Save to Firestore (source of truth)
+         Only executes because Paystack confirmed payment.
+         Uses transaction to prevent duplicates.                */
+      let firestoreSaved = false;
+      try {
+        await saveOrderToFirestore(form, cartSnapshot, paidRef, response, subtotal, shipping);
+        firestoreSaved = true;
+      } catch (err) {
+        console.error('Firestore save error:', err);
+        // Payment is real — still save locally even if Firestore fails
+      }
+
+      /* STEP 2 — Build the confirmed order record */
+      const confirmedOrder = {
+        ref:   paidRef,
+        date:  new Date().toLocaleString('en-GB', {
+          timeZone:'Africa/Accra', day:'2-digit', month:'short',
+          year:'numeric', hour:'2-digit', minute:'2-digit'
+        }),
+        savedAt:   new Date().toISOString(),
+        total:     subtotal + shipping,
+        firestoreSaved,
+        items: cartSnapshot.map(i => ({
           name:       i.name,
           size:       i.size,
           colorHex:   i.colorHex   || null,
@@ -1249,22 +1287,28 @@ window.submitCheckoutAndPay = () => {
           qty:        i.qty,
           img:        i.img,
         })),
-        customer: { name: form.name, email: form.email, phone: form.phone }
-      });
+        customer: {
+          name:  form.name,
+          email: form.email,
+          phone: form.phone
+        }
+      };
+
+      /* STEP 3 — Add to local order history (locked, no delete) */
+      orderHistory.push(confirmedOrder);
       localStorage.setItem('444orders', JSON.stringify(orderHistory));
 
-      // FIX 3: Update UI immediately — badge + cart render
+      /* STEP 4 — Clear cart (items have been purchased) */
+      cart = [];
       saveCart();
       updateOrdersBadge();
 
-      // FIX 4: Show success screen with the pre-captured snapshot (items before paid mutation)
-      showProcessing(false);
-      showPaymentSuccess(response.reference, form, unpaidSnapshot);
+      /* STEP 5 — Show success screen */
+      setProcessing(false);
+      showPaymentSuccess(paidRef, form, cartSnapshot);
 
-      // FIX 5: Firestore + email run in background — failures don't break the UX
-      saveOrderToFirestore(form, unpaidSnapshot, response.reference, response, subtotal, shipping)
-        .catch(err => console.error('Firestore save failed (order is still confirmed):', err));
-      sendAdminEmail(form, unpaidSnapshot, response.reference, subtotal + shipping)
+      /* STEP 6 — Send admin email in background */
+      sendAdminEmail(form, cartSnapshot, paidRef, subtotal + shipping)
         .catch(err => console.warn('Admin email failed:', err));
     },
 
@@ -1277,9 +1321,9 @@ window.submitCheckoutAndPay = () => {
   handler.openIframe();
 };
 
-// ── SAVE TO FIRESTORE ────────────────────────────────────────
-// FIX: now receives pre-captured unpaidSnapshot + pre-calculated totals
-async function saveOrderToFirestore(form, unpaidSnapshot, paystackRef, paystackResponse, subtotal, shipping) {
+/* ── SAVE ORDER TO FIRESTORE ────────────────────────────────── */
+/* Called ONLY from onSuccess — guarantees payment was confirmed */
+async function saveOrderToFirestore(form, items, paystackRef, paystackResponse, subtotal, shipping) {
   const total    = subtotal + shipping;
   const orderRef = doc(db, 'orders', paystackRef);
 
@@ -1289,36 +1333,51 @@ async function saveOrderToFirestore(form, unpaidSnapshot, paystackRef, paystackR
 
     const orderData = {
       paystackRef,
-      customerName: form.name.trim(),
-      email:        form.email.trim().toLowerCase(),
-      phone:        form.phone.trim(),
-      address:      form.address.trim(),
-      city:         form.city.trim(),
-      country:      form.country.trim(),
-      gpsLocation:  form.gpsLocation?.trim() || '',
-      orderNotes:   form.notes?.trim() || '',
-      items: unpaidSnapshot.map(item => ({
-        productId: item.id   || '',
-        name:      item.name,
-        image:     item.img  || '',
-        size:      item.size,
-        colorHex:  item.colorHex   || '',
-        colorLabel:item.colorLabel || '',
-        qty:       item.qty,
-        unitPrice: item.price,
-        lineTotal: item.price * item.qty,
+      customerName:  form.name.trim(),
+      email:         form.email.trim().toLowerCase(),
+      phone:         form.phone.trim(),
+      address:       form.address.trim(),
+      city:          form.city.trim(),
+      country:       form.country.trim(),
+      gpsLocation:   form.gpsLocation?.trim() || '',
+      orderNotes:    form.notes?.trim() || '',
+      items: items.map(item => ({
+        productId:  item.id        || '',
+        name:       item.name,
+        image:      item.img       || '',
+        size:       item.size,
+        colorHex:   item.colorHex  || '',
+        colorLabel: item.colorLabel|| '',
+        qty:        item.qty,
+        unitPrice:  item.price,
+        lineTotal:  item.price * item.qty,
       })),
-      subtotal, shippingFee: shipping, totalAmount: total, currency: 'GHS',
-      paymentStatus: 'paid', paymentMethod: 'paystack',
-      paystackData:  paystackResponse || {},
-      orderStatus:   'confirmed',
-      orderHistory:  [{ status:'confirmed', timestamp: new Date().toISOString(), note:'Order confirmed via Paystack' }],
-      brand: '444 Brand', source: 'web',
-      createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+      subtotal,
+      shippingFee:    shipping,
+      totalAmount:    total,
+      currency:       'GHS',
+      paymentStatus:  'paid',          // Only 'paid' orders are ever written
+      paymentMethod:  'paystack',
+      paystackData:   paystackResponse || {},
+      orderStatus:    'confirmed',
+      orderHistory: [{
+        status:    'confirmed',
+        timestamp: new Date().toISOString(),
+        note:      'Payment confirmed via Paystack — order automatically saved'
+      }],
+      // Admin-managed fields — client cannot modify these
+      adminLocked:    true,            // Admin panel checks this before allowing delete
+      canUserDelete:  false,           // Explicit flag: users cannot delete orders
+      brand:         '444 Brand',
+      source:        'web',
+      createdAt:     serverTimestamp(),
+      updatedAt:     serverTimestamp(),
     };
 
+    // Write the order document
     tx.set(orderRef, orderData);
 
+    // Write notification for admin dashboard
     const notifRef = doc(db, 'orderNotifications', paystackRef);
     tx.set(notifRef, {
       paystackRef,
@@ -1335,20 +1394,16 @@ async function saveOrderToFirestore(form, unpaidSnapshot, paystackRef, paystackR
   });
 }
 
-// ── ADMIN EMAIL ───────────────────────────────────────────────
-// FIX: now receives pre-captured unpaidSnapshot + pre-calculated total
-async function sendAdminEmail(form, unpaidSnapshot, paystackRef, total) {
+/* ── ADMIN EMAIL ────────────────────────────────────────────── */
+async function sendAdminEmail(form, items, paystackRef, total) {
   if (typeof emailjs === 'undefined') return;
-
-  const subtotal = unpaidSnapshot.reduce((a, i) => a + i.price * i.qty, 0);
+  const subtotal = items.reduce((a,i) => a+i.price*i.qty, 0);
   const shipping = total - subtotal;
-
-  const itemsList = unpaidSnapshot.map(i => {
-    const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
-    const colorText = resolvedLabel ? ` | Color: ${resolvedLabel}` : '';
-    return `• ${i.name} (Size: ${i.size}${colorText}) ×${i.qty} = GH₵${(i.price * i.qty).toLocaleString()}`;
+  const itemsList = items.map(i => {
+    const label = i.colorLabel || (i.colorHex ? i.colorHex : '');
+    const colorText = label ? ` | Color: ${label}` : '';
+    return `• ${i.name} (Size: ${i.size}${colorText}) ×${i.qty} = GH₵${(i.price*i.qty).toLocaleString()}`;
   }).join('\n');
-
   return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
     to_email:         ADMIN_EMAIL,
     order_ref:        paystackRef,
@@ -1366,11 +1421,11 @@ async function sendAdminEmail(form, unpaidSnapshot, paystackRef, total) {
     order_date:       new Date().toLocaleString('en-GB', { timeZone:'Africa/Accra' }),
     brand:            '444 Brand',
     customer_city:    form.city,
-    items_count:      `${unpaidSnapshot.length} item${unpaidSnapshot.length !== 1 ? 's' : ''}`,
+    items_count:      `${items.length} item${items.length !== 1 ? 's' : ''}`,
   }, EMAILJS_PUBLIC_KEY);
 }
 
-// ── SUCCESS SCREEN ────────────────────────────────────────────
+/* ── SUCCESS SCREEN ─────────────────────────────────────────── */
 function showPaymentSuccess(ref, form, items) {
   document.getElementById('successRef').textContent = ref;
   document.getElementById('successCustomerInfo').innerHTML = `
@@ -1382,9 +1437,9 @@ function showPaymentSuccess(ref, form, items) {
     ${form.notes ? `<div class="sci-row"><i class="fas fa-sticky-note"></i>${form.notes}</div>` : ''}
   `;
   document.getElementById('successItemsList').innerHTML = items.map(i => {
-    const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
-    const colorDot  = i.colorHex ? `<span class="success-color-dot" style="background:${i.colorHex}" title="${resolvedLabel}"></span>` : '';
-    const colorText = resolvedLabel ? ` · ${resolvedLabel}` : '';
+    const label    = i.colorLabel || (i.colorHex ? i.colorHex : '');
+    const colorDot = i.colorHex ? `<span class="success-color-dot" style="background:${i.colorHex}" title="${label}"></span>` : '';
+    const colorText = label ? ` · ${label}` : '';
     return `<div class="success-item-row">
       <span class="success-item-name">${colorDot}${i.name} <span style="opacity:.5;font-size:.62rem">(${i.size}${colorText}) ×${i.qty}</span></span>
       <span class="success-item-price">GH₵ ${(i.price*i.qty).toLocaleString()}</span>
@@ -1408,9 +1463,10 @@ window.closeSuccessViewOrders = () => {
   openOrdersDrawer();
 };
 
-function showProcessing(show, msg='Saving your order…') {
+function setProcessing(show, msg='Processing…', sub='') {
   const el = document.getElementById('processingOverlay');
-  el.querySelector('.processing-msg').textContent = msg;
+  document.getElementById('processingMsg').textContent = msg;
+  document.getElementById('processingSub').textContent = sub;
   el.classList.toggle('open', show);
 }
 
@@ -1423,7 +1479,7 @@ function showToast(msg, ok=true) {
   setTimeout(() => t.classList.remove('show'), 3800);
 }
 
-// ── INIT ─────────────────────────────────────────────────────
+/* ── INIT ───────────────────────────────────────────────────── */
 saveCart();
 renderCart();
 loadProducts();
