@@ -676,12 +676,24 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 <a href="https://wa.me/233530399523" class="wa-float" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getFirestore, collection, doc, setDoc, getDoc, getDocs,
-  serverTimestamp, runTransaction, query, orderBy, where
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  serverTimestamp,
+  runTransaction,
+  query,
+  orderBy,
+  where,
+  enableIndexedDbPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  
 /* ── CONFIG ─────────────────────────────────────────────────── */
 const firebaseConfig = {
   apiKey:"AIzaSyDE1KZtXElz9q6JsU65voYRfXuGNg6pDVE",
@@ -695,28 +707,79 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
+enableIndexedDbPersistence(db).catch((err) => {
+  console.log("Persistence error:", err);
+});
+
 const EMAILJS_SERVICE_ID  = 'service_4tj52zt';
 const EMAILJS_TEMPLATE_ID = 'template_f8pc5ts';
 const EMAILJS_PUBLIC_KEY  = 'YdwKKnZpEVzhis4lB';
-if (typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
+
+if (typeof emailjs !== 'undefined') {
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}
 
 const PAYSTACK_PUBLIC_KEY = 'pk_live_981ff8ce8cf5e116ac0d57bcca18dd557af89edc';
+
 const ADMIN_EMAIL         = '444brandgh@gmail.com';
 const DELIVERY_FEE        = 0;
 const FREE_DELIVERY_ABOVE = 500;
 
-/* ── STATE ──────────────────────────────────────────────────── */
-let allProducts    = [];
-let currentProduct = null;
-let selectedSize   = null;
-let selectedColor  = null;
+/* ── LOAD ORDERS FROM FIRESTORE ───────────────────────────── */
+async function loadOrdersFromFirestore() {
+  try {
 
-// Cart: unpaid items only (staging area before payment)
-let cart = JSON.parse(localStorage.getItem('444cart') || '[]').filter(i => !i.paid);
+    const snap = await getDocs(collection(db, 'orders'));
 
-// Order history: confirmed paid orders — loaded from Firestore + localStorage
-let orderHistory = JSON.parse(localStorage.getItem('444orders') || '[]');
+    const firestoreOrders = snap.docs.map(docu => {
 
+      const d = docu.data();
+
+      return {
+        ref: d.paystackRef,
+
+        date: d.createdAt
+          ? new Date(d.createdAt.seconds * 1000).toLocaleString()
+          : 'Recently',
+
+        savedAt: new Date().toISOString(),
+
+        total: d.totalAmount || 0,
+
+        firestoreSaved: true,
+
+        items: (d.items || []).map(i => ({
+          name: i.name,
+          size: i.size,
+          colorHex: i.colorHex || null,
+          colorLabel: i.colorLabel || null,
+          unitPrice: i.unitPrice,
+          qty: i.qty,
+          img: i.image || ''
+        })),
+
+        customer: {
+          name: d.customerName,
+          email: d.email,
+          phone: d.phone
+        }
+      };
+    });
+
+    orderHistory = firestoreOrders;
+
+    localStorage.setItem('444orders', JSON.stringify(orderHistory));
+
+    updateOrdersBadge();
+
+    console.log("Orders loaded:", firestoreOrders);
+
+  } catch(err) {
+
+    console.error("Failed loading orders:", err);
+
+  }
+}
 /* ── HERO SLIDER ────────────────────────────────────────────── */
 let ci = 0;
 const slides = document.querySelectorAll('.slide');
@@ -1248,7 +1311,7 @@ window.submitCheckoutAndPay = () => {
     },
 
     /* ─── PAYMENT CONFIRMED BY PAYSTACK ─── */
-    onSuccess: async (response) => {
+   callback: async function(response) {
       btn.disabled = false;
       setProcessing(true, 'Saving your order…', 'Do not close this page');
 
@@ -1483,6 +1546,7 @@ function showToast(msg, ok=true) {
 saveCart();
 renderCart();
 loadProducts();
+loadOrdersFromFirestore();
 updateOrdersBadge();
 </script>
 </body>
