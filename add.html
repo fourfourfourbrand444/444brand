@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>444 Brand Admin</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+color:white;
+padding:30px;
+}
+
+h1{
+margin-bottom:25px;
+font-size:32px;
+}
+
+.orders-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
+gap:20px;
+}
+
+.order-card{
+background:#171717;
+border:1px solid #2a2a2a;
+border-radius:18px;
+padding:20px;
+}
+
+.order-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.order-ref{
+font-size:14px;
+opacity:.7;
+}
+
+.status{
+padding:8px 14px;
+border-radius:999px;
+font-size:13px;
+font-weight:bold;
+}
+
+.pending{
+background:#2b2100;
+color:#ffcc00;
+}
+
+.paid{
+background:#0d2b16;
+color:#00ff88;
+}
+
+.customer{
+margin-bottom:15px;
+line-height:1.7;
+font-size:14px;
+}
+
+.items{
+margin-bottom:20px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+font-size:14px;
+padding-bottom:10px;
+border-bottom:1px solid #2a2a2a;
+}
+
+.total{
+font-size:20px;
+font-weight:bold;
+margin-bottom:20px;
+}
+
+.actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+button{
+border:none;
+padding:12px 16px;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.btn-paid{
+background:#00c853;
+color:white;
+}
+
+.btn-pending{
+background:#ff9800;
+color:white;
+}
+
+.btn-delete{
+background:#ff3b30;
+color:white;
+}
+
+.loading{
+text-align:center;
+padding:60px;
+font-size:20px;
+opacity:.7;
+}
+
+.empty{
+text-align:center;
+padding:60px;
+opacity:.6;
+}
+</style>
+</head>
+
+<body>
+
+<h1>444 Brand Admin Panel</h1>
+
+<div id="ordersContainer" class="loading">
+Loading orders...
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+onSnapshot,
+doc,
+updateDoc,
+deleteDoc,
+query,
+orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+apiKey: "AIzaSyDE1KZtXElz9q6JsU65voYRfXuGNg6pDVE",
+authDomain: "brand-dc8f6.firebaseapp.com",
+projectId: "brand-dc8f6",
+storageBucket: "brand-dc8f6.firebasestorage.app",
+messagingSenderId: "473062980138",
+appId: "1:473062980138:web:1f6046bcc824589372e153",
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+const container = document.getElementById("ordersContainer");
+
+/* LOAD ORDERS */
+
+const q = query(
+collection(db,"orders"),
+orderBy("createdAt","desc")
+);
+
+onSnapshot(q,(snap)=>{
+
+const orders = snap.docs.map(d=>({
+id:d.id,
+...d.data()
+}));
+
+renderOrders(orders);
+
+});
+
+/* RENDER */
+
+function renderOrders(orders){
+
+if(!orders.length){
+container.innerHTML = `
+<div class="empty">
+No orders found
+</div>
+`;
+return;
+}
+
+container.className = "orders-grid";
+
+container.innerHTML = orders.map(order=>{
+
+const paid = order.paymentStatus === "paid";
+
+return `
+
+<div class="order-card">
+
+<div class="order-top">
+
+<div>
+<div class="order-ref">Order Ref</div>
+<div>${order.paystackRef || order.id}</div>
+</div>
+
+<div class="status ${paid ? 'paid':'pending'}">
+${paid ? 'PAID':'PENDING'}
+</div>
+
+</div>
+
+<div class="customer">
+<div><strong>${order.customerName || 'No name'}</strong></div>
+<div>${order.email || ''}</div>
+<div>${order.phone || ''}</div>
+<div>${order.address || ''}</div>
+</div>
+
+<div class="items">
+
+${(order.items || []).map(item=>`
+
+<div class="item">
+<div>
+${item.name}
+<br>
+<small>
+${item.size || ''} 
+${item.colorLabel ? '· '+item.colorLabel : ''}
+×${item.qty}
+</small>
+</div>
+
+<div>
+GH₵ ${(item.lineTotal || 0).toLocaleString()}
+</div>
+</div>
+
+`).join('')}
+
+</div>
+
+<div class="total">
+GH₵ ${(order.totalAmount || 0).toLocaleString()}
+</div>
+
+<div class="actions">
+
+<button class="btn-paid"
+onclick="markPaid('${order.id}')">
+Mark Paid
+</button>
+
+<button class="btn-pending"
+onclick="markPending('${order.id}')">
+Mark Pending
+</button>
+
+<button class="btn-delete"
+onclick="deleteOrder('${order.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join('');
+
+}
+
+/* ACTIONS */
+
+window.markPaid = async(id)=>{
+
+await updateDoc(doc(db,"orders",id),{
+paymentStatus:"paid",
+adminLocked:true,
+updatedAt:new Date()
+});
+
+alert("Order marked as PAID");
+
+};
+
+window.markPending = async(id)=>{
+
+await updateDoc(doc(db,"orders",id),{
+paymentStatus:"pending",
+adminLocked:false,
+updatedAt:new Date()
+});
+
+alert("Order marked as PENDING");
+
+};
+
+window.deleteOrder = async(id)=>{
+
+const confirmDelete = confirm(
+"Delete this order?"
+);
+
+if(!confirmDelete) return;
+
+await deleteDoc(doc(db,"orders",id));
+
+alert("Order deleted");
+
+};
+
+</script>
+
+</body>
+</html>
