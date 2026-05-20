@@ -33,7 +33,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .nav-btn{background:none;border:none;color:rgba(255,255,255,0.75);font-size:0.95rem;cursor:pointer;transition:color 0.3s;position:relative;text-decoration:none}
 .nav-btn:hover{color:var(--gold)}
 .cart-badge{position:absolute;top:-7px;right:-8px;width:15px;height:15px;background:var(--gold);color:var(--black);font-size:0.5rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center}
-/* Orders badge — gold-green to distinguish from cart */
 .orders-badge{position:absolute;top:-7px;right:-8px;width:15px;height:15px;background:var(--green);color:var(--white);font-size:0.5rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;display:none}
 .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px}
 .hamburger span{display:block;width:22px;height:1px;background:rgba(255,255,255,0.8)}
@@ -160,23 +159,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .cart-empty-state{text-align:center;padding:4rem 1rem}
 .cart-empty-state i{font-size:2.8rem;color:var(--light-gray);display:block;margin-bottom:1rem}
 .cart-empty-state p{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray)}
-
-/* CART ITEM — paid items get a green left border */
 .cart-item{display:grid;grid-template-columns:74px 1fr auto;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--light-gray);align-items:start;position:relative}
 .cart-item.is-paid{border-left:3px solid var(--green);padding-left:0.8rem;background:linear-gradient(to right,rgba(230,244,237,0.4),transparent 40%)}
 .cart-item img{width:74px;aspect-ratio:3/4;object-fit:cover;object-position:top center;background:var(--cream)}
 .cart-item-name{font-family:var(--font-display);font-size:0.95rem;font-weight:500;margin-bottom:0.2rem}
-.cart-item-meta{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
-.cart-color-dot{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:middle;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
-.cart-item-price{font-size:0.82rem;font-weight:700;margin-bottom:0.35rem}
 
-/* ── PAID BADGE (cart) ── */
+/* ── FIX: cart-item-meta now uses flex to keep color chip inline-aligned ── */
+.cart-item-meta{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;line-height:1.6}
+.cart-color-dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
+/* ── FIX: color name label in cart meta ── */
+.cart-color-name{font-weight:600;color:var(--dark-gray);letter-spacing:0.06em;text-transform:uppercase;font-size:0.57rem}
+/* ── FIX: color pill chip — shows dot + name in a subtle pill ── */
+.cart-color-chip{display:inline-flex;align-items:center;gap:4px;background:var(--cream);border:1px solid var(--light-gray);padding:1px 6px 1px 3px;border-radius:2px;vertical-align:middle}
+
+.cart-item-price{font-size:0.82rem;font-weight:700;margin-bottom:0.35rem}
 .cart-paid-badge{display:inline-flex;align-items:center;gap:0.35rem;background:var(--green-light);color:var(--green);font-size:0.52rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid rgba(26,110,60,0.3);border-radius:2px}
 .cart-paid-badge i{font-size:0.6rem}
-
-/* lock icon for paid items — replaces delete btn */
 .cart-lock{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--green);opacity:0.6;font-size:0.8rem;flex-shrink:0}
-
 .cart-rm{background:none;border:none;color:var(--mid-gray);cursor:pointer;font-size:0.75rem;padding:0.2rem;transition:color 0.3s}
 .cart-rm:hover{color:var(--black)}
 .cart-foot{padding:1.5rem 2rem 2rem;border-top:1px solid var(--light-gray);background:var(--off-white)}
@@ -197,7 +196,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .secure-note{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.8rem;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-gray)}
 .secure-note i{color:var(--gold-dark);font-size:0.65rem}
 
-/* ── ORDERS DRAWER ── */
+/* ORDERS DRAWER */
 .orders-drawer{position:fixed;top:0;right:-520px;width:min(520px,100%);height:100vh;background:var(--white);z-index:2600;display:flex;flex-direction:column;transition:right 0.5s cubic-bezier(0.76,0,0.24,1);box-shadow:-30px 0 80px rgba(0,0,0,0.2)}
 .orders-drawer.open{right:0}
 .orders-head{display:flex;align-items:center;justify-content:space-between;padding:1.8rem 2rem;border-bottom:1px solid var(--light-gray);background:var(--black)}
@@ -210,8 +209,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .orders-empty i{font-size:2.8rem;color:var(--light-gray);display:block;margin-bottom:1rem}
 .orders-empty p{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.4rem}
 .orders-empty small{font-size:0.6rem;color:var(--light-gray);letter-spacing:0.08em}
-
-/* Individual order card */
 .order-card{border:1px solid var(--light-gray);margin-bottom:1.2rem;overflow:hidden}
 .order-card-head{background:var(--black);padding:0.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .order-ref-label{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.2rem}
@@ -249,9 +246,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .checkout-order-strip-title{font-size:0.55rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--mid-gray);margin-bottom:0.6rem}
 .checkout-order-items{display:flex;flex-direction:column;gap:0.35rem;max-height:130px;overflow-y:auto}
 .checkout-order-item{display:flex;justify-content:space-between;align-items:center;font-size:0.65rem;color:var(--dark-gray)}
-.checkout-order-item .item-n{font-weight:500;display:flex;align-items:center;gap:0.4rem}
-.checkout-order-item .item-p{font-weight:700;color:var(--black)}
-.co-color-dot{display:inline-block;width:8px;height:8px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
+.checkout-order-item .item-n{font-weight:500;display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap}
+.checkout-order-item .item-p{font-weight:700;color:var(--black);flex-shrink:0;margin-left:0.5rem}
+.co-color-dot{display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0;vertical-align:middle}
 .checkout-order-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:0.7rem;padding-top:0.7rem;border-top:1px solid var(--light-gray)}
 .checkout-order-total-row .lbl{font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--dark-gray)}
 .checkout-order-total-row .val{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--black)}
@@ -313,7 +310,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .success-customer-info{background:var(--off-white);border:1px solid var(--light-gray);padding:1rem 1.2rem;margin-bottom:1.5rem;text-align:left}
 .success-customer-info .sci-row{display:flex;gap:0.5rem;font-size:0.62rem;color:var(--dark-gray);margin-bottom:0.3rem;align-items:baseline}
 .success-customer-info .sci-row i{color:var(--gold-dark);font-size:0.65rem;width:14px;flex-shrink:0}
-/* success actions row */
 .success-actions{display:flex;gap:0.6rem}
 .btn-success-continue{flex:1;padding:1rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
 .btn-success-continue:hover{background:var(--gold);color:var(--black)}
@@ -353,7 +349,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
   </ul>
   <div class="nav-right">
     <a href="#" class="nav-btn"><i class="fas fa-search"></i></a>
-    <!-- ORDERS icon -->
     <button class="nav-btn" id="ordersToggle" title="My Orders">
       <i class="fas fa-receipt"></i>
       <span class="orders-badge" id="ordersCount">0</span>
@@ -663,7 +658,6 @@ let currentProduct = null;
 let selectedSize   = null;
 let selectedColor  = null;
 let cart           = JSON.parse(localStorage.getItem('444cart') || '[]');
-// Orders history stored separately — array of order objects
 let orderHistory   = JSON.parse(localStorage.getItem('444orders') || '[]');
 
 // ── HERO SLIDER ──────────────────────────────────────────────
@@ -839,11 +833,13 @@ window.addToCart = () => {
   if (existing) existing.qty++;
   else cart.push({
     id: currentProduct.id, name: currentProduct.name, price: Number(currentProduct.price),
-    size: selectedSize, colorHex: selectedColor ? selectedColor.hex : null,
-    colorLabel: selectedColor ? selectedColor.label : null, qty: 1, img, paid: false
+    size: selectedSize,
+    colorHex:   selectedColor ? selectedColor.hex   : null,
+    colorLabel: selectedColor ? (selectedColor.label || selectedColor.hex || '') : null,
+    qty: 1, img, paid: false
   });
   saveCart(); closeModal();
-  const colorText = selectedColor ? ` in ${selectedColor.label}` : '';
+  const colorText = selectedColor ? ` in ${selectedColor.label || selectedColor.hex}` : '';
   showToast(`${currentProduct.name}${colorText} added to bag`);
   openCart();
 };
@@ -858,13 +854,13 @@ document.getElementById('cartClose').onclick  = () => document.getElementById('c
 
 function saveCart() {
   localStorage.setItem('444cart', JSON.stringify(cart));
-  // Cart badge: only unpaid items count
   const unpaidCount = cart.filter(i=>!i.paid).reduce((a,i)=>a+i.qty,0);
   document.getElementById('cartCount').textContent = unpaidCount;
   renderCart();
   updateOrdersBadge();
 }
 
+// ── FIX: renderCart — color now shown as a pill chip with dot + name ──────────
 function renderCart() {
   const body       = document.getElementById('cartBody');
   const unpaid     = cart.filter(i=>!i.paid);
@@ -889,24 +885,33 @@ function renderCart() {
     return;
   }
 
-  // Show unpaid first, then paid (locked) items
   const allItems = [...unpaid, ...paid];
   body.innerHTML = allItems.map((item) => {
-    // find original index in cart array for removal
     const idx = cart.indexOf(item);
-    const colorChip = item.colorHex
-      ? `<span class="cart-color-dot" style="background:${item.colorHex}" title="${item.colorLabel||''}"></span>${item.colorLabel||''}`
+
+    // ── FIX: build color chip — dot + label inside a subtle pill ──
+    const resolvedColorLabel = item.colorLabel || (item.colorHex ? item.colorHex : '');
+    const colorChipHtml = item.colorHex
+      ? `<span class="cart-color-chip">
+           <span class="cart-color-dot" style="background:${item.colorHex}" title="${resolvedColorLabel}"></span>
+           <span class="cart-color-name">${resolvedColorLabel}</span>
+         </span>`
       : '';
-    const sizeMeta = `Size: ${item.size}${item.colorHex ? ' · ' : ''}${colorChip}${item.qty > 1 ? ` · Qty: ${item.qty}` : ''}`;
+
+    // Build meta line: "Size · Color chip · Qty"
+    const metaParts = [
+      `Size: <strong style="color:var(--dark-gray);font-weight:700">${item.size}</strong>`,
+      colorChipHtml ? `Color: ${colorChipHtml}` : '',
+      item.qty > 1  ? `Qty: ${item.qty}` : '',
+    ].filter(Boolean).join(' &nbsp;·&nbsp; ');
 
     if (item.paid) {
-      // PAID ITEM — locked, cannot be deleted
       return `
         <div class="cart-item is-paid">
           <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
           <div>
             <p class="cart-item-name">${item.name}</p>
-            <p class="cart-item-meta">${sizeMeta}</p>
+            <p class="cart-item-meta">${metaParts}</p>
             <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
             <span class="cart-paid-badge"><i class="fas fa-check-circle"></i> Paid &amp; Confirmed</span>
           </div>
@@ -918,7 +923,7 @@ function renderCart() {
           <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
           <div>
             <p class="cart-item-name">${item.name}</p>
-            <p class="cart-item-meta">${sizeMeta}</p>
+            <p class="cart-item-meta">${metaParts}</p>
             <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
           </div>
           <button class="cart-rm" onclick="removeItem(${idx})"><i class="fas fa-times"></i></button>
@@ -928,7 +933,6 @@ function renderCart() {
 }
 
 window.removeItem = idx => {
-  // Safety: only allow removing unpaid items
   if (cart[idx] && !cart[idx].paid) { cart.splice(idx,1); saveCart(); }
 };
 
@@ -961,17 +965,16 @@ function renderOrdersDrawer() {
   }
 
   clearBtn.style.display = 'block';
-
-  // Most recent first
   const sorted = [...orderHistory].reverse();
   body.innerHTML = sorted.map(order => {
     const itemsHtml = order.items.map(i => {
       const colorDot = i.colorHex
         ? `<span class="order-color-dot" style="background:${i.colorHex}" title="${i.colorLabel||''}"></span>`
         : '';
-      const colorText = i.colorLabel ? ` · ${i.colorLabel}` : '';
+      const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
+      const colorText = i.colorHex ? ` · ${colorDot} ${resolvedLabel}` : '';
       return `<div class="order-item-row">
-        <span class="order-item-name">${colorDot}${i.name}<span class="order-item-meta">(${i.size}${colorText}) ×${i.qty}</span></span>
+        <span class="order-item-name">${i.name}<span class="order-item-meta">(${i.size}${colorText}) ×${i.qty}</span></span>
         <span class="order-item-price">GH₵ ${(i.unitPrice*i.qty).toLocaleString()}</span>
       </div>`;
     }).join('');
@@ -1012,14 +1015,22 @@ window.openCheckoutPanel = () => {
   const subtotal = calcSubtotal();
   const delivery = calcDelivery(subtotal);
   const total    = subtotal + delivery;
+
+  // ── FIX: checkout order strip also shows color dot + label ──
   document.getElementById('checkoutOrderItems').innerHTML = unpaid.map(i => {
-    const colorDot  = i.colorHex ? `<span class="co-color-dot" style="background:${i.colorHex}"></span>` : '';
-    const colorText = i.colorLabel ? ` · ${i.colorLabel}` : '';
+    const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
+    const colorDot  = i.colorHex
+      ? `<span class="co-color-dot" style="background:${i.colorHex}" title="${resolvedLabel}"></span>`
+      : '';
+    const colorText = i.colorHex
+      ? ` · ${colorDot}<span style="font-weight:600">${resolvedLabel}</span>`
+      : '';
     return `<div class="checkout-order-item">
-      <span class="item-n">${colorDot}${i.name} <span style="opacity:.5">(${i.size}${colorText}) ×${i.qty}</span></span>
+      <span class="item-n">${i.name} <span style="opacity:.55;font-weight:400">(${i.size}${colorText}) ×${i.qty}</span></span>
       <span class="item-p">GH₵ ${(i.price*i.qty).toLocaleString()}</span>
     </div>`;
   }).join('');
+
   document.getElementById('checkoutOrderTotal').textContent = `GH₵ ${total.toLocaleString()}`;
   document.getElementById('btnPayTotal').textContent        = `GH₵ ${total.toLocaleString()}`;
   document.getElementById('checkoutPanel').classList.add('open');
@@ -1098,7 +1109,10 @@ window.submitCheckoutAndPay = () => {
   const total     = calcTotal();
   const amountPes = Math.round(total * 100);
   const ref       = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
-  const itemsMeta = unpaid.map(i => `${i.name} (${i.size}${i.colorLabel?' · '+i.colorLabel:''}) ×${i.qty}`).join('; ');
+  const itemsMeta = unpaid.map(i => {
+    const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
+    return `${i.name} (${i.size}${resolvedLabel?' · '+resolvedLabel:''}) ×${i.qty}`;
+  }).join('; ');
   const btn = document.getElementById('btnPayNow');
   btn.disabled = true;
 
@@ -1121,7 +1135,6 @@ window.submitCheckoutAndPay = () => {
       try {
         await saveOrderToFirestore(form, cart, response.reference, response);
         sendAdminEmail(form, cart, response.reference, total).catch(console.warn);
-        // ── Save to local order history ──────────────────────
         const subtotal = calcSubtotal();
         const shipping = calcDelivery(subtotal);
         orderHistory.push({
@@ -1140,7 +1153,6 @@ window.submitCheckoutAndPay = () => {
           customer: { name:form.name, email:form.email, phone:form.phone }
         });
         localStorage.setItem('444orders', JSON.stringify(orderHistory));
-        // Mark cart items as paid
         cart = cart.map(i => i.paid ? i : { ...i, paid:true, payRef:response.reference });
         localStorage.setItem('444cart', JSON.stringify(cart));
         saveCart();
@@ -1202,7 +1214,8 @@ async function sendAdminEmail(form, cart, paystackRef, total) {
   const subtotal = calcSubtotal();
   const shipping = calcDelivery(subtotal);
   const itemsList = unpaid.map(i => {
-    const colorText = i.colorLabel ? ` | Color: ${i.colorLabel}` : '';
+    const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
+    const colorText = resolvedLabel ? ` | Color: ${resolvedLabel}` : '';
     return `• ${i.name} (Size: ${i.size}${colorText}) ×${i.qty} = GH₵${(i.price*i.qty).toLocaleString()}`;
   }).join('\n');
   return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
@@ -1234,8 +1247,9 @@ function showPaymentSuccess(ref, form, items) {
     ${form.notes ? `<div class="sci-row"><i class="fas fa-sticky-note"></i>${form.notes}</div>` : ''}
   `;
   document.getElementById('successItemsList').innerHTML = items.map(i => {
-    const colorDot  = i.colorHex ? `<span class="success-color-dot" style="background:${i.colorHex}"></span>` : '';
-    const colorText = i.colorLabel ? ` · ${i.colorLabel}` : '';
+    const resolvedLabel = i.colorLabel || (i.colorHex ? i.colorHex : '');
+    const colorDot  = i.colorHex ? `<span class="success-color-dot" style="background:${i.colorHex}" title="${resolvedLabel}"></span>` : '';
+    const colorText = resolvedLabel ? ` · ${resolvedLabel}` : '';
     return `<div class="success-item-row">
       <span class="success-item-name">${colorDot}${i.name} <span style="opacity:.5;font-size:.62rem">(${i.size}${colorText}) ×${i.qty}</span></span>
       <span class="success-item-price">GH₵ ${(i.price*i.qty).toLocaleString()}</span>
@@ -1253,7 +1267,6 @@ window.closeSuccess = () => {
   showToast('Thank you! Your 444 order is confirmed. 🎉');
 };
 
-// View orders directly from success screen
 window.closeSuccessViewOrders = () => {
   document.getElementById('successOverlay').classList.remove('open');
   document.body.style.overflow = '';
