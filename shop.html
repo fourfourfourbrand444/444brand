@@ -1596,7 +1596,7 @@ async function sendAdminEmail(form, items, ref, total) {
     subtotal:         `GH₵ ${subtotal.toLocaleString()}`,
     shipping_fee:     `GH₵ ${shipping.toLocaleString()}`,
     total_amount:     `GH₵ ${total.toLocaleString()}`,
-    payment_status:   'Pending — awaiting admin confirmation',
+    payment_status:   'Pending',
     order_date:       new Date().toLocaleString('en-GB',{timeZone:'Africa/Accra'}),
     brand:            '444 Brand',
     customer_city:    form.city,
