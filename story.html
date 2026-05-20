@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>444 — Our Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ============================================================
+   444 BRAND — ABOUT / OUR STORY  |  about.css (inline)
+   ============================================================ */
+
+:root {
+  --black:#060606; --deep:#0d0b09; --dark:#161410;
+  --mid-dark:#1e1b16; --mid:#2e2a23; --warm:#3d3830;
+  --ash:#6b6459; --mist:#9a9088; --silver:#c4bdb4; --white:#f5f2ee;
+  --gold:#c8a96e; --gold-l:#e8d4a8; --gold-d:#9a7a45;
+  --gold-dim:rgba(200,169,110,0.15);
+  --font-display:'Cormorant Garamond',serif;
+  --font-ui:'Montserrat',sans-serif;
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --ease-in:cubic-bezier(0.7,0,0.84,0);
+  --ease-c:cubic-bezier(0.25,0.46,0.45,0.94);
+  --vh:1vh;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--font-ui);font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--gold-d);border-radius:2px}
+
+/* GRAIN */
+.grain{position:fixed;inset:0;z-index:9998;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;opacity:0.5;mix-blend-mode:overlay}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;transition:opacity 0.8s var(--ease-c),visibility 0.8s}
+#loader.hidden{opacity:0;visibility:hidden}
+.loader-logo{font-family:var(--font-display);font-size:clamp(4rem,10vw,8rem);font-weight:700;letter-spacing:0.2em;color:var(--white)}
+.loader-logo span{color:var(--gold)}
+.loader-bar-wrap{width:120px;height:1px;background:rgba(255,255,255,0.1);position:relative;overflow:hidden}
+.loader-bar{position:absolute;inset:0;background:var(--gold);transform:translateX(-100%);animation:loaderFill 1.6s var(--ease-out) forwards 0.3s}
+@keyframes loaderFill{to{transform:translateX(0)}}
+.loader-label{font-size:0.52rem;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.3);animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:0.3}50%{opacity:0.7}}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:2rem 3rem;display:flex;align-items:center;justify-content:space-between;transition:padding 0.5s var(--ease-c),background 0.5s}
+#nav.scrolled{padding:1.2rem 3rem;background:rgba(6,6,6,0.9);backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3);border-bottom:1px solid rgba(255,255,255,0.05)}
+.nav-logo{font-family:var(--font-display);font-size:1.8rem;font-weight:700;letter-spacing:0.15em;color:var(--white)}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-size:0.58rem;font-weight:500;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.5);transition:color 0.3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.4s var(--ease-c)}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{font-size:0.55rem;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,169,110,0.4);padding:0.6rem 1.4rem;border-radius:2px;transition:all 0.3s var(--ease-c)}
+.nav-cta:hover{background:var(--gold);color:var(--black);border-color:var(--gold)}
+.nav-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-burger span{display:block;width:24px;height:1px;background:var(--white);transition:all 0.3s}
+
+section{position:relative;overflow:hidden}
+
+/* ── HERO ── */
+#hero{height:100vh;height:calc(var(--vh,1vh)*100);display:flex;align-items:flex-end;padding:0 0 5rem}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{transform:scale(1.1);transition:transform 8s var(--ease-c);filter:brightness(0.35) contrast(1.1) saturate(0.75)}
+.hero-bg img.loaded{transform:scale(1)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,6,0.95) 0%,rgba(6,6,6,0.3) 40%,transparent 70%),linear-gradient(to right,rgba(6,6,6,0.5) 0%,transparent 60%)}
+.hero-content{position:relative;z-index:2;padding:0 clamp(1.5rem,5vw,6rem);max-width:1200px}
+.hero-eyebrow{font-size:0.55rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem;display:flex;align-items:center;gap:1.2rem;opacity:0;transform:translateY(20px);animation:revealUp 1s var(--ease-out) 1.8s forwards}
+.hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--gold)}
+.hero-num{font-family:var(--font-display);font-size:clamp(7rem,18vw,18rem);font-weight:700;line-height:0.85;letter-spacing:-0.02em;color:var(--white);display:block;opacity:0;transform:translateY(40px);animation:revealUp 1.2s var(--ease-out) 2s forwards}
+.hero-tagline{font-family:var(--font-display);font-size:clamp(1.5rem,3.5vw,3.2rem);font-weight:300;font-style:italic;color:var(--gold-l);letter-spacing:0.04em;margin-top:0.4rem;opacity:0;transform:translateY(30px);animation:revealUp 1s var(--ease-out) 2.3s forwards}
+.hero-scroll{position:absolute;bottom:3rem;right:clamp(1.5rem,5vw,6rem);display:flex;flex-direction:column;align-items:center;gap:0.8rem;z-index:2;opacity:0;animation:fadeIn 1s var(--ease-out) 3s forwards}
+.hero-scroll span{font-size:0.5rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.35);writing-mode:vertical-rl;transform:rotate(180deg)}
+.scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,rgba(255,255,255,0.3),transparent);animation:scrollPulse 2s ease-in-out infinite 3.5s}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(0.5)}}
+
+/* ── ORIGIN ── */
+#origin{background:var(--deep);padding:clamp(6rem,12vw,12rem) 0}
+.origin-intro{text-align:center;padding:0 clamp(1.5rem,10vw,20rem);margin-bottom:clamp(5rem,10vw,10rem)}
+.section-label{font-size:0.52rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;display:inline-flex;align-items:center;gap:1rem}
+.section-label::before,.section-label::after{content:'';width:30px;height:1px;background:var(--gold-d)}
+.origin-intro h2{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,6rem);font-weight:300;line-height:1.05;color:var(--white);margin-bottom:2.5rem}
+.origin-intro h2 em{font-style:italic;font-weight:700;color:var(--gold-l)}
+.origin-intro p{font-size:clamp(0.75rem,1.2vw,0.88rem);line-height:2.2;letter-spacing:0.06em;color:rgba(255,255,255,0.45);font-weight:300;max-width:680px;margin:0 auto}
+.origin-split{display:grid;grid-template-columns:1fr 1fr;min-height:80vh}
+.origin-img{position:relative;overflow:hidden}
+.origin-img img{height:100%;min-height:600px;transform:scale(1.05);filter:brightness(0.6) contrast(1.1) saturate(0.7);transition:transform 0.8s var(--ease-c)}
+.origin-img:hover img{transform:scale(1)}
+.origin-img-overlay{position:absolute;inset:0;background:linear-gradient(to right,transparent 50%,var(--deep) 100%)}
+.origin-deco{position:absolute;top:2rem;left:2rem;font-family:var(--font-display);font-size:18rem;font-weight:700;color:rgba(200,169,110,0.04);line-height:1;pointer-events:none;user-select:none}
+.origin-text{display:flex;flex-direction:column;justify-content:center;padding:clamp(3rem,6vw,8rem) clamp(2rem,5vw,7rem);background:var(--deep)}
+.origin-chapter{font-size:0.5rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-d);margin-bottom:1.5rem}
+.origin-text h3{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.8rem);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:2rem}
+.origin-text h3 em{font-style:italic;color:var(--gold-l);font-weight:600}
+.origin-text p{font-size:clamp(0.72rem,1vw,0.82rem);line-height:2.3;letter-spacing:0.05em;color:rgba(255,255,255,0.42);font-weight:300;margin-bottom:1.5rem}
+.origin-text p:last-of-type{margin-bottom:2.5rem}
+.text-link{font-size:0.58rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:0.8rem;transition:gap 0.3s}
+.text-link::after{content:'→';font-size:0.9rem;transition:transform 0.3s}
+.text-link:hover{gap:1.4rem}
+.text-link:hover::after{transform:translateX(4px)}
+
+/* ── VISION ── */
+#vision{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:clamp(5rem,10vw,10rem) clamp(1.5rem,8vw,12rem)}
+.vision-bg{position:absolute;inset:0}
+.vision-bg img{filter:brightness(0.18) contrast(1.2) saturate(0.5);transform:scale(1.05)}
+.vision-blur{position:absolute;inset:0;backdrop-filter:blur(3px) saturate(0.8);-webkit-backdrop-filter:blur(3px) saturate(0.8);background:rgba(6,6,6,0.55)}
+.vision-content{position:relative;z-index:2;max-width:1100px}
+.vision-pre{font-size:0.52rem;letter-spacing:0.5em;text-transform:uppercase;color:var(--gold);margin-bottom:3rem}
+.vision-quote{font-family:var(--font-display);font-size:clamp(2.4rem,5.5vw,6.5rem);font-weight:300;line-height:1.1;color:var(--white);letter-spacing:-0.01em}
+.vision-quote em{font-style:italic;font-weight:700;color:var(--gold-l);display:block;margin-top:0.2em}
+.vision-rule{width:60px;height:1px;background:var(--gold);margin:3rem auto;transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease-out)}
+.vision-rule.visible{transform:scaleX(1)}
+.vision-sub{font-size:clamp(0.7rem,1.2vw,0.85rem);letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:300}
+
+/* ── CRAFT ── */
+#craft{background:var(--dark);padding:clamp(6rem,12vw,12rem) clamp(1.5rem,5vw,6rem)}
+.craft-header{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-bottom:clamp(5rem,8vw,8rem);align-items:end}
+.craft-header h2{font-family:var(--font-display);font-size:clamp(2.8rem,5.5vw,5.5rem);font-weight:300;line-height:1;color:var(--white)}
+.craft-header h2 em{font-style:italic;color:var(--gold-l);font-weight:600}
+.craft-header p{font-size:clamp(0.72rem,1vw,0.82rem);line-height:2.2;letter-spacing:0.05em;color:rgba(255,255,255,0.4);font-weight:300;padding-top:1rem}
+.craft-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:1.5rem}
+.stat-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:transform 0.4s var(--ease-c),border-color 0.4s;border-radius:4px}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.4s}
+.stat-card:hover{transform:translateY(-6px);border-color:rgba(200,169,110,0.2)}
+.stat-card:hover::before{opacity:1}
+.stat-num{font-family:var(--font-display);font-size:clamp(2.5rem,4vw,4rem);font-weight:700;color:var(--gold);line-height:1;margin-bottom:0.5rem}
+.stat-label{font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.35);line-height:1.6}
+.stat-card-deco{position:absolute;bottom:-1rem;right:-0.5rem;font-family:var(--font-display);font-size:6rem;font-weight:700;color:rgba(255,255,255,0.02);line-height:1;pointer-events:none}
+.craft-features{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.craft-feat{padding:2.5rem 2rem;border-left:1px solid rgba(200,169,110,0.2);transition:border-color 0.4s}
+.craft-feat:hover{border-color:var(--gold)}
+.feat-icon{width:36px;height:36px;border:1px solid rgba(200,169,110,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-size:0.7rem;color:var(--gold)}
+.craft-feat h4{font-family:var(--font-display);font-size:1.4rem;font-weight:400;color:var(--white);margin-bottom:0.8rem;letter-spacing:0.04em}
+.craft-feat p{font-size:0.68rem;line-height:2;letter-spacing:0.04em;color:rgba(255,255,255,0.38);font-weight:300}
+
+/* ── EXPERIENCE ── */
+#experience{background:var(--black)}
+.exp-panel{position:relative;height:100vh;display:flex;align-items:flex-end;padding:5rem clamp(1.5rem,5vw,6rem)}
+.exp-panel-bg{position:absolute;inset:0}
+.exp-panel-bg img{filter:brightness(0.3) contrast(1.15) saturate(0.6);transition:transform 12s var(--ease-c)}
+.exp-panel:hover .exp-panel-bg img{transform:scale(1.04)}
+.exp-panel-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,6,0.92) 0%,rgba(6,6,6,0.4) 40%,transparent 70%)}
+.exp-panel-content{position:relative;z-index:2;max-width:650px}
+.exp-num{font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.4em;color:var(--gold-d);text-transform:uppercase;margin-bottom:1rem}
+.exp-panel-content h3{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,5rem);font-weight:300;line-height:1.05;color:var(--white);margin-bottom:1.2rem}
+.exp-panel-content h3 em{font-style:italic;font-weight:700;color:var(--gold-l)}
+.exp-panel-content p{font-size:clamp(0.7rem,1vw,0.8rem);line-height:2.1;letter-spacing:0.06em;color:rgba(255,255,255,0.45);font-weight:300;max-width:480px}
+.exp-panel.right{justify-content:flex-end;text-align:right}
+.exp-panel.right .exp-panel-content p{margin-left:auto}
+.exp-panel-tag{position:absolute;top:3rem;right:clamp(1.5rem,5vw,6rem);font-size:0.5rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.2);z-index:2}
+.exp-panel.right .exp-panel-tag{right:auto;left:clamp(1.5rem,5vw,6rem)}
+
+/* ── FINAL ── */
+#final{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:clamp(5rem,10vw,10rem) clamp(1.5rem,8vw,12rem);background:var(--black);position:relative}
+.final-ambient{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(200,169,110,0.04) 0%,transparent 70%)}
+.final-content{position:relative;z-index:2}
+.final-rule-top{width:1px;height:80px;background:linear-gradient(to bottom,transparent,var(--gold-d));margin:0 auto 4rem}
+.final-pre{font-size:0.52rem;letter-spacing:0.5em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:2.5rem}
+.final-statement{font-family:var(--font-display);font-size:clamp(3.5rem,9vw,11rem);font-weight:700;line-height:0.9;letter-spacing:-0.02em;color:var(--white)}
+.final-statement span{color:var(--gold)}
+.final-sub{font-family:var(--font-display);font-size:clamp(1.2rem,2.5vw,2.2rem);font-style:italic;font-weight:300;color:rgba(255,255,255,0.4);margin-top:1.5rem;letter-spacing:0.06em}
+.final-cta{display:inline-flex;align-items:center;gap:1.2rem;margin-top:4rem;padding:1.1rem 3rem;border:1px solid var(--gold);color:var(--gold);background:transparent;font-family:var(--font-ui);font-size:0.6rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;border-radius:2px;position:relative;overflow:hidden;transition:color 0.5s}
+.final-cta::before{content:'';position:absolute;inset:0;background:var(--gold);transform:translateX(-100%);transition:transform 0.5s var(--ease-out)}
+.final-cta:hover{color:var(--black)}
+.final-cta:hover::before{transform:translateX(0)}
+.final-cta span,.final-cta i{position:relative;z-index:1}
+.final-cta-wrap{position:relative;display:inline-block}
+.final-cta-wrap::after{content:'';position:absolute;inset:-15px;background:radial-gradient(ellipse,rgba(200,169,110,0.15) 0%,transparent 70%);pointer-events:none;animation:glowPulse 3s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+
+/* ── FOOTER ── */
+footer{background:var(--deep);border-top:1px solid rgba(255,255,255,0.06);padding:4rem clamp(1.5rem,5vw,6rem) 2.5rem}
+.footer-inner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;align-items:start}
+.footer-brand .footer-logo{font-family:var(--font-display);font-size:2.2rem;font-weight:700;letter-spacing:0.15em;color:var(--white);margin-bottom:0.8rem}
+.footer-brand .footer-logo span{color:var(--gold)}
+.footer-brand p{font-size:0.62rem;line-height:1.9;letter-spacing:0.06em;color:rgba(255,255,255,0.3);font-weight:300;max-width:240px}
+.footer-links h5,.footer-social h5{font-size:0.52rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;font-weight:600}
+.footer-links ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem}
+.footer-links a{font-size:0.65rem;letter-spacing:0.08em;color:rgba(255,255,255,0.35);transition:color 0.3s}
+.footer-links a:hover{color:var(--gold)}
+.social-icons{display:flex;gap:1rem}
+.social-icon{width:38px;height:38px;border:1px solid rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:rgba(255,255,255,0.4);transition:all 0.3s var(--ease-c);text-decoration:none}
+.social-icon:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.05)}
+.footer-copy{font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.2)}
+.footer-bottom-links{display:flex;gap:2rem}
+.footer-bottom-links a{font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.2);transition:color 0.3s}
+.footer-bottom-links a:hover{color:rgba(255,255,255,0.5)}
+
+/* ── REVEAL SYSTEM ── */
+.reveal{opacity:0;transform:translateY(50px);transition:opacity 0.9s var(--ease-out),transform 0.9s var(--ease-out)}
+.reveal.delay-1{transition-delay:0.1s}.reveal.delay-2{transition-delay:0.2s}
+.reveal.delay-3{transition-delay:0.35s}.reveal.delay-4{transition-delay:0.5s}
+.reveal.delay-5{transition-delay:0.65s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-60px);transition:opacity 1s var(--ease-out),transform 1s var(--ease-out)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(60px);transition:opacity 1s var(--ease-out),transform 1s var(--ease-out)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(0.94);transition:opacity 1s var(--ease-out),transform 1s var(--ease-out)}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+.char-reveal span{display:inline-block;opacity:0;transform:translateY(100%);animation:none}
+.char-reveal.visible span{animation:charUp 0.8s var(--ease-out) forwards}
+@keyframes charUp{to{opacity:1;transform:translateY(0)}}
+@keyframes revealUp{to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{to{opacity:1}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav-links,.nav-cta{display:none}
+  .nav-burger{display:flex}
+  #nav{padding:1.5rem 1.5rem}
+  #nav.scrolled{padding:1rem 1.5rem}
+  .origin-split{grid-template-columns:1fr}
+  .origin-img img{min-height:400px}
+  .origin-img-overlay{background:linear-gradient(to bottom,transparent 50%,var(--deep) 100%)}
+  .craft-header{grid-template-columns:1fr;gap:2rem}
+  .craft-stats{grid-template-columns:repeat(2,1fr)}
+  .craft-features{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr;gap:2.5rem}
+  .footer-bottom{flex-direction:column;gap:1rem;text-align:center}
+  .footer-bottom-links{justify-content:center;flex-wrap:wrap}
+  .exp-panel{height:70vh;min-height:450px}
+}
+@media(max-width:600px){
+  .craft-stats{grid-template-columns:1fr 1fr}
+  .exp-panel.right{justify-content:flex-start;text-align:left}
+  .exp-panel.right .exp-panel-content p{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+  <!-- GRAIN -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ════ LOADER ════ -->
+  <div id="loader" aria-hidden="true">
+    <div class="loader-logo">4<span>4</span>4</div>
+    <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+    <p class="loader-label">Our Story</p>
+  </div>
+
+  <!-- ════ NAV ════ -->
+  <nav id="nav">
+    <a href="shop.html" class="nav-logo">4<span>4</span>4</a>
+    <ul class="nav-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="about.html" aria-current="page">Our Story</a></li>
+      <li><a href="#">Lookbook</a></li>
+      <li><a href="#">Drops</a></li>
+    </ul>
+    <a href="shop.html" class="nav-cta">Enter the World</a>
+    <button class="nav-burger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ════════════════════════════════
+       1. HERO
+  ════════════════════════════════ -->
+  <section id="hero">
+    <div class="hero-bg">
+      <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=2000&q=85" alt="" loading="eager">
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Est. 2024 &nbsp;·&nbsp; Ghana</p>
+      <span class="hero-num">444</span>
+      <p class="hero-tagline">Not Just Fashion. A Frequency.</p>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════
+       2. OUR ORIGIN
+  ════════════════════════════════ -->
+  <section id="origin">
+    <div class="origin-intro">
+      <span class="section-label reveal">Our Origin</span>
+      <h2 class="reveal delay-2">
+        Born from <em>restlessness.</em><br>
+        Built for the <em>extraordinary.</em>
+      </h2>
+      <p class="reveal delay-3">
+        444 did not begin in a boardroom or a factory. It began in the quiet hours — in the space between
+        midnight and dawn — when the world is still and the most honest ideas surface. A single question
+        drove everything: what would fashion look like if it were designed for those who refuse to be ordinary?
+      </p>
+    </div>
+
+    <div class="origin-split">
+      <div class="origin-img reveal-left">
+        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=1200&q=80" alt="444 Brand — the origin" loading="lazy">
+        <div class="origin-img-overlay" aria-hidden="true"></div>
+        <div class="origin-deco" aria-hidden="true">4</div>
+      </div>
+      <div class="origin-text reveal-right">
+        <p class="origin-chapter">Chapter I — The Beginning</p>
+        <h3>A movement disguised<br>as <em>clothing.</em></h3>
+        <p>444 is not a brand. It is a signal. A deliberate frequency broadcast to those who understand that what you wear is not decoration — it is declaration. Every silhouette we cut, every fabric we select, every stitch we approve carries the weight of intention. We build garments that outlast seasons and outlive trends.</p>
+        <p>The number 444 carries meaning across cultures, philosophies, and traditions — a sign of alignment, of being exactly where you are supposed to be. We adopted it not as a gimmick, but as a compass. Every creative decision must align. Every release must resonate. Every piece must earn its place in someone's life.</p>
+        <p>We exist for creators, visionaries, cultural architects. For the individual who understands that true luxury is not about logos — it is about the unspoken confidence that comes from wearing something made with absolute conviction.</p>
+        <a href="shop.html" class="text-link">Explore the collection</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════
+       3. THE VISION QUOTE
+  ════════════════════════════════ -->
+  <section id="vision">
+    <div class="vision-bg">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2000&q=80" alt="" loading="lazy">
+    </div>
+    <div class="vision-blur" aria-hidden="true"></div>
+    <div class="vision-content">
+      <p class="vision-pre reveal">The 444 Vision</p>
+      <blockquote class="vision-quote char-reveal">
+        We don't follow culture.
+        <em>We design what culture becomes.</em>
+      </blockquote>
+      <div class="vision-rule"></div>
+      <p class="vision-sub reveal">Luxury Streetwear &nbsp;·&nbsp; Cultural Architecture &nbsp;·&nbsp; Timeless Expression</p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════
+       4. CRAFTSMANSHIP
+  ════════════════════════════════ -->
+  <section id="craft">
+    <div class="craft-header">
+      <div class="reveal-left">
+        <span class="section-label" style="margin-bottom:1.5rem">The Construction</span>
+        <h2>Obsessive<br><em>craftsmanship.</em></h2>
+      </div>
+      <p class="reveal-right" style="padding-top:2rem">
+        Every garment that leaves under the 444 name has been interrogated. The weight of the fabric.
+        The fall of the hem. The precision of the seam. We hold every detail to a standard that most
+        brands reserve only for their most expensive lines. For us, there is no other way.
+        We make one level: exceptional.
+      </p>
+    </div>
+
+    <div class="craft-stats">
+      <div class="stat-card reveal delay-1">
+        <div class="stat-num" data-count="100">0</div>
+        <div class="stat-label">Quality<br>Check Points</div>
+        <div class="stat-card-deco" aria-hidden="true">01</div>
+      </div>
+      <div class="stat-card reveal delay-2">
+        <div class="stat-num" data-count="48">0</div>
+        <div class="stat-label">Hours per<br>Garment</div>
+        <div class="stat-card-deco" aria-hidden="true">02</div>
+      </div>
+      <div class="stat-card reveal delay-3">
+        <div class="stat-num" data-count="12">0</div>
+        <div class="stat-label">Fabric<br>Sources</div>
+        <div class="stat-card-deco" aria-hidden="true">03</div>
+      </div>
+      <div class="stat-card reveal delay-4">
+        <div class="stat-num" data-count="0">0</div>
+        <div class="stat-label">Compromises<br>Made</div>
+        <div class="stat-card-deco" aria-hidden="true">04</div>
+      </div>
+    </div>
+
+    <div class="craft-features" style="margin-top:1.5rem">
+      <div class="craft-feat reveal delay-1">
+        <div class="feat-icon"><i class="fas fa-gem"></i></div>
+        <h4>Premium Materials</h4>
+        <p>We source heavyweight cotton, technical fleece, and luxury jersey from mills that supply the highest fashion houses in Europe. No shortcuts. No substitutions. The hand-feel of every piece is a statement before it is worn.</p>
+      </div>
+      <div class="craft-feat reveal delay-2">
+        <div class="feat-icon"><i class="fas fa-cut"></i></div>
+        <h4>Architectural Silhouettes</h4>
+        <p>Our patterns are developed with one principle: the garment must move like it was made for the body, not imposed on it. Oversized where it should breathe, precise where structure matters. Every seam is a conscious decision.</p>
+      </div>
+      <div class="craft-feat reveal delay-3">
+        <div class="feat-icon"><i class="fas fa-infinity"></i></div>
+        <h4>Timeless Construction</h4>
+        <p>We build garments to survive decades. Reinforced stitching, colourfast dyes, and hardware that ages with dignity. 444 pieces are not seasonal commodities — they are permanent additions to a wardrobe and a life.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════
+       5. EXPERIENCE PANELS
+  ════════════════════════════════ -->
+  <section id="experience">
+
+    <div class="exp-panel">
+      <div class="exp-panel-bg">
+        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=1800&q=80" alt="" loading="lazy">
+      </div>
+      <div class="exp-panel-overlay" aria-hidden="true"></div>
+      <p class="exp-panel-tag">Chapter II</p>
+      <div class="exp-panel-content">
+        <p class="exp-num">— 001</p>
+        <h3>Dressed for<br><em>the rare few.</em></h3>
+        <p>444 has never been for everyone. It was built for the individual who has outgrown the comfort of ordinary fashion and demands something that mirrors the depth of their own identity. Exclusivity is not arrogance — it is precision.</p>
+      </div>
+    </div>
+
+    <div class="exp-panel right">
+      <div class="exp-panel-bg">
+        <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1800&q=80" alt="" loading="lazy">
+      </div>
+      <div class="exp-panel-overlay" aria-hidden="true"></div>
+      <p class="exp-panel-tag">Chapter III</p>
+      <div class="exp-panel-content">
+        <p class="exp-num">— 002</p>
+        <h3>Where culture<br><em>is authored.</em></h3>
+        <p>We are not observers of the cultural moment — we are architects of it. From the streets of Accra to the runways of global consciousness, 444 plants flags in territories that most brands are afraid to enter. Culture is not followed here. It is written.</p>
+      </div>
+    </div>
+
+    <div class="exp-panel">
+      <div class="exp-panel-bg">
+        <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=1800&q=80" alt="" loading="lazy">
+      </div>
+      <div class="exp-panel-overlay" aria-hidden="true"></div>
+      <p class="exp-panel-tag">Chapter IV</p>
+      <div class="exp-panel-content">
+        <p class="exp-num">— 003</p>
+        <h3>A legacy being<br><em>built today.</em></h3>
+        <p>The brands that last are those that understand they are in the business of legacy, not commerce. Every 444 garment is an artefact of a specific moment in cultural history — the moment a generation decided to dress with intention, purpose, and absolute refusal to be invisible.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ════════════════════════════════
+       6. FINAL STATEMENT
+  ════════════════════════════════ -->
+  <section id="final">
+    <div class="final-ambient" aria-hidden="true"></div>
+    <div class="final-content">
+      <div class="final-rule-top reveal"></div>
+      <p class="final-pre reveal delay-1">The Final Word</p>
+      <h2 class="final-statement reveal delay-2">
+        444 IS<br>FOR THE <span>FEW.</span>
+      </h2>
+      <p class="final-sub reveal delay-3">Are you one of them?</p>
+      <div class="final-cta-wrap reveal delay-4">
+        <a href="shop.html" class="final-cta">
+          <span>Enter the World of 444</span>
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════
+       7. FOOTER
+  ════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">4<span>4</span>4</div>
+        <p>Not just fashion. A frequency.<br>Luxury streetwear for those who<br>move with intention.</p>
+      </div>
+      <div class="footer-links">
+        <h5>Navigate</h5>
+        <ul>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="#">Lookbook</a></li>
+          <li><a href="#">New Drops</a></li>
+          <li><a href="#">Size Guide</a></li>
+        </ul>
+      </div>
+      <div class="footer-social">
+        <h5>Follow the Movement</h5>
+        <div class="social-icons">
+          <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="#" class="social-icon" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" class="social-icon" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 444 Brand. All Rights Reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Returns</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+/* ============================================================
+   444 BRAND — about.js (inline)
+   ============================================================ */
+
+// ── VH FIX
+function setVH(){document.documentElement.style.setProperty('--vh',`${window.innerHeight*0.01}px`)}
+setVH();window.addEventListener('resize',setVH);
+
+// ── LOADER
+window.addEventListener('load',()=>{
+  const loader=document.getElementById('loader');
+  setTimeout(()=>{
+    loader.classList.add('hidden');
+    const img=document.querySelector('.hero-bg img');
+    if(img) img.classList.add('loaded');
+  },2200);
+});
+
+// ── NAV SCROLL
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60),{passive:true});
+
+// ── MOBILE BURGER
+const burger=document.querySelector('.nav-burger');
+const navLinks=document.querySelector('.nav-links');
+let menuOpen=false;
+if(burger){
+  burger.addEventListener('click',()=>{
+    menuOpen=!menuOpen;
+    if(navLinks){
+      Object.assign(navLinks.style,menuOpen?{display:'flex',flexDirection:'column',position:'fixed',top:'0',left:'0',right:'0',bottom:'0',background:'rgba(6,6,6,0.97)',alignItems:'center',justifyContent:'center',gap:'2.5rem',zIndex:'200'}:{display:'',flexDirection:'',position:'',top:'',left:'',right:'',bottom:'',background:'',alignItems:'',justifyContent:'',gap:'',zIndex:''});
+    }
+    const s=burger.querySelectorAll('span');
+    menuOpen?(s[0].style.transform='translateY(6px) rotate(45deg)',s[1].style.opacity='0',s[2].style.transform='translateY(-6px) rotate(-45deg)'):(s.forEach(x=>{x.style.transform='';x.style.opacity=''}));
+  });
+}
+
+// ── INTERSECTION OBSERVER: REVEAL
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target)}});
+},{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>ro.observe(el));
+
+// ── CHAR REVEAL
+document.querySelectorAll('.char-reveal').forEach(el=>{
+  el.innerHTML=el.innerHTML.split(' ').map((w,i)=>`<span style="animation-delay:${i*0.07}s">${w}</span>`).join(' ');
+  const o=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');o.unobserve(e.target)}});},{threshold:0.3});
+  o.observe(el);
+});
+
+// ── VISION RULE
+const vr=document.querySelector('.vision-rule');
+if(vr){new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible')}});},{threshold:0.5}).observe(vr);}
+
+// ── PARALLAX
+function parallax(){
+  const y=window.scrollY;
+  const heroImg=document.querySelector('.hero-bg img');
+  if(heroImg) heroImg.style.transform=`scale(1) translateY(${y*0.25}px)`;
+  const deco=document.querySelector('.origin-deco');
+  if(deco){const ot=document.getElementById('origin')?.offsetTop||0;deco.style.transform=`translateY(${(y-ot)*0.15}px)`;}
+  document.querySelectorAll('.exp-panel-bg img').forEach(img=>{
+    const rect=img.closest('.exp-panel')?.getBoundingClientRect();
+    if(rect) img.style.transform=`scale(1.08) translateY(${(rect.top/window.innerHeight)*-30}px)`;
+  });
+}
+window.addEventListener('scroll',parallax,{passive:true});
+
+// ── STAT COUNTERS
+function animateCounter(el,target,dur=1800){
+  const isPlus=target.endsWith('+');
+  const num=parseFloat(target);
+  const start=performance.now();
+  (function update(now){
+    const p=Math.min((now-start)/dur,1);
+    const ease=1-Math.pow(1-p,3);
+    el.textContent=Math.floor(num*ease)+(isPlus?'+':'');
+    if(p<1)requestAnimationFrame(update);
+  })(start);
+}
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting&&e.target.dataset.count){animateCounter(e.target,e.target.dataset.count);}});
+},{threshold:0.5}).observe && document.querySelectorAll('.stat-num[data-count]').forEach(el=>{
+  new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animateCounter(e.target,e.target.dataset.count);new IntersectionObserver(()=>{}).observe(document.body)}});},{threshold:0.5}).observe(el);
+});
+
+// ── CURSOR GLOW (desktop)
+if(window.matchMedia('(pointer:fine)').matches){
+  const g=document.createElement('div');
+  g.style.cssText='position:fixed;top:0;left:0;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.06) 0%,transparent 70%);pointer-events:none;z-index:9997;transform:translate(-50%,-50%);will-change:transform;';
+  document.body.appendChild(g);
+  let mx=0,my=0,cx=0,cy=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function animateCursor(){cx+=(mx-cx)*0.08;cy+=(my-cy)*0.08;g.style.transform=`translate(${cx-150}px,${cy-150}px)`;requestAnimationFrame(animateCursor)})();
+}
+
+// ── SMOOTH ANCHORS
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});
+});
+</script>
+</body>
+</html>
