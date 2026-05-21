@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lookbook — 444 Brand</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#0a0a0a;--white:#fff;--off-white:#f7f5f1;--cream:#f0ede6;
+  --light-gray:#e6e2db;--mid-gray:#a09890;--dark-gray:#302b26;
+  --gold:#c8a96e;--gold-light:#e8d4a8;--gold-dark:#9a7a45;
+  --font-display:'Cormorant Garamond',serif;--font-body:'Montserrat',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--black);color:var(--white);overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--gold)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,169,110,0.15)}
+.nav-logo{font-family:var(--font-display);font-size:1.9rem;font-weight:700;letter-spacing:0.15em;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--gold)}
+.nav-center{display:flex;gap:2.5rem;list-style:none;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-center a{font-size:0.65rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.65);text-decoration:none;transition:color 0.3s}
+.nav-center a:hover,.nav-center a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.2rem}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,0.75);font-size:0.95rem;cursor:pointer;transition:color 0.3s;text-decoration:none}
+.nav-btn:hover{color:var(--gold)}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:1px;background:rgba(255,255,255,0.8)}
+.mobile-menu{position:fixed;top:0;right:-100%;width:min(340px,100%);height:100vh;background:var(--black);z-index:2000;display:flex;flex-direction:column;padding:5rem 2.5rem 2.5rem;transition:right 0.5s cubic-bezier(0.76,0,0.24,1)}
+.mobile-menu.open{right:0}
+.mobile-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--white);font-size:1.3rem;cursor:pointer}
+.mobile-links{list-style:none;display:flex;flex-direction:column;gap:1.8rem}
+.mobile-links a{font-family:var(--font-display);font-size:2.2rem;font-weight:300;color:var(--white);text-decoration:none;transition:color 0.3s}
+.mobile-links a:hover{color:var(--gold)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1999;opacity:0;pointer-events:none;transition:opacity 0.4s}
+.overlay.open{opacity:1;pointer-events:all}
+
+/* HERO */
+.lb-hero{margin-top:72px;height:70vh;min-height:500px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.lb-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.45)}
+.lb-hero-content{position:relative;z-index:2;text-align:center}
+.lb-eyebrow{font-size:0.6rem;font-weight:600;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.lb-title{font-family:var(--font-display);font-size:clamp(4rem,10vw,9rem);font-weight:300;line-height:0.88;letter-spacing:-0.02em}
+.lb-title em{font-style:italic;font-weight:700;color:var(--gold-light);display:block}
+.lb-scroll{margin-top:2rem;display:flex;flex-direction:column;align-items:center;gap:0.4rem;font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.lb-scroll::after{content:'';width:1px;height:40px;background:rgba(255,255,255,0.2);animation:scrollLine 2s ease-in-out infinite}
+@keyframes scrollLine{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(0.4)}}
+
+/* CHAPTER SYSTEM */
+.chapter{padding:0}
+
+.chapter-header{padding:4rem 6%;display:flex;align-items:baseline;gap:2rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.chapter-num{font-family:var(--font-display);font-size:5rem;font-weight:700;color:rgba(255,255,255,0.06);line-height:1;flex-shrink:0}
+.chapter-info{}
+.chapter-tag{font-size:0.58rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem}
+.chapter-name{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);font-weight:300;line-height:1.05}
+.chapter-name em{font-style:italic;font-weight:700}
+
+/* LAYOUTS */
+.layout-full{position:relative;overflow:hidden}
+.layout-full img{width:100%;display:block;aspect-ratio:21/9;object-fit:cover;object-position:top center;filter:brightness(0.8);transition:transform 0.8s ease}
+.layout-full:hover img{transform:scale(1.02)}
+.layout-full-caption{position:absolute;bottom:0;left:0;right:0;padding:3rem 6%;background:linear-gradient(transparent,rgba(0,0,0,0.7));display:flex;align-items:flex-end;justify-content:space-between}
+
+.layout-split{display:grid;grid-template-columns:1fr 1fr}
+.split-img{overflow:hidden;position:relative}
+.split-img img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top center;display:block;filter:brightness(0.75);transition:transform 0.7s ease}
+.split-img:hover img{transform:scale(1.04)}
+.split-text{background:#111;display:flex;flex-direction:column;justify-content:center;padding:4rem 3.5rem}
+.split-text .st-label{font-size:0.58rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.split-text h3{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:300;line-height:1.1;margin-bottom:1.2rem}
+.split-text h3 em{font-style:italic;font-weight:700;color:var(--gold-light)}
+.split-text p{font-size:0.68rem;line-height:2;color:rgba(255,255,255,0.45);letter-spacing:0.03em;margin-bottom:2rem}
+.btn-outline-white{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2rem;border:1px solid rgba(255,255,255,0.3);color:var(--white);text-decoration:none;font-size:0.6rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;transition:all 0.3s}
+.btn-outline-white:hover{background:var(--white);color:var(--black);border-color:var(--white)}
+
+.layout-grid3{display:grid;grid-template-columns:repeat(3,1fr)}
+.grid3-img{overflow:hidden;position:relative}
+.grid3-img img{width:100%;aspect-ratio:2/3;object-fit:cover;object-position:top center;display:block;filter:brightness(0.7);transition:transform 0.7s ease,filter 0.4s}
+.grid3-img:hover img{transform:scale(1.05);filter:brightness(0.55)}
+.grid3-caption{position:absolute;bottom:0;left:0;right:0;padding:1.5rem;background:linear-gradient(transparent,rgba(0,0,0,0.7))}
+.gc-tag{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-light);margin-bottom:0.3rem}
+.gc-name{font-family:var(--font-display);font-size:1.2rem;font-weight:500}
+
+.caption-label{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-light);margin-bottom:0.3rem}
+.caption-name{font-family:var(--font-display);font-size:1.4rem;font-weight:500}
+
+/* SHOP CTA */
+.lb-cta{padding:6rem 6%;text-align:center;background:linear-gradient(to bottom,var(--black),#0f0c06)}
+.lb-cta h2{font-family:var(--font-display);font-size:clamp(2.5rem,6vw,5rem);font-weight:300;line-height:1;margin-bottom:1rem}
+.lb-cta h2 em{font-style:italic;font-weight:700;color:var(--gold-light)}
+.lb-cta p{font-size:0.7rem;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:2.5rem}
+.btn-gold{display:inline-flex;align-items:center;gap:0.6rem;padding:1rem 2.5rem;background:var(--gold);color:var(--black);text-decoration:none;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;transition:background 0.3s}
+.btn-gold:hover{background:var(--gold-light)}
+
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid rgba(255,255,255,0.08);padding:2.5rem 6%;color:rgba(255,255,255,0.45)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--white);letter-spacing:0.1em}
+.footer-logo span{color:var(--gold)}
+.footer-copy{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase}
+.footer-links-row{display:flex;gap:1.5rem}
+.footer-links-row a{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.3s}
+.footer-links-row a:hover{color:var(--gold)}
+
+@media(max-width:768px){nav{padding:0 1.2rem}.nav-center{display:none}.hamburger{display:flex}.layout-split{grid-template-columns:1fr}.layout-grid3{grid-template-columns:1fr 1fr}.layout-full img{aspect-ratio:3/4}.lb-title{font-size:clamp(3rem,14vw,6rem)}}
+@media(max-width:480px){.layout-grid3{grid-template-columns:1fr}.footer-bottom{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">4<span>4</span>4</a>
+  <ul class="nav-center">
+    <li><a href="shop.html">New Drops</a></li>
+    <li><a href="collections.html">Collections</a></li>
+    <li><a href="lookbook.html" class="active">Lookbook</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="shop.html" class="nav-btn"><i class="fas fa-shopping-bag"></i></a>
+    <a href="auth.html" class="nav-btn"><i class="fas fa-user"></i></a>
+    <button class="hamburger" id="menuBtn"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="overlay" id="overlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="menuClose"><i class="fas fa-times"></i></button>
+  <ul class="mobile-links">
+    <li><a href="shop.html">New Drops</a></li>
+    <li><a href="collections.html">Collections</a></li>
+    <li><a href="lookbook.html">Lookbook</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</div>
+
+<!-- HERO -->
+<div class="lb-hero">
+  <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/main.jpg" alt="444 Lookbook"
+       onerror="this.src='https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=1600&q=80'">
+  <div class="lb-hero-content">
+    <p class="lb-eyebrow">Visual Stories · 2025</p>
+    <h1 class="lb-title">Look<em>Book</em></h1>
+    <div class="lb-scroll">Scroll</div>
+  </div>
+</div>
+
+<!-- CHAPTER 01 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">01</div>
+    <div class="chapter-info">
+      <p class="chapter-tag">Season One</p>
+      <h2 class="chapter-name">Negative <em>Spaces</em></h2>
+    </div>
+  </div>
+
+  <div class="layout-full">
+    <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/main.jpg" alt="Negative Spaces"
+         onerror="this.src='https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=1400&q=80'">
+    <div class="layout-full-caption">
+      <div><p class="caption-label">Campaign · 2025</p><p class="caption-name">The Silence Between</p></div>
+      <a href="shop.html" style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:2px">Shop Now →</a>
+    </div>
+  </div>
+
+  <div class="layout-split">
+    <div class="split-img">
+      <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/bwf.jpg" alt="Angel 444"
+           onerror="this.src='https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&q=80'">
+    </div>
+    <div class="split-text">
+      <p class="st-label">The Story</p>
+      <h3>Worn By Those Who<br><em>Shape Culture</em></h3>
+      <p>444 is more than a brand. It's a movement rooted in identity, crafted for the generation that doesn't wait for permission to lead. Every piece carries that energy.</p>
+      <a href="shop.html" class="btn-outline-white">Explore the Drop <i class="fas fa-arrow-right" style="font-size:.65rem"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 02 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">02</div>
+    <div class="chapter-info">
+      <p class="chapter-tag">Drop Two</p>
+      <h2 class="chapter-name"><em>Angel</em> 444</h2>
+    </div>
+  </div>
+
+  <div class="layout-grid3">
+    <div class="grid3-img">
+      <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/1.jpg" alt="Look 1"
+           onerror="this.src='https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=600&q=80'">
+      <div class="grid3-caption"><p class="gc-tag">Look 01</p><p class="gc-name">Angel 444 Tee</p></div>
+    </div>
+    <div class="grid3-img">
+      <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/2.jpg" alt="Look 2"
+           onerror="this.src='https://images.unsplash.com/photo-1516826957135-700dedea698c?w=600&q=80'">
+      <div class="grid3-caption"><p class="gc-tag">Look 02</p><p class="gc-name">Angel 444 Front</p></div>
+    </div>
+    <div class="grid3-img">
+      <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/3.png" alt="Look 3"
+           onerror="this.src='https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80'">
+      <div class="grid3-caption"><p class="gc-tag">Look 03</p><p class="gc-name">Angel Drop</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 03 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">03</div>
+    <div class="chapter-info">
+      <p class="chapter-tag">Drop Three</p>
+      <h2 class="chapter-name">Black &amp; <em>White</em></h2>
+    </div>
+  </div>
+
+  <div class="layout-split" style="direction:rtl">
+    <div class="split-img" style="direction:ltr">
+      <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/bwbm.jpg" alt="B&W Male"
+           onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=800&q=80'">
+    </div>
+    <div class="split-text" style="direction:ltr">
+      <p class="st-label">The Monochrome Edit</p>
+      <h3>Raw. Refined.<br><em>Redefined.</em></h3>
+      <p>The Black & White collection strips everything back to essence. No noise. Just the silhouette, the weight of the fabric, and the statement it makes without saying a word.</p>
+      <a href="shop.html" class="btn-outline-white">Shop B&W <i class="fas fa-arrow-right" style="font-size:.65rem"></i></a>
+    </div>
+  </div>
+
+  <div class="layout-full">
+    <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/sf.jpg" alt="Long Sleeves"
+         onerror="this.src='https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=80'">
+    <div class="layout-full-caption">
+      <div><p class="caption-label">Featured Piece</p><p class="caption-name">Long Sleeves NGS</p></div>
+      <a href="shop.html" style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:2px">Shop Now →</a>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="lb-cta">
+  <h2>Ready to Wear<br><em>the Story?</em></h2>
+  <p>Every piece from the lookbook is available now — while stock lasts.</p>
+  <a href="shop.html" class="btn-gold">Shop All Drops <i class="fas fa-arrow-right" style="margin-left:.4rem;font-size:.6rem"></i></a>
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <div class="footer-logo">4<span>4</span>4</div>
+    <p class="footer-copy">© 2025 444 Brand. All rights reserved.</p>
+    <div class="footer-links-row">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="shop.html">Shop</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('menuBtn').onclick = () => {
+  document.getElementById('mobileMenu').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+};
+const closeNav = () => {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+};
+document.getElementById('menuClose').onclick = closeNav;
+document.getElementById('overlay').onclick = closeNav;
+</script>
+</body>
+</html>
