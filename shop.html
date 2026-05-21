@@ -815,11 +815,14 @@ const db        = getFirestore(app);
 const auth      = getAuth(app);
 const gProvider = new GoogleAuthProvider();
 
+/* ── PAYSTACK CONFIG ── ✅ THIS WAS MISSING — ROOT CAUSE OF BUG */
+const PAYSTACK_PUBLIC_KEY = 'pk_live_981ff8ce8cf5e116ac0d57bcca18dd557af89edc';
+
 /* ── WEB3FORMS CONFIG ── */
 const WEB3FORMS_KEY = '0e5b085f-92af-4efa-b205-a10c0e898294';
 const ADMIN_EMAIL   = '444brandgh@gmail.com';
 
-/* ── CONFIG ── */
+/* ── DELIVERY CONFIG ── */
 const DELIVERY_FEE        = 0;
 const FREE_DELIVERY_ABOVE = 500;
 
@@ -1101,7 +1104,7 @@ function renderOrders(orders) {
       <div class="order-card-head">
         <div class="order-ref-group">
           <p class="order-ref-label">Order Reference</p>
-          <p class="order-ref-val">${order.ref || order.id}</p>
+          <p class="order-ref-val">${order.paystackRef || order.ref || order.id}</p>
         </div>
         ${headerRight}
       </div>
@@ -1479,8 +1482,9 @@ function showFormErrors(errors) {
 }
 
 /* ═══════════════════════════════════════════
-   PLACE ORDER  (save to Firestore → send email → show success)
-   NO PAYSTACK — payment handled offline/manually
+   SUBMIT CHECKOUT
+   Flow: Validate → Save Firestore → Email → Paystack popup
+   Success screen ONLY shows after Paystack onSuccess fires
 ═══════════════════════════════════════════ */
 window.submitCheckoutAndPay = async () => {
   const form   = readCheckoutForm();
@@ -1496,13 +1500,13 @@ window.submitCheckoutAndPay = async () => {
   const subtotal     = cartSnapshot.reduce((a, i) => a + i.price * i.qty, 0);
   const delivery     = calcDelivery(subtotal);
   const total        = subtotal + delivery;
+  const amountPes    = Math.round(total * 100);
   const uid          = currentUser ? currentUser.uid   : null;
   const authEmail    = currentUser ? currentUser.email : form.email.trim().toLowerCase();
   const ref          = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
 
-  setProcessing(true, 'Saving your order…', 'Please do not close this page');
-
   /* ── STEP 1: Save to Firestore ── */
+  setProcessing(true, 'Saving your order…', 'Please do not close this page');
   try {
     await saveOrderToFirestore(form, cartSnapshot, ref, subtotal, delivery, total, uid, authEmail);
   } catch(err) {
@@ -1513,29 +1517,46 @@ window.submitCheckoutAndPay = async () => {
     return;
   }
 
-  /* ── STEP 2: Send email to admin (non-blocking — don't fail order if email fails) ── */
-  setProcessing(true, 'Sending order confirmation…', 'Almost done');
+  /* ── STEP 2: Send email immediately after Firestore save ── */
   try {
     await sendAdminEmail(form, cartSnapshot, ref, total, subtotal, delivery);
     console.log('✅ Order email sent to', ADMIN_EMAIL);
   } catch(err) {
-    console.warn('⚠️ Email send failed (order still saved):', err);
-    // Order is already saved — don't block success
+    console.warn('⚠️ Email failed (order still saved):', err);
+    // Don't block — order is saved, email is best-effort
   }
 
-  /* ── STEP 3: Clear cart and show success ── */
+  /* ── STEP 3: Open Paystack popup ── */
   setProcessing(false);
-  cart = [];
-  saveCart();
   btn.disabled = false;
-  showPaymentSuccess(ref, form, cartSnapshot, total);
+
+  const handler = PaystackPop.setup({
+    key:      PAYSTACK_PUBLIC_KEY,   // ✅ now defined
+    email:    authEmail,
+    amount:   amountPes,
+    currency: 'GHS',
+    ref,
+    label:    '444 Brand Order',
+
+    onSuccess: () => {
+      /* ✅ Success screen ONLY shows here — after real payment */
+      cart = [];
+      saveCart();
+      showPaymentSuccess(ref, form, cartSnapshot, total);
+    },
+
+    onCancel: () => {
+      showToast('Payment cancelled. Your order is saved — complete payment when ready.', false);
+    }
+  });
+
+  handler.openIframe();
 };
 
 /* ── SAVE ORDER TO FIRESTORE ── */
 async function saveOrderToFirestore(form, items, ref, subtotal, shipping, total, uid, authEmail) {
   const orderData = {
-    ref,
-    paystackRef:   ref,           // kept for schema compatibility
+    paystackRef:   ref,
     uid:           uid || '',
     email:         authEmail,
     customerName:  form.name.trim(),
@@ -1564,7 +1585,7 @@ async function saveOrderToFirestore(form, items, ref, subtotal, shipping, total,
     orderStatus:   'pending',
     adminLocked:   false,
     canUserDelete: true,
-    paymentMethod: 'manual',      // changed — no Paystack
+    paymentMethod: 'paystack',   // ✅ restored
     brand:         '444 Brand',
     source:        'web',
     createdAt:     serverTimestamp(),
@@ -1574,25 +1595,18 @@ async function saveOrderToFirestore(form, items, ref, subtotal, shipping, total,
   return orderData;
 }
 
-/* ── SEND ADMIN EMAIL via Web3Forms ──
-   Fires immediately after Firestore save.
-   Delivers to whatever email is linked in your Web3Forms account.
-   Add 444brandgh@gmail.com under Web3Forms → Linked Emails if not already done. */
+/* ── SEND ADMIN EMAIL via Web3Forms ── */
 async function sendAdminEmail(form, items, ref, total, subtotal, shipping) {
   const itemsList = items.map(i => {
     const lbl = i.colorLabel || (i.colorHex || '');
     return `• ${i.name} (Size: ${i.size}${lbl ? ' | Color: ' + lbl : ''}) x${i.qty} = GH₵${(i.price * i.qty).toLocaleString()}`;
   }).join('\n');
 
-  const dateStr = new Date().toLocaleString('en-GB', { timeZone: 'Africa/Accra' });
-
-  /* Web3Forms expects a flat JSON object — all values become email fields */
   const payload = {
-    access_key:       WEB3FORMS_KEY,
-    subject:          `🛍️ New 444 Order — ${ref}`,
-    from_name:        '444 Brand Store',
-    replyto:          form.email.trim(),   // replies go to customer
-    /* ── readable order fields ── */
+    access_key:        WEB3FORMS_KEY,
+    subject:           `🛍️ New 444 Order — ${ref}`,
+    from_name:         '444 Brand Store',
+    replyto:           form.email.trim(),
     'Order_Reference': ref,
     'Customer_Name':   form.name.trim(),
     'Customer_Email':  form.email.trim(),
@@ -1604,8 +1618,8 @@ async function sendAdminEmail(form, items, ref, total, subtotal, shipping) {
     'Subtotal':        `GH₵ ${subtotal.toLocaleString()}`,
     'Shipping':        `GH₵ ${shipping.toLocaleString()}`,
     'TOTAL':           `GH₵ ${total.toLocaleString()}`,
-    'Order_Date':      dateStr,
-    'Payment_Status':  'PENDING — collect manually or via transfer',
+    'Order_Date':      new Date().toLocaleString('en-GB', { timeZone: 'Africa/Accra' }),
+    'Payment_Status':  'PENDING — awaiting Paystack confirmation',
   };
 
   const res = await fetch('https://api.web3forms.com/submit', {
@@ -1613,9 +1627,7 @@ async function sendAdminEmail(form, items, ref, total, subtotal, shipping) {
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body:    JSON.stringify(payload),
   });
-
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
   const data = await res.json();
   if (!data.success) throw new Error(data.message || 'Web3Forms rejected the submission');
   return data;
@@ -1631,7 +1643,6 @@ function showPaymentSuccess(ref, form, items, total) {
     <div class="sci-row"><i class="fas fa-map-marker-alt"></i>${form.address}, ${form.city}, ${form.country}</div>
     ${form.gps   ? `<div class="sci-row"><i class="fas fa-crosshairs"></i>${form.gps}</div>`    : ''}
     ${form.notes ? `<div class="sci-row"><i class="fas fa-sticky-note"></i>${form.notes}</div>` : ''}
-    <div class="sci-row"><i class="fas fa-coins"></i>Total: <strong>GH₵ ${total.toLocaleString()}</strong> — payment pending</div>
   `;
   document.getElementById('successItemsList').innerHTML = items.map(i => {
     const lbl = i.colorLabel || (i.colorHex || '');
@@ -1651,7 +1662,7 @@ function showPaymentSuccess(ref, form, items, total) {
 window.closeSuccess = () => {
   document.getElementById('successOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  showToast('Order saved! We\'ll be in touch shortly.');
+  showToast("Order confirmed! We'll be in touch with delivery updates.");
 };
 
 window.closeSuccessViewOrders = () => {
