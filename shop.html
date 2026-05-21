@@ -783,6 +783,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 <a href="https://wa.me/233530399523" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
 <!-- ══════════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <script type="module">
 import { initializeApp }       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
@@ -814,11 +815,24 @@ const db       = getFirestore(app);
 const auth     = getAuth(app);
 const gProvider= new GoogleAuthProvider();
 
-/* ── EMAIL JS ── */
+/* ── EMAIL JS ── 
+   emailjs is loaded as a regular <script> tag (not a module), so inside
+   a module script it may not be available immediately. We poll for it. */
 const EMAILJS_SERVICE_ID  = 'service_4tj52zt';
 const EMAILJS_TEMPLATE_ID = 'template_f8pc5ts';
 const EMAILJS_PUBLIC_KEY  = 'YdwKKnZpEVzhis4lB';
-if (typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
+
+const _ejsReady = new Promise(resolve => {
+  const check = setInterval(() => {
+    if (typeof emailjs !== 'undefined') {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+      clearInterval(check);
+      resolve();
+    }
+  }, 50);
+  // Give up after 10 seconds — avoids infinite loop if CDN fails
+  setTimeout(() => { clearInterval(check); resolve(); }, 10000);
+});
 
 /* ── CONFIG ── */
 const PAYSTACK_PUBLIC_KEY = 'pk_live_981ff8ce8cf5e116ac0d57bcca18dd557af89edc';
@@ -832,9 +846,9 @@ let currentProduct = null;
 let selectedSize   = null;
 let selectedColor  = null;
 let cart = JSON.parse(localStorage.getItem('444cart') || '[]');
-let currentUser    = null;          // Firebase auth user
-let ordersUnsubscribe = null;       // real-time orders listener
-let pendingDeleteRef  = null;       // order ID pending deletion
+let currentUser    = null;
+let ordersUnsubscribe = null;
+let pendingDeleteRef  = null;
 
 /* ═══════════════════════════════════════════
    HERO SLIDER
@@ -878,12 +892,12 @@ onAuthStateChanged(auth, user => {
 });
 
 function updateAuthUI(user) {
-  const authIcon   = document.getElementById('authIcon');
-  const userPanel  = document.getElementById('userPanel');
-  const formPanel  = document.getElementById('authFormPanel');
+  const authIcon  = document.getElementById('authIcon');
+  const userPanel = document.getElementById('userPanel');
+  const formPanel = document.getElementById('authFormPanel');
   if (user) {
     authIcon.className = 'fas fa-user-check';
-    document.getElementById('userAvatar').textContent   = (user.displayName || user.email || '?')[0].toUpperCase();
+    document.getElementById('userAvatar').textContent      = (user.displayName || user.email || '?')[0].toUpperCase();
     document.getElementById('userDisplayName').textContent = user.displayName || 'Account';
     document.getElementById('userEmailLabel').textContent  = user.email || '';
     userPanel.classList.add('show');
@@ -907,15 +921,15 @@ document.getElementById('authToggle').onclick = () => document.getElementById('a
 document.getElementById('authClose').onclick  = () => document.getElementById('authDrawer').classList.remove('open');
 
 window.switchTab = tab => {
-  document.getElementById('tabSignin').classList.toggle('active',   tab==='signin');
-  document.getElementById('tabRegister').classList.toggle('active', tab==='register');
-  document.getElementById('signinForm').style.display   = tab==='signin'   ? 'flex' : 'none';
-  document.getElementById('registerForm').style.display = tab==='register' ? 'flex' : 'none';
+  document.getElementById('tabSignin').classList.toggle('active',   tab === 'signin');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('signinForm').style.display   = tab === 'signin'   ? 'flex' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'flex' : 'none';
   setAuthError(''); setAuthSuccess('');
 };
 
-function setAuthError(msg)   { const el=document.getElementById('authError');   el.textContent=msg; el.classList.toggle('show',!!msg); }
-function setAuthSuccess(msg) { const el=document.getElementById('authSuccess'); el.textContent=msg; el.classList.toggle('show',!!msg); }
+function setAuthError(msg)   { const el = document.getElementById('authError');   el.textContent = msg; el.classList.toggle('show', !!msg); }
+function setAuthSuccess(msg) { const el = document.getElementById('authSuccess'); el.textContent = msg; el.classList.toggle('show', !!msg); }
 
 window.doSignIn = async () => {
   const email = document.getElementById('si-email').value.trim();
@@ -929,16 +943,16 @@ window.doSignIn = async () => {
     showToast('Welcome back!');
   } catch(e) {
     setAuthError(friendlyAuthError(e.code));
-  } finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-sign-in-alt" style="margin-right:.4rem"></i>Sign In'; }
+  } finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right:.4rem"></i>Sign In'; }
 };
 
 window.doRegister = async () => {
   const name  = document.getElementById('reg-name').value.trim();
   const email = document.getElementById('reg-email').value.trim();
   const pass  = document.getElementById('reg-pass').value;
-  if (!name)  { setAuthError('Please enter your name'); return; }
-  if (!email) { setAuthError('Please enter your email'); return; }
-  if (pass.length < 6) { setAuthError('Password must be at least 6 characters'); return; }
+  if (!name)          { setAuthError('Please enter your name'); return; }
+  if (!email)         { setAuthError('Please enter your email'); return; }
+  if (pass.length < 6){ setAuthError('Password must be at least 6 characters'); return; }
   const btn = document.getElementById('btnRegister');
   btn.disabled = true; btn.textContent = 'Creating account…';
   try {
@@ -949,7 +963,7 @@ window.doRegister = async () => {
     showToast('Account created — welcome!');
   } catch(e) {
     setAuthError(friendlyAuthError(e.code));
-  } finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-user-plus" style="margin-right:.4rem"></i>Create Account'; }
+  } finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus" style="margin-right:.4rem"></i>Create Account'; }
 };
 
 window.doGoogleSignIn = async () => {
@@ -979,13 +993,13 @@ window.openAuthFromOrders = () => {
 
 function friendlyAuthError(code) {
   const m = {
-    'auth/invalid-email':         'Invalid email address.',
-    'auth/user-not-found':        'No account found with this email.',
-    'auth/wrong-password':        'Incorrect password.',
-    'auth/email-already-in-use':  'This email is already registered.',
-    'auth/weak-password':         'Password is too weak (min 6 chars).',
-    'auth/too-many-requests':     'Too many attempts. Please try again later.',
-    'auth/invalid-credential':    'Incorrect email or password.',
+    'auth/invalid-email':        'Invalid email address.',
+    'auth/user-not-found':       'No account found with this email.',
+    'auth/wrong-password':       'Incorrect password.',
+    'auth/email-already-in-use': 'This email is already registered.',
+    'auth/weak-password':        'Password is too weak (min 6 chars).',
+    'auth/too-many-requests':    'Too many attempts. Please try again later.',
+    'auth/invalid-credential':   'Incorrect email or password.',
   };
   return m[code] || 'Something went wrong. Please try again.';
 }
@@ -994,19 +1008,19 @@ function friendlyAuthError(code) {
    ORDERS — real-time listener per UID
 ═══════════════════════════════════════════ */
 function subscribeToOrders(uid) {
-  unsubscribeOrders(); // clean up any previous listener
-  const q = query(collection(db,'orders'), where('uid','==',uid), orderBy('createdAt','desc'));
+  unsubscribeOrders();
+  const q = query(collection(db, 'orders'), where('uid', '==', uid), orderBy('createdAt', 'desc'));
   ordersUnsubscribe = onSnapshot(q, snap => {
     const orders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderOrders(orders);
     updateOrdersBadge(orders.length);
-  }, err => {
-    // Fallback without orderBy if index missing
-    const q2 = query(collection(db,'orders'), where('uid','==',uid));
+  }, () => {
+    // Fallback without orderBy if composite index is missing
+    const q2 = query(collection(db, 'orders'), where('uid', '==', uid));
     ordersUnsubscribe = onSnapshot(q2, snap2 => {
       const orders = snap2.docs
         .map(d => ({ id: d.id, ...d.data() }))
-        .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+        .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
       renderOrders(orders);
       updateOrdersBadge(orders.length);
     });
@@ -1032,72 +1046,69 @@ function clearOrdersUI() {
 function updateOrdersBadge(count) {
   const badge = document.getElementById('ordersCount');
   if (count > 0) {
-    badge.textContent    = count > 99 ? '99+' : count;
-    badge.style.display  = 'flex';
+    badge.textContent   = count > 99 ? '99+' : count;
+    badge.style.display = 'flex';
   } else {
-    badge.style.display  = 'none';
+    badge.style.display = 'none';
   }
 }
 
-/* ── RENDER ORDERS — clean cards, no status badges for users ── */
 function renderOrders(orders) {
   const body = document.getElementById('ordersBody');
   const sub  = document.getElementById('ordersHeadSub');
 
   if (!orders.length) {
-    body.innerHTML = `<div class="orders-empty"><i class="fas fa-receipt"></i><p>No orders yet</p><small>Your orders will appear here after checkout.</small></div>`;
+    body.innerHTML  = `<div class="orders-empty"><i class="fas fa-receipt"></i><p>No orders yet</p><small>Your orders will appear here after checkout.</small></div>`;
     sub.textContent = 'No orders yet';
     return;
   }
 
-  sub.textContent = `${orders.length} order${orders.length!==1?'s':''}`;
+  sub.textContent = `${orders.length} order${orders.length !== 1 ? 's' : ''}`;
 
   body.innerHTML = orders.map(order => {
-    const isPaid    = (order.paymentStatus||'').toLowerCase() === 'paid';
-    const isLocked  = isPaid; // admin-confirmed orders are locked
+    const isPaid   = (order.paymentStatus || '').toLowerCase() === 'paid';
+    const isLocked = isPaid;
 
     let dateStr = '—';
     try {
       if (order.createdAt) {
         const ts = order.createdAt.toDate
           ? order.createdAt.toDate()
-          : new Date((order.createdAt.seconds||0)*1000);
-        dateStr = ts.toLocaleString('en-GB',{timeZone:'Africa/Accra',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+          : new Date((order.createdAt.seconds || 0) * 1000);
+        dateStr = ts.toLocaleString('en-GB', { timeZone: 'Africa/Accra', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
       }
-    } catch{}
+    } catch {}
 
-    const itemsHtml = (order.items||[]).map(i => {
+    const itemsHtml = (order.items || []).map(i => {
       const colorDot  = i.colorHex ? `<span class="order-color-swatch" style="background:${i.colorHex}"></span>` : '';
-      const colorChip = i.colorHex ? `<span class="order-attr-chip">${colorDot} ${i.colorLabel||i.colorHex}</span>` : '';
+      const colorChip = i.colorHex ? `<span class="order-attr-chip">${colorDot} ${i.colorLabel || i.colorHex}</span>` : '';
       return `<div class="order-item-row">
-        <img class="order-item-thumb" src="${i.image||i.img||''}" alt="${i.name}" onerror="this.style.display='none'">
+        <img class="order-item-thumb" src="${i.image || i.img || ''}" alt="${i.name}" onerror="this.style.display='none'">
         <div class="order-item-info">
           <span class="order-item-name">${i.name}</span>
           <div class="order-item-attrs">
             <span class="order-attr-chip">Size: ${i.size}</span>
             ${colorChip}
-            ${i.qty>1?`<span class="order-attr-chip">×${i.qty}</span>`:''}
+            ${i.qty > 1 ? `<span class="order-attr-chip">×${i.qty}</span>` : ''}
           </div>
         </div>
-        <div class="order-item-price">GH₵ ${((i.unitPrice||i.price||0)*i.qty).toLocaleString()}</div>
+        <div class="order-item-price">GH₵ ${((i.unitPrice || i.price || 0) * i.qty).toLocaleString()}</div>
       </div>`;
     }).join('');
 
-    /* Right side of card header: lock icon if paid, delete button if not */
     const headerRight = isLocked
       ? `<div class="order-locked-icon" title="Order confirmed"><i class="fas fa-lock"></i></div>`
       : `<button class="order-delete-btn" onclick="confirmDeleteOrder('${order.id}')" title="Remove order"><i class="fas fa-trash"></i></button>`;
 
-    /* Bottom strip — only shown when admin has confirmed paid */
     const confirmedStrip = isPaid
       ? `<div class="order-confirmed-strip"><i class="fas fa-shield-alt"></i><span>Confirmed — we'll be in touch with delivery updates</span></div>`
       : '';
 
-    return `<div class="order-card${isLocked?' locked':''}">
+    return `<div class="order-card${isLocked ? ' locked' : ''}">
       <div class="order-card-head">
         <div class="order-ref-group">
           <p class="order-ref-label">Order Reference</p>
-          <p class="order-ref-val">${order.paystackRef||order.id}</p>
+          <p class="order-ref-val">${order.paystackRef || order.id}</p>
         </div>
         ${headerRight}
       </div>
@@ -1107,7 +1118,7 @@ function renderOrders(orders) {
       </div>
       <div class="order-total-strip">
         <span class="lbl">Order Total</span>
-        <span class="val">GH₵ ${(order.totalAmount||0).toLocaleString()}</span>
+        <span class="val">GH₵ ${(order.totalAmount || 0).toLocaleString()}</span>
       </div>
       ${confirmedStrip}
     </div>`;
@@ -1131,14 +1142,12 @@ async function executeDeleteOrder(orderId) {
   try {
     await deleteDoc(doc(db, 'orders', orderId));
     showToast('Order removed');
-    // Real-time listener will automatically re-render the orders list
   } catch(err) {
     console.error('Delete failed:', err);
     showToast('Could not delete order. Try again.', false);
   }
 }
 
-/* ── ORDERS DRAWER toggle ── */
 document.getElementById('ordersToggle').onclick = () => document.getElementById('ordersDrawer').classList.add('open');
 document.getElementById('ordersClose').onclick  = () => document.getElementById('ordersDrawer').classList.remove('open');
 
@@ -1149,9 +1158,9 @@ async function loadProducts() {
   try {
     let snap;
     try {
-      snap = await getDocs(query(collection(db,'products'), orderBy('createdAt','desc')));
+      snap = await getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc')));
     } catch {
-      snap = await getDocs(collection(db,'products'));
+      snap = await getDocs(collection(db, 'products'));
     }
     allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(err) {
@@ -1177,12 +1186,12 @@ function buildFilters() {
 window.setFilter = (btn, val) => {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const filtered = val==='all' ? allProducts : allProducts.filter(p => p.category===val);
+  const filtered = val === 'all' ? allProducts : allProducts.filter(p => p.category === val);
   renderProducts(filtered); updateCount(filtered.length);
 };
 
 function updateCount(n) {
-  document.getElementById('itemCount').textContent = `${n} item${n!==1?'s':''}`;
+  document.getElementById('itemCount').textContent = `${n} item${n !== 1 ? 's' : ''}`;
 }
 
 function renderProducts(list) {
@@ -1200,12 +1209,12 @@ function renderProducts(list) {
       <div class="card-img-wrap">
         <img src="${img}" alt="${p.name}" loading="lazy"
              onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80'">
-        ${p.badge ? `<span class="card-badge ${p.badge==='Limited'||p.badge==='Exclusive'?'badge-gold':'badge-new'}">${p.badge}</span>` : ''}
+        ${p.badge ? `<span class="card-badge ${p.badge === 'Limited' || p.badge === 'Exclusive' ? 'badge-gold' : 'badge-new'}">${p.badge}</span>` : ''}
         <div class="card-hover-cta"><i class="fas fa-eye" style="margin-right:.4rem"></i>Quick View</div>
       </div>
       <div class="card-body">
         <p class="card-name">${p.name}</p>
-        <p class="card-sub">${p.category||'444 Collection'}</p>
+        <p class="card-sub">${p.category || '444 Collection'}</p>
         <div class="card-footer">
           <span class="card-price">GH₵ ${Number(p.price).toLocaleString()}</span>
           <span class="card-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
@@ -1229,12 +1238,13 @@ window.openModal = p => {
   document.getElementById('mName').textContent  = p.name;
   document.getElementById('mPrice').textContent = Number(p.price).toLocaleString();
   document.getElementById('mDesc').textContent  = p.description || 'Premium quality luxury streetwear.';
+
   const thumbRow = document.getElementById('thumbRow');
   thumbRow.innerHTML = '';
   imgs.forEach((src, i) => {
     const div = document.createElement('div');
-    div.className = `thumb ${i===0?'active':''}`;
-    div.innerHTML = `<img src="${src}" alt="View ${i+1}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=200'">`;
+    div.className = `thumb ${i === 0 ? 'active' : ''}`;
+    div.innerHTML = `<img src="${src}" alt="View ${i + 1}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=200'">`;
     div.onclick = () => {
       document.getElementById('mainImg').src = src;
       document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
@@ -1242,9 +1252,11 @@ window.openModal = p => {
     };
     thumbRow.appendChild(div);
   });
+
   const sg    = document.getElementById('sizeGrid');
-  const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['S','M','L','XL','2XL'];
+  const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['S', 'M', 'L', 'XL', '2XL'];
   sg.innerHTML = sizes.map(s => `<button class="size-btn" onclick="selSize(this)">${s}</button>`).join('');
+
   const colors          = Array.isArray(p.colors) ? p.colors : [];
   const colorSection    = document.getElementById('colorSection');
   const colorGrid       = document.getElementById('colorGrid');
@@ -1254,8 +1266,10 @@ window.openModal = p => {
   const colorSelLbl     = document.getElementById('colorSelectedLabel');
   const colorHint       = document.getElementById('colorHint');
   const colorSecLabel   = document.getElementById('colorSectionLabel');
+
   colorGrid.innerHTML = ''; colorSelLbl.textContent = '';
   colorSingleDisp.style.display = 'none'; colorGrid.style.display = 'flex'; colorHint.style.display = 'none';
+
   if (colors.length === 0) {
     colorSection.style.display = 'none'; selectedColor = null;
   } else if (colors.length === 1) {
@@ -1271,11 +1285,11 @@ window.openModal = p => {
       const btn = document.createElement('button');
       btn.className = 'color-swatch';
       if (isLightColor(c.hex)) btn.classList.add('light-swatch');
-      btn.style.background = c.hex; btn.title = c.label||c.hex;
+      btn.style.background = c.hex; btn.title = c.label || c.hex;
       btn.onclick = () => {
         document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('sel'));
         btn.classList.add('sel'); selectedColor = c;
-        colorSelLbl.textContent = c.label||c.hex; colorHint.style.display = 'none';
+        colorSelLbl.textContent = c.label || c.hex; colorHint.style.display = 'none';
       };
       colorGrid.appendChild(btn);
     });
@@ -1285,10 +1299,10 @@ window.openModal = p => {
 };
 
 function isLightColor(hex) {
-  const c = (hex||'').replace('#','');
+  const c = (hex || '').replace('#', '');
   if (c.length < 6) return false;
-  const r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),b=parseInt(c.substr(4,2),16);
-  return (r*299+g*587+b*114)/1000 > 180;
+  const r = parseInt(c.substr(0, 2), 16), g = parseInt(c.substr(2, 2), 16), b = parseInt(c.substr(4, 2), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 180;
 }
 
 window.selSize = btn => {
@@ -1297,7 +1311,7 @@ window.selSize = btn => {
 };
 
 document.getElementById('modalClose').onclick = closeModal;
-document.getElementById('modal').onclick = e => { if (e.target===document.getElementById('modal')) closeModal(); };
+document.getElementById('modal').onclick = e => { if (e.target === document.getElementById('modal')) closeModal(); };
 function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = ''; }
 
 /* ═══════════════════════════════════════════
@@ -1310,30 +1324,30 @@ window.addToCart = () => {
   if (colors.length >= 2 && !selectedColor) {
     showToast('Please select a color', false);
     const hint = document.getElementById('colorHint');
-    if (hint) { hint.style.color='var(--red)'; setTimeout(()=>hint.style.color='',2000); }
+    if (hint) { hint.style.color = 'var(--red)'; setTimeout(() => hint.style.color = '', 2000); }
     return;
   }
   const img      = (currentProduct.images && currentProduct.images[0]) || currentProduct.image || '';
   const colorKey = selectedColor ? selectedColor.hex : null;
-  const existing = cart.find(i => i.id===currentProduct.id && i.size===selectedSize && i.colorHex===colorKey);
+  const existing = cart.find(i => i.id === currentProduct.id && i.size === selectedSize && i.colorHex === colorKey);
   if (existing) { existing.qty++; }
   else {
     cart.push({
       id: currentProduct.id, name: currentProduct.name, price: Number(currentProduct.price),
-      size: selectedSize, colorHex: selectedColor?selectedColor.hex:null,
-      colorLabel: selectedColor?(selectedColor.label||selectedColor.hex||''):null,
+      size: selectedSize, colorHex: selectedColor ? selectedColor.hex : null,
+      colorLabel: selectedColor ? (selectedColor.label || selectedColor.hex || '') : null,
       qty: 1, img,
     });
   }
   saveCart(); closeModal();
-  const colorText = selectedColor ? ` · ${selectedColor.label||selectedColor.hex}` : '';
+  const colorText = selectedColor ? ` · ${selectedColor.label || selectedColor.hex}` : '';
   showToast(`${currentProduct.name}${colorText} added to bag`);
   openCart();
 };
 
-function calcSubtotal() { return cart.reduce((a,i) => a+i.price*i.qty, 0); }
-function calcDelivery(sub) { if (sub===0) return 0; return sub>=FREE_DELIVERY_ABOVE?0:DELIVERY_FEE; }
-function calcTotal()    { const s=calcSubtotal(); return s+calcDelivery(s); }
+function calcSubtotal() { return cart.reduce((a, i) => a + i.price * i.qty, 0); }
+function calcDelivery(sub) { if (sub === 0) return 0; return sub >= FREE_DELIVERY_ABOVE ? 0 : DELIVERY_FEE; }
+function calcTotal()    { const s = calcSubtotal(); return s + calcDelivery(s); }
 
 function openCart() { document.getElementById('cartDrawer').classList.add('open'); }
 document.getElementById('cartToggle').onclick = openCart;
@@ -1341,22 +1355,22 @@ document.getElementById('cartClose').onclick  = () => document.getElementById('c
 
 function saveCart() {
   localStorage.setItem('444cart', JSON.stringify(cart));
-  document.getElementById('cartCount').textContent = cart.reduce((a,i)=>a+i.qty,0);
+  document.getElementById('cartCount').textContent = cart.reduce((a, i) => a + i.qty, 0);
   renderCart();
 }
 
 function renderCart() {
-  const body     = document.getElementById('cartBody');
-  const subtotal = calcSubtotal();
-  const delivery = calcDelivery(subtotal);
-  const total    = subtotal+delivery;
+  const body      = document.getElementById('cartBody');
+  const subtotal  = calcSubtotal();
+  const delivery  = calcDelivery(subtotal);
+  const total     = subtotal + delivery;
   const summaryEl = document.getElementById('cartSummary');
   const checkBtn  = document.getElementById('proceedCheckoutBtn');
   if (cart.length > 0) {
     summaryEl.style.display = 'block'; checkBtn.disabled = false;
     document.getElementById('summarySubtotal').textContent = `GH₵ ${subtotal.toLocaleString()}`;
-    document.getElementById('summaryDelivery').textContent = delivery===0
-      ? (subtotal>=FREE_DELIVERY_ABOVE?'Free':'GH₵ 0') : `GH₵ ${delivery.toLocaleString()}`;
+    document.getElementById('summaryDelivery').textContent = delivery === 0
+      ? (subtotal >= FREE_DELIVERY_ABOVE ? 'Free' : 'GH₵ 0') : `GH₵ ${delivery.toLocaleString()}`;
     document.getElementById('summaryTotal').textContent = `GH₵ ${total.toLocaleString()}`;
   } else {
     summaryEl.style.display = 'none'; checkBtn.disabled = true;
@@ -1365,41 +1379,41 @@ function renderCart() {
     body.innerHTML = `<div class="cart-empty-state"><i class="fas fa-shopping-bag"></i><p>Your bag is empty</p></div>`;
     return;
   }
-  body.innerHTML = cart.map((item,idx) => {
-    const resolvedLabel = item.colorLabel||(item.colorHex?item.colorHex:'');
+  body.innerHTML = cart.map((item, idx) => {
+    const resolvedLabel = item.colorLabel || (item.colorHex ? item.colorHex : '');
     const colorChipHtml = item.colorHex
       ? `<span class="cart-color-chip"><span class="cart-color-dot" style="background:${item.colorHex}"></span><span class="cart-color-name">${resolvedLabel}</span></span>` : '';
     const metaParts = [
       `Size: <strong style="color:var(--dark-gray);font-weight:700">${item.size}</strong>`,
       colorChipHtml ? `Color: ${colorChipHtml}` : '',
-      item.qty>1 ? `Qty: ${item.qty}` : '',
+      item.qty > 1 ? `Qty: ${item.qty}` : '',
     ].filter(Boolean).join(' &nbsp;·&nbsp; ');
     return `<div class="cart-item">
       <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=150'">
       <div>
         <p class="cart-item-name">${item.name}</p>
         <p class="cart-item-meta">${metaParts}</p>
-        <p class="cart-item-price">GH₵ ${(item.price*item.qty).toLocaleString()}</p>
+        <p class="cart-item-price">GH₵ ${(item.price * item.qty).toLocaleString()}</p>
       </div>
       <button class="cart-rm" onclick="removeItem(${idx})"><i class="fas fa-times"></i></button>
     </div>`;
   }).join('');
 }
 
-window.removeItem = idx => { if (cart[idx]) { cart.splice(idx,1); saveCart(); } };
+window.removeItem = idx => { if (cart[idx]) { cart.splice(idx, 1); saveCart(); } };
 
 /* ═══════════════════════════════════════════
    CHECKOUT PANEL
 ═══════════════════════════════════════════ */
 window.openCheckoutPanel = () => {
-  const subtotal = calcSubtotal(); const delivery = calcDelivery(subtotal); const total = subtotal+delivery;
+  const subtotal = calcSubtotal(); const delivery = calcDelivery(subtotal); const total = subtotal + delivery;
   document.getElementById('checkoutOrderItems').innerHTML = cart.map(i => {
-    const lbl = i.colorLabel||(i.colorHex||'');
+    const lbl = i.colorLabel || (i.colorHex || '');
     const dot = i.colorHex ? `<span class="co-color-dot" style="background:${i.colorHex}"></span>` : '';
     const clr = i.colorHex ? ` · ${dot}<span style="font-weight:600">${lbl}</span>` : '';
     return `<div class="checkout-order-item">
       <span class="item-n">${i.name}<span style="opacity:.55;font-weight:400"> (${i.size}${clr}) ×${i.qty}</span></span>
-      <span class="item-p">GH₵ ${(i.price*i.qty).toLocaleString()}</span>
+      <span class="item-p">GH₵ ${(i.price * i.qty).toLocaleString()}</span>
     </div>`;
   }).join('');
   document.getElementById('checkoutOrderTotal').textContent = `GH₵ ${total.toLocaleString()}`;
@@ -1416,14 +1430,14 @@ window.closeCheckoutPanel = () => {
 
 window.detectGPS = () => {
   const btn = document.getElementById('gpsDetectBtn');
-  if (!navigator.geolocation) { showToast('Geolocation not supported',false); return; }
+  if (!navigator.geolocation) { showToast('Geolocation not supported', false); return; }
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
   navigator.geolocation.getCurrentPosition(
     pos => {
       document.getElementById('f-gps').value = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
       btn.innerHTML = '<i class="fas fa-check"></i> Done'; btn.disabled = false; showToast('Location detected');
     },
-    () => { btn.innerHTML = '<i class="fas fa-crosshairs"></i> Detect'; btn.disabled = false; showToast('Could not get location',false); },
+    () => { btn.innerHTML = '<i class="fas fa-crosshairs"></i> Detect'; btn.disabled = false; showToast('Could not get location', false); },
     { timeout: 10000 }
   );
 };
@@ -1444,15 +1458,15 @@ function readCheckoutForm() {
 function validateForm(form) {
   const errors = [];
   const fields = {
-    'f-name':    { val:form.name,    msg:'Full name required (min 2 chars)',  test:v=>v.trim().length>=2 },
-    'f-email':   { val:form.email,   msg:'Valid email required',              test:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
-    'f-phone':   { val:form.phone,   msg:'Valid phone number required',       test:v=>/^\+?[\d\s\-]{7,15}$/.test(v.trim()) },
-    'f-address': { val:form.address, msg:'Delivery address required',         test:v=>v.trim().length>=5 },
-    'f-city':    { val:form.city,    msg:'City required',                     test:v=>v.trim().length>=2 },
-    'f-country': { val:form.country, msg:'Please select a country',           test:v=>v.trim().length>=2 },
+    'f-name':    { val: form.name,    msg: 'Full name required (min 2 chars)', test: v => v.trim().length >= 2 },
+    'f-email':   { val: form.email,   msg: 'Valid email required',             test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
+    'f-phone':   { val: form.phone,   msg: 'Valid phone number required',      test: v => /^\+?[\d\s\-]{7,15}$/.test(v.trim()) },
+    'f-address': { val: form.address, msg: 'Delivery address required',        test: v => v.trim().length >= 5 },
+    'f-city':    { val: form.city,    msg: 'City required',                    test: v => v.trim().length >= 2 },
+    'f-country': { val: form.country, msg: 'Please select a country',          test: v => v.trim().length >= 2 },
   };
   Object.keys(fields).forEach(id => document.getElementById(id)?.classList.remove('error'));
-  Object.entries(fields).forEach(([id,cfg]) => {
+  Object.entries(fields).forEach(([id, cfg]) => {
     if (!cfg.test(cfg.val)) { errors.push(cfg.msg); document.getElementById(id)?.classList.add('error'); }
   });
   return errors;
@@ -1462,37 +1476,34 @@ function showFormErrors(errors) {
   const banner = document.getElementById('formErrorsBanner');
   const list   = document.getElementById('formErrorsList');
   if (!errors.length) { banner.classList.remove('show'); return; }
-  list.innerHTML = errors.map(e=>`<li>${e}</li>`).join('');
+  list.innerHTML = errors.map(e => `<li>${e}</li>`).join('');
   banner.classList.add('show');
-  banner.scrollIntoView({behavior:'smooth',block:'nearest'});
+  banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /* ═══════════════════════════════════════════
    SUBMIT & PAY
-   — Paystack popup opens; NO auto-confirmation.
-   — Order saved as 'pending'; admin changes to 'paid' in Firestore.
 ═══════════════════════════════════════════ */
 window.submitCheckoutAndPay = async () => {
   const form   = readCheckoutForm();
   const errors = validateForm(form);
   if (errors.length) { showFormErrors(errors); return; }
   showFormErrors([]);
-  if (!cart.length) { showToast('Your cart is empty',false); return; }
+  if (!cart.length) { showToast('Your cart is empty', false); return; }
 
   const btn          = document.getElementById('btnPayNow');
-  const cartSnapshot = cart.map(i => ({...i}));
-  const subtotal     = cartSnapshot.reduce((a,i)=>a+i.price*i.qty, 0);
+  const cartSnapshot = cart.map(i => ({ ...i }));
+  const subtotal     = cartSnapshot.reduce((a, i) => a + i.price * i.qty, 0);
   const delivery     = calcDelivery(subtotal);
   const total        = subtotal + delivery;
   const amountPes    = Math.round(total * 100);
 
-  // Use authenticated user's UID and real email if signed in
-  const uid         = currentUser ? currentUser.uid   : null;
-  const authEmail   = currentUser ? currentUser.email : form.email.trim().toLowerCase();
-  const ref         = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
+  const uid       = currentUser ? currentUser.uid   : null;
+  const authEmail = currentUser ? currentUser.email : form.email.trim().toLowerCase();
+  const ref       = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
   btn.disabled = true;
-  setProcessing(true,'Saving your order…','Just a moment');
+  setProcessing(true, 'Saving your order…', 'Just a moment');
 
   try {
     await saveOrderToFirestore(form, cartSnapshot, ref, subtotal, delivery, uid, authEmail);
@@ -1506,7 +1517,6 @@ window.submitCheckoutAndPay = async () => {
   setProcessing(false);
   btn.disabled = false;
 
-  /* ── Open Paystack ── */
   const handler = PaystackPop.setup({
     key:      PAYSTACK_PUBLIC_KEY,
     email:    authEmail,
@@ -1515,13 +1525,13 @@ window.submitCheckoutAndPay = async () => {
     ref,
     label:    '444 Brand Order',
 
-    /* Payment completed on Paystack's side — we do NOT update status here.
-       Admin will confirm receipt and change paymentStatus to 'paid' in Firestore.
-       The real-time onSnapshot listener will reflect the update instantly. */
     onSuccess: () => {
       cart = []; saveCart();
       showPaymentSuccess(ref, form, cartSnapshot);
-      sendAdminEmail(form, cartSnapshot, ref, total).catch(()=>{});
+      // ── Send admin email — awaits emailjs being ready before sending ──
+      sendAdminEmail(form, cartSnapshot, ref, total)
+        .then(() => console.log('✅ Admin email sent successfully'))
+        .catch(err => console.error('❌ EmailJS error:', err));
     },
 
     onCancel: () => {
@@ -1533,19 +1543,19 @@ window.submitCheckoutAndPay = async () => {
   handler.openIframe();
 };
 
-/* ── SAVE ORDER ── stores uid + authEmail so real-time listener can fetch it ── */
+/* ── SAVE ORDER ── */
 async function saveOrderToFirestore(form, items, ref, subtotal, shipping, uid, authEmail) {
   const orderData = {
     paystackRef:   ref,
-    uid:           uid || '',           // ← used by the onSnapshot query
-    email:         authEmail,           // ← the authenticated user's real email
+    uid:           uid || '',
+    email:         authEmail,
     customerName:  form.name.trim(),
     phone:         form.phone.trim(),
     address:       form.address.trim(),
     city:          form.city.trim(),
     country:       form.country.trim(),
-    gpsLocation:   form.gps?.trim()  || '',
-    orderNotes:    form.notes?.trim()|| '',
+    gpsLocation:   form.gps?.trim()   || '',
+    orderNotes:    form.notes?.trim() || '',
     items: items.map(item => ({
       productId:  item.id    || '',
       name:       item.name,
@@ -1561,28 +1571,38 @@ async function saveOrderToFirestore(form, items, ref, subtotal, shipping, uid, a
     shippingFee:   shipping,
     totalAmount:   subtotal + shipping,
     currency:      'GHS',
-    paymentStatus: 'pending',    // admin changes this to 'paid' to confirm
+    paymentStatus: 'pending',
     orderStatus:   'pending',
-    adminLocked:   false,        // admin sets this true after confirming
-    canUserDelete: true,         // user can delete until admin locks
+    adminLocked:   false,
+    canUserDelete: true,
     paymentMethod: 'paystack',
     brand:         '444 Brand',
     source:        'web',
     createdAt:     serverTimestamp(),
     updatedAt:     serverTimestamp(),
   };
-  await setDoc(doc(db,'orders',ref), orderData);
+  await setDoc(doc(db, 'orders', ref), orderData);
   return orderData;
 }
 
+/* ── SEND ADMIN EMAIL ──
+   Waits for emailjs to be initialised (via _ejsReady) before sending.
+   This is the fix for the module-scope timing problem. */
 async function sendAdminEmail(form, items, ref, total) {
-  if (typeof emailjs === 'undefined') return;
-  const subtotal  = items.reduce((a,i)=>a+i.price*i.qty, 0);
+  await _ejsReady; // ← wait until emailjs CDN has loaded & been init'd
+
+  if (typeof emailjs === 'undefined') {
+    console.warn('EmailJS not available — skipping email');
+    return;
+  }
+
+  const subtotal  = items.reduce((a, i) => a + i.price * i.qty, 0);
   const shipping  = total - subtotal;
   const itemsList = items.map(i => {
-    const lbl = i.colorLabel||(i.colorHex||'');
-    return `• ${i.name} (Size: ${i.size}${lbl?' | Color: '+lbl:''}) ×${i.qty} = GH₵${(i.price*i.qty).toLocaleString()}`;
+    const lbl = i.colorLabel || (i.colorHex || '');
+    return `• ${i.name} (Size: ${i.size}${lbl ? ' | Color: ' + lbl : ''}) ×${i.qty} = GH₵${(i.price * i.qty).toLocaleString()}`;
   }).join('\n');
+
   return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
     to_email:         ADMIN_EMAIL,
     order_ref:        ref,
@@ -1597,10 +1617,10 @@ async function sendAdminEmail(form, items, ref, total) {
     shipping_fee:     `GH₵ ${shipping.toLocaleString()}`,
     total_amount:     `GH₵ ${total.toLocaleString()}`,
     payment_status:   'Pending',
-    order_date:       new Date().toLocaleString('en-GB',{timeZone:'Africa/Accra'}),
+    order_date:       new Date().toLocaleString('en-GB', { timeZone: 'Africa/Accra' }),
     brand:            '444 Brand',
     customer_city:    form.city,
-    items_count:      `${items.length} item${items.length!==1?'s':''}`,
+    items_count:      `${items.length} item${items.length !== 1 ? 's' : ''}`,
   }, EMAILJS_PUBLIC_KEY);
 }
 
@@ -1611,17 +1631,17 @@ function showPaymentSuccess(ref, form, items) {
     <div class="sci-row"><i class="fas fa-envelope"></i>${form.email}</div>
     <div class="sci-row"><i class="fas fa-phone"></i>${form.phone}</div>
     <div class="sci-row"><i class="fas fa-map-marker-alt"></i>${form.address}, ${form.city}, ${form.country}</div>
-    ${form.gps   ? `<div class="sci-row"><i class="fas fa-crosshairs"></i>${form.gps}</div>` : ''}
+    ${form.gps   ? `<div class="sci-row"><i class="fas fa-crosshairs"></i>${form.gps}</div>`         : ''}
     ${form.notes ? `<div class="sci-row"><i class="fas fa-sticky-note"></i>${form.notes}</div>` : ''}
   `;
   document.getElementById('successItemsList').innerHTML = items.map(i => {
-    const lbl = i.colorLabel||(i.colorHex||'');
+    const lbl = i.colorLabel || (i.colorHex || '');
     const dot = i.colorHex ? `<span class="success-color-dot" style="background:${i.colorHex}"></span>` : '';
     return `<div class="success-item-row">
       <span class="success-item-name">${dot}${i.name}
-        <span style="opacity:.5;font-size:.62rem">(${i.size}${lbl?' · '+lbl:''}) ×${i.qty}</span>
+        <span style="opacity:.5;font-size:.62rem">(${i.size}${lbl ? ' · ' + lbl : ''}) ×${i.qty}</span>
       </span>
-      <span class="success-item-price">GH₵ ${(i.price*i.qty).toLocaleString()}</span>
+      <span class="success-item-price">GH₵ ${(i.price * i.qty).toLocaleString()}</span>
     </div>`;
   }).join('');
   document.getElementById('successOverlay').classList.add('open');
@@ -1632,7 +1652,7 @@ function showPaymentSuccess(ref, form, items) {
 window.closeSuccess = () => {
   document.getElementById('successOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  showToast('Order saved! We\'ll confirm your payment shortly.');
+  showToast("Order saved! We'll confirm your payment shortly.");
 };
 
 window.closeSuccessViewOrders = () => {
@@ -1641,13 +1661,13 @@ window.closeSuccessViewOrders = () => {
   document.getElementById('ordersDrawer').classList.add('open');
 };
 
-function setProcessing(show, msg='Processing…', sub='') {
+function setProcessing(show, msg = 'Processing…', sub = '') {
   document.getElementById('processingMsg').textContent = msg;
   document.getElementById('processingSub').textContent = sub;
   document.getElementById('processingOverlay').classList.toggle('open', show);
 }
 
-function showToast(msg, ok=true) {
+function showToast(msg, ok = true) {
   const t = document.getElementById('toast');
   document.getElementById('toastMsg').textContent = msg;
   t.querySelector('i').className   = ok ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
