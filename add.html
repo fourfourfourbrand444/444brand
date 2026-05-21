@@ -3,495 +3,883 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>444 Brand Admin Panel</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-
+<title>444 Brand · Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
+:root {
+  --bg: #080808;
+  --surface: #111111;
+  --surface2: #161616;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.14);
+  --text: #f0f0f0;
+  --muted: rgba(240,240,240,0.38);
+  --accent: #c8ff00;
+  --accent-dim: rgba(200,255,0,0.1);
+  --paid: #00e5a0;
+  --paid-bg: rgba(0,229,160,0.08);
+  --pending: #ffb800;
+  --pending-bg: rgba(255,184,0,0.08);
+  --danger: #ff4040;
+  --danger-bg: rgba(255,64,64,0.08);
+  --radius: 16px;
+  --mono: 'DM Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
 }
 
-body{
-background:#0f0f0f;
-color:white;
-padding:25px;
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 14px;
+  min-height: 100vh;
+  padding: 28px 24px 60px;
+  -webkit-font-smoothing: antialiased;
 }
 
-h1{
-font-size:32px;
-margin-bottom:25px;
+/* ─── TOP BAR ─── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
 }
 
-.stats{
-display:flex;
-gap:15px;
-margin-bottom:25px;
-flex-wrap:wrap;
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
-.stat-card{
-background:#171717;
-padding:20px;
-border-radius:18px;
-flex:1;
-min-width:200px;
-border:1px solid #262626;
+.brand-name {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--accent);
 }
 
-.stat-card h2{
-font-size:28px;
-margin-top:10px;
+.brand-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.orders-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
-gap:20px;
+.search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 360px;
+  min-width: 200px;
 }
 
-.order-card{
-background:#171717;
-border-radius:20px;
-padding:20px;
-border:1px solid #2a2a2a;
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+  font-size: 14px;
 }
 
-.order-head{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
+.search {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 12px 16px 12px 40px;
+  border-radius: 12px;
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .18s, background .18s;
 }
 
-.order-ref{
-font-size:14px;
-opacity:.6;
+.search::placeholder { color: var(--muted); }
+.search:focus {
+  border-color: var(--accent);
+  background: var(--surface2);
 }
 
-.status{
-padding:8px 14px;
-border-radius:999px;
-font-size:12px;
-font-weight:bold;
+/* ─── STATS ─── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 32px;
 }
 
-.pending{
-background:#332600;
-color:#ffcc00;
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp .35s ease both;
 }
 
-.paid{
-background:#062d1d;
-color:#00ff88;
+.stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, transparent 60%);
+  pointer-events: none;
 }
 
-.customer{
-margin-bottom:20px;
-line-height:1.7;
-font-size:14px;
+.stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
 }
 
-.items{
-margin-bottom:20px;
+.stat-value {
+  font-family: var(--display);
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+  transition: all .3s;
 }
 
-.item{
-display:flex;
-justify-content:space-between;
-gap:10px;
-padding:12px 0;
-border-bottom:1px solid #2a2a2a;
-font-size:14px;
+.stat-card:nth-child(1) .stat-value { color: var(--text); }
+.stat-card:nth-child(2) .stat-value { color: var(--paid); }
+.stat-card:nth-child(3) .stat-value { color: var(--pending); }
+
+/* ─── TOOLBAR ─── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
 }
 
-.total{
-font-size:22px;
-font-weight:bold;
-margin-bottom:20px;
+.filter-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all .18s;
 }
 
-.actions{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
+.filter-btn:hover,
+.filter-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
 }
 
-button{
-border:none;
-padding:12px 15px;
-border-radius:12px;
-cursor:pointer;
-font-weight:bold;
+.order-count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
 }
 
-.btn-paid{
-background:#00c853;
-color:white;
+/* ─── GRID ─── */
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 18px;
 }
 
-.btn-pending{
-background:#ff9800;
-color:white;
+/* ─── ORDER CARD ─── */
+.order-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  animation: fadeUp .4s ease both;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
 }
 
-.btn-delete{
-background:#ff3b30;
-color:white;
+.order-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
 }
 
-.loading,
-.empty{
-text-align:center;
-padding:70px;
-opacity:.7;
-font-size:20px;
+.order-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
 }
 
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-gap:15px;
-flex-wrap:wrap;
+.order-card.paid-card::after {
+  background: linear-gradient(90deg, transparent, var(--paid), transparent);
+  opacity: 0.4;
 }
 
-.search{
-background:#171717;
-border:1px solid #2a2a2a;
-padding:14px 18px;
-border-radius:14px;
-color:white;
-width:320px;
-outline:none;
+/* ─── ORDER HEAD ─── */
+.order-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
 }
 
+.order-ref-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.order-ref-val {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  word-break: break-all;
+}
+
+.status-badge {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.status-paid { background: var(--paid-bg); color: var(--paid); border: 1px solid rgba(0,229,160,0.2); }
+.status-pending { background: var(--pending-bg); color: var(--pending); border: 1px solid rgba(255,184,0,0.2); }
+
+/* ─── CUSTOMER ─── */
+.customer-block {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.customer-name {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.customer-detail {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.customer-detail svg {
+  width: 11px;
+  height: 11px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* ─── ITEMS ─── */
+.items-block { display: flex; flex-direction: column; gap: 0; }
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.item:last-child { border-bottom: none; }
+
+.item-name { font-size: 13px; color: var(--text); font-weight: 500; }
+
+.item-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.item-price {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── TOTAL ─── */
+.total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.total-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.total-val {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+}
+
+/* ─── TIMESTAMP ─── */
+.order-time {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-align: right;
+  margin-top: -10px;
+}
+
+/* ─── ACTIONS ─── */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+}
+
+.btn {
+  border: none;
+  padding: 11px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all .18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); filter: brightness(0.9); }
+
+.btn-paid { background: var(--paid-bg); color: var(--paid); border: 1px solid rgba(0,229,160,0.25); }
+.btn-pending { background: var(--pending-bg); color: var(--pending); border: 1px solid rgba(255,184,0,0.25); }
+.btn-delete { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(255,64,64,0.25); aspect-ratio: 1; padding: 11px; }
+
+/* ─── STATES ─── */
+.state-msg {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--muted);
+}
+
+.state-msg svg {
+  width: 48px; height: 48px;
+  margin: 0 auto 16px;
+  opacity: 0.2;
+  display: block;
+}
+
+.state-msg h3 {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(240,240,240,0.5);
+  margin-bottom: 6px;
+}
+
+.state-msg p { font-size: 13px; }
+
+/* Skeleton loader */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 18px;
+}
+
+.skeleton-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skel {
+  background: linear-gradient(90deg, var(--surface2) 25%, #1e1e1e 50%, var(--surface2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+
+.skel-h { height: 14px; }
+.skel-l { height: 20px; }
+
+/* ─── TOAST ─── */
+.toast-wrap {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.toast {
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  animation: slideUp .25s ease;
+  border: 1px solid;
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-success { background: rgba(0,229,160,0.12); color: var(--paid); border-color: rgba(0,229,160,0.2); }
+.toast-error { background: rgba(255,64,64,0.12); color: var(--danger); border-color: rgba(255,64,64,0.2); }
+.toast-info { background: rgba(200,255,0,0.1); color: var(--accent); border-color: rgba(200,255,0,0.2); }
+
+/* ─── CONFIRM MODAL ─── */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 998;
+  animation: fadeIn .2s ease;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 380px;
+  width: 90%;
+  animation: scaleIn .2s ease;
+}
+
+.modal h3 {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.modal p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.modal-actions { display: flex; gap: 10px; }
+
+.modal-cancel {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 12px;
+  transition: all .15s;
+}
+
+.modal-cancel:hover { color: var(--text); border-color: var(--border-hover); }
+
+.modal-confirm {
+  flex: 1;
+  background: var(--danger-bg);
+  border: 1px solid rgba(255,64,64,0.25);
+  color: var(--danger);
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 12px;
+  transition: all .15s;
+}
+
+.modal-confirm:hover { background: rgba(255,64,64,0.15); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  body { padding: 18px 14px 60px; }
+  .orders-grid, .skeleton-grid { grid-template-columns: 1fr; }
+  .brand-name { font-size: 22px; }
+}
 </style>
 </head>
-
 <body>
 
+<!-- Topbar -->
 <div class="topbar">
-<h1>444 Brand Admin</h1>
-
-<input
-type="text"
-class="search"
-id="searchInput"
-placeholder="Search orders..."
->
+  <div class="brand">
+    <span class="brand-name">444</span>
+    <span class="brand-tag">Admin Panel</span>
+  </div>
+  <div class="search-wrap">
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" class="search" id="searchInput" placeholder="Search by name, email or ref…" autocomplete="off">
+  </div>
 </div>
 
+<!-- Stats -->
 <div class="stats">
-
-<div class="stat-card">
-<div>Total Orders</div>
-<h2 id="totalOrders">0</h2>
+  <div class="stat-card" style="animation-delay:.05s">
+    <div class="stat-label">Total Orders</div>
+    <div class="stat-value" id="totalOrders">—</div>
+  </div>
+  <div class="stat-card" style="animation-delay:.1s">
+    <div class="stat-label">Paid</div>
+    <div class="stat-value" id="paidOrders">—</div>
+  </div>
+  <div class="stat-card" style="animation-delay:.15s">
+    <div class="stat-label">Pending</div>
+    <div class="stat-value" id="pendingOrders">—</div>
+  </div>
 </div>
 
-<div class="stat-card">
-<div>Paid Orders</div>
-<h2 id="paidOrders">0</h2>
+<!-- Toolbar -->
+<div class="toolbar">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="paid">Paid</button>
+  <button class="filter-btn" data-filter="pending">Pending</button>
+  <span class="order-count" id="orderCount"></span>
 </div>
 
-<div class="stat-card">
-<div>Pending Orders</div>
-<h2 id="pendingOrders">0</h2>
+<!-- Orders -->
+<div id="ordersContainer">
+  <!-- skeleton -->
+  <div class="skeleton-grid">
+    ${[1,2,3].map(()=>`
+    <div class="skeleton-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="skel skel-h" style="width:120px"></div>
+        <div class="skel" style="width:60px;height:22px;border-radius:999px"></div>
+      </div>
+      <div class="skel skel-h" style="width:80%"></div>
+      <div class="skel skel-h" style="width:60%"></div>
+      <div class="skel skel-h" style="width:70%"></div>
+      <div class="skel skel-l" style="width:40%"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px">
+        <div class="skel" style="height:38px;border-radius:10px"></div>
+        <div class="skel" style="height:38px;border-radius:10px"></div>
+        <div class="skel" style="height:38px;width:38px;border-radius:10px"></div>
+      </div>
+    </div>`).join('')}
+  </div>
 </div>
 
-</div>
-
-<div id="ordersContainer" class="loading">
-Loading orders...
-</div>
+<!-- Toast container -->
+<div class="toast-wrap" id="toastWrap"></div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-
 import {
-getFirestore,
-collection,
-onSnapshot,
-doc,
-updateDoc,
-deleteDoc
+  getFirestore, collection, onSnapshot,
+  doc, updateDoc, deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* FIREBASE */
-
-const firebaseConfig = {
-apiKey: "AIzaSyDE1KZtXElz9q6JsU65voYRfXuGNg6pDVE",
-authDomain: "brand-dc8f6.firebaseapp.com",
-projectId: "brand-dc8f6",
-storageBucket: "brand-dc8f6.firebasestorage.app",
-messagingSenderId: "473062980138",
-appId: "1:473062980138:web:1f6046bcc824589372e153",
-};
-
-const app = initializeApp(firebaseConfig);
+/* ── Firebase ── */
+const app = initializeApp({
+  apiKey: "AIzaSyDE1KZtXElz9q6JsU65voYRfXuGNg6pDVE",
+  authDomain: "brand-dc8f6.firebaseapp.com",
+  projectId: "brand-dc8f6",
+  storageBucket: "brand-dc8f6.firebasestorage.app",
+  messagingSenderId: "473062980138",
+  appId: "1:473062980138:web:1f6046bcc824589372e153",
+});
 const db = getFirestore(app);
 
-const container = document.getElementById("ordersContainer");
-
+/* ── State ── */
 let allOrders = [];
+let activeFilter = 'all';
+let searchVal = '';
 
-/* REALTIME ORDERS */
+/* ── Toast ── */
+function toast(msg, type='info') {
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'✓', error:'✕', info:'·' };
+  el.textContent = `${icons[type]||''} ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(), 300); }, 3000);
+}
 
-onSnapshot(collection(db,"orders"), (snap)=>{
+/* ── Confirm modal ── */
+function confirm(msg) {
+  return new Promise(resolve => {
+    const bd = document.createElement('div');
+    bd.className = 'modal-backdrop';
+    bd.innerHTML = `
+      <div class="modal">
+        <h3>Confirm Action</h3>
+        <p>${msg}</p>
+        <div class="modal-actions">
+          <button class="modal-cancel">Cancel</button>
+          <button class="modal-confirm">Delete</button>
+        </div>
+      </div>`;
+    document.body.appendChild(bd);
+    bd.querySelector('.modal-cancel').onclick = ()=>{ bd.remove(); resolve(false); };
+    bd.querySelector('.modal-confirm').onclick = ()=>{ bd.remove(); resolve(true); };
+    bd.onclick = e=>{ if(e.target===bd){ bd.remove(); resolve(false); } };
+  });
+}
 
-allOrders = snap.docs.map(doc=>({
-id:doc.id,
-...doc.data()
-}));
+/* ── Format date ── */
+function fmtDate(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts.seconds*1000);
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
 
-allOrders.sort((a,b)=>{
-return (b.createdAt?.seconds || 0)
-- (a.createdAt?.seconds || 0);
+/* ── Stats ── */
+function updateStats() {
+  document.getElementById('totalOrders').textContent = allOrders.length;
+  document.getElementById('paidOrders').textContent = allOrders.filter(o=>o.paymentStatus==='paid').length;
+  document.getElementById('pendingOrders').textContent = allOrders.filter(o=>o.paymentStatus!=='paid').length;
+}
+
+/* ── Filter + Search ── */
+function getVisible() {
+  return allOrders.filter(o => {
+    const matchFilter =
+      activeFilter === 'all' ? true :
+      activeFilter === 'paid' ? o.paymentStatus === 'paid' :
+      o.paymentStatus !== 'paid';
+    const q = searchVal.toLowerCase();
+    const matchSearch = !q ||
+      (o.customerName||'').toLowerCase().includes(q) ||
+      (o.email||'').toLowerCase().includes(q) ||
+      (o.paystackRef||'').toLowerCase().includes(q) ||
+      (o.phone||'').toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+}
+
+/* ── Render ── */
+function render() {
+  const orders = getVisible();
+  const container = document.getElementById('ordersContainer');
+  const countEl = document.getElementById('orderCount');
+  countEl.textContent = `${orders.length} order${orders.length!==1?'s':''}`;
+
+  if (!orders.length) {
+    container.innerHTML = `
+      <div class="state-msg">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4"/></svg>
+        <h3>${searchVal ? 'No results found' : 'No orders yet'}</h3>
+        <p>${searchVal ? 'Try a different search term.' : 'Orders will appear here when customers place them.'}</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="orders-grid">${orders.map((order, i) => {
+    const paid = (order.paymentStatus||'').toLowerCase() === 'paid';
+    return `
+    <div class="order-card${paid?' paid-card':''}" style="animation-delay:${i*0.04}s">
+
+      <div class="order-head">
+        <div>
+          <div class="order-ref-label">Order Ref</div>
+          <div class="order-ref-val">${order.paystackRef || order.id}</div>
+        </div>
+        <div class="status-badge ${paid?'status-paid':'status-pending'}">${paid?'Paid':'Pending'}</div>
+      </div>
+
+      <div class="customer-block">
+        <div class="customer-name">${order.customerName || 'Unknown'}</div>
+        ${order.email ? `<div class="customer-detail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          ${order.email}
+        </div>` : ''}
+        ${order.phone ? `<div class="customer-detail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.22 2.37 2 2 0 012.21 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.61-.61a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+          ${order.phone}
+        </div>` : ''}
+        ${order.address ? `<div class="customer-detail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${order.address}
+        </div>` : ''}
+      </div>
+
+      <div class="items-block">
+        ${(order.items||[]).map(item=>`
+        <div class="item">
+          <div>
+            <div class="item-name">${item.name}</div>
+            <div class="item-meta">${[item.size, item.colorLabel].filter(Boolean).join(' · ')} × ${item.qty}</div>
+          </div>
+          <div class="item-price">GH₵ ${(item.lineTotal||0).toLocaleString()}</div>
+        </div>`).join('')}
+      </div>
+
+      <div class="total-row">
+        <span class="total-label">Total</span>
+        <span class="total-val">GH₵ ${(order.totalAmount||0).toLocaleString()}</span>
+      </div>
+
+      ${order.createdAt ? `<div class="order-time">${fmtDate(order.createdAt)}</div>` : ''}
+
+      <div class="actions">
+        <button class="btn btn-paid" onclick="markPaid('${order.id}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Mark Paid
+        </button>
+        <button class="btn btn-pending" onclick="markPending('${order.id}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Pending
+        </button>
+        <button class="btn btn-delete" onclick="deleteOrder('${order.id}')" title="Delete order">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </div>
+
+    </div>`;
+  }).join('')}</div>`;
+}
+
+/* ── Realtime listener ── */
+onSnapshot(collection(db, 'orders'), snap => {
+  allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  allOrders.sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+  updateStats();
+  render();
+}, err => {
+  console.error(err);
+  document.getElementById('ordersContainer').innerHTML = `
+    <div class="state-msg">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3>Connection Error</h3>
+      <p>Failed to load orders. Check your connection and refresh.</p>
+    </div>`;
 });
 
-renderOrders(allOrders);
-updateStats();
-
-}, (err)=>{
-console.error(err);
-
-container.innerHTML = `
-<div class="empty">
-Failed to load orders
-</div>
-`;
+/* ── Filter buttons ── */
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    render();
+  });
 });
 
-/* STATS */
-
-function updateStats(){
-
-document.getElementById("totalOrders").textContent =
-allOrders.length;
-
-document.getElementById("paidOrders").textContent =
-allOrders.filter(o=>o.paymentStatus==="paid").length;
-
-document.getElementById("pendingOrders").textContent =
-allOrders.filter(o=>o.paymentStatus!=="paid").length;
-
-}
-
-/* RENDER */
-
-function renderOrders(orders){
-
-if(!orders.length){
-container.className = "empty";
-
-container.innerHTML = `
-No orders found
-`;
-
-return;
-}
-
-container.className = "orders-grid";
-
-container.innerHTML = orders.map(order=>{
-
-const paid =
-(order.paymentStatus || "").toLowerCase() === "paid";
-
-return `
-
-<div class="order-card">
-
-<div class="order-head">
-
-<div>
-<div class="order-ref">Order Ref</div>
-<div>${order.paystackRef || order.id}</div>
-</div>
-
-<div class="status ${paid ? 'paid':'pending'}">
-${paid ? 'PAID':'PENDING'}
-</div>
-
-</div>
-
-<div class="customer">
-
-<div><strong>${order.customerName || 'No name'}</strong></div>
-
-<div>${order.email || ''}</div>
-
-<div>${order.phone || ''}</div>
-
-<div>${order.address || ''}</div>
-
-</div>
-
-<div class="items">
-
-${(order.items || []).map(item=>`
-
-<div class="item">
-
-<div>
-${item.name}
-<br>
-
-<small>
-${item.size || ''}
-${item.colorLabel ? ' · '+item.colorLabel : ''}
-×${item.qty}
-</small>
-
-</div>
-
-<div>
-GH₵ ${(item.lineTotal || 0).toLocaleString()}
-</div>
-
-</div>
-
-`).join('')}
-
-</div>
-
-<div class="total">
-GH₵ ${(order.totalAmount || 0).toLocaleString()}
-</div>
-
-<div class="actions">
-
-<button
-class="btn-paid"
-onclick="markPaid('${order.id}')">
-Mark Paid
-</button>
-
-<button
-class="btn-pending"
-onclick="markPending('${order.id}')">
-Pending
-</button>
-
-<button
-class="btn-delete"
-onclick="deleteOrder('${order.id}')">
-Delete
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}).join('');
-
-}
-
-/* ACTIONS */
-
-window.markPaid = async(id)=>{
-
-try{
-
-await updateDoc(doc(db,"orders",id),{
-paymentStatus:"paid",
-adminLocked:true,
-updatedAt:new Date()
+/* ── Search (debounced) ── */
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchVal = e.target.value;
+    render();
+  }, 200);
 });
 
-alert("Order marked as PAID");
-
-}catch(err){
-console.error(err);
-alert("Failed");
-}
-
+/* ── Actions ── */
+window.markPaid = async id => {
+  try {
+    await updateDoc(doc(db,'orders',id), {
+      paymentStatus:'paid', adminLocked:true, updatedAt:new Date()
+    });
+    toast('Order marked as Paid', 'success');
+  } catch(e) { toast('Failed to update order', 'error'); }
 };
 
-window.markPending = async(id)=>{
-
-try{
-
-await updateDoc(doc(db,"orders",id),{
-paymentStatus:"pending",
-adminLocked:false,
-updatedAt:new Date()
-});
-
-alert("Order marked as PENDING");
-
-}catch(err){
-console.error(err);
-alert("Failed");
-}
-
+window.markPending = async id => {
+  try {
+    await updateDoc(doc(db,'orders',id), {
+      paymentStatus:'pending', adminLocked:false, updatedAt:new Date()
+    });
+    toast('Order marked as Pending', 'info');
+  } catch(e) { toast('Failed to update order', 'error'); }
 };
 
-window.deleteOrder = async(id)=>{
-
-const confirmDelete =
-confirm("Delete this order?");
-
-if(!confirmDelete) return;
-
-try{
-
-await deleteDoc(doc(db,"orders",id));
-
-alert("Order deleted");
-
-}catch(err){
-console.error(err);
-alert("Delete failed");
-}
-
+window.deleteOrder = async id => {
+  const ok = await confirm('This will permanently remove the order. This cannot be undone.');
+  if (!ok) return;
+  try {
+    await deleteDoc(doc(db,'orders',id));
+    toast('Order deleted', 'success');
+  } catch(e) { toast('Failed to delete order', 'error'); }
 };
-
-/* SEARCH */
-
-document
-.getElementById("searchInput")
-.addEventListener("input",(e)=>{
-
-const val =
-e.target.value.toLowerCase();
-
-const filtered =
-allOrders.filter(order=>{
-
-return (
-(order.customerName || '')
-.toLowerCase()
-.includes(val)
-
-||
-
-(order.email || '')
-.toLowerCase()
-.includes(val)
-
-||
-
-(order.paystackRef || '')
-.toLowerCase()
-.includes(val)
-);
-
-});
-
-renderOrders(filtered);
-
-});
-
 </script>
-
 </body>
 </html>
