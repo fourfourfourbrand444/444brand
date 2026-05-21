@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — 444 Brand</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#0a0a0a;--white:#fff;--off-white:#f7f5f1;--cream:#f0ede6;
+  --light-gray:#e6e2db;--mid-gray:#a09890;--dark-gray:#302b26;
+  --gold:#c8a96e;--gold-light:#e8d4a8;--gold-dark:#9a7a45;
+  --font-display:'Cormorant Garamond',serif;--font-body:'Montserrat',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--off-white);color:var(--black);overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--off-white)}::-webkit-scrollbar-thumb{background:var(--black)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,169,110,0.15)}
+.nav-logo{font-family:var(--font-display);font-size:1.9rem;font-weight:700;letter-spacing:0.15em;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--gold)}
+.nav-center{display:flex;gap:2.5rem;list-style:none;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-center a{font-size:0.65rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.65);text-decoration:none;transition:color 0.3s}
+.nav-center a:hover,.nav-center a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.2rem}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,0.75);font-size:0.95rem;cursor:pointer;transition:color 0.3s;text-decoration:none}
+.nav-btn:hover{color:var(--gold)}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:1px;background:rgba(255,255,255,0.8)}
+.mobile-menu{position:fixed;top:0;right:-100%;width:min(340px,100%);height:100vh;background:var(--black);z-index:2000;display:flex;flex-direction:column;padding:5rem 2.5rem 2.5rem;transition:right 0.5s cubic-bezier(0.76,0,0.24,1)}
+.mobile-menu.open{right:0}
+.mobile-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--white);font-size:1.3rem;cursor:pointer}
+.mobile-links{list-style:none;display:flex;flex-direction:column;gap:1.8rem}
+.mobile-links a{font-family:var(--font-display);font-size:2.2rem;font-weight:300;color:var(--white);text-decoration:none;transition:color 0.3s}
+.mobile-links a:hover{color:var(--gold)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1999;opacity:0;pointer-events:none;transition:opacity 0.4s}
+.overlay.open{opacity:1;pointer-events:all}
+
+/* CONTACT LAYOUT */
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+
+/* LEFT — dark panel */
+.contact-left{background:var(--black);padding:10rem 5% 5rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.contact-left::before{content:'';position:absolute;top:-100px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(200,169,110,0.06) 0%,transparent 70%);pointer-events:none}
+.cl-top{}
+.cl-eyebrow{font-size:0.58rem;font-weight:600;letter-spacing:0.38em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.8rem}
+.cl-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold)}
+.cl-title{font-family:var(--font-display);font-size:clamp(3rem,5vw,5rem);font-weight:300;color:var(--white);line-height:0.95;margin-bottom:1.5rem}
+.cl-title em{font-style:italic;font-weight:700;color:var(--gold-light);display:block}
+.cl-desc{font-size:0.7rem;line-height:2;color:rgba(255,255,255,0.45);max-width:340px;letter-spacing:0.03em;margin-bottom:3rem}
+
+.contact-channels{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:3rem}
+.channel{display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.5rem;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);text-decoration:none;transition:all 0.3s;cursor:pointer}
+.channel:hover{border-color:rgba(200,169,110,0.35);background:rgba(200,169,110,0.05)}
+.ch-icon{width:42px;height:42px;background:rgba(200,169,110,0.12);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1rem;flex-shrink:0}
+.ch-info{}
+.ch-label{font-size:0.55rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.2rem}
+.ch-value{font-size:0.78rem;color:var(--white);font-weight:500;letter-spacing:0.03em}
+
+.cl-socials{display:flex;gap:0.8rem}
+.social-link{width:38px;height:38px;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.45);font-size:0.9rem;text-decoration:none;transition:all 0.3s}
+.social-link:hover{border-color:var(--gold);color:var(--gold)}
+
+/* RIGHT — form panel */
+.contact-right{background:var(--off-white);padding:10rem 6% 5rem;display:flex;flex-direction:column;justify-content:center}
+.form-heading{margin-bottom:2.5rem}
+.form-heading h2{font-family:var(--font-display);font-size:clamp(1.8rem,3vw,2.5rem);font-weight:400;line-height:1.1;margin-bottom:0.4rem}
+.form-heading h2 em{font-style:italic;color:var(--gold-dark)}
+.form-heading p{font-size:0.65rem;letter-spacing:0.08em;color:var(--mid-gray);line-height:1.8}
+
+.contact-form{display:flex;flex-direction:column;gap:1rem;max-width:480px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:0.35rem}
+.form-label{font-size:0.55rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--dark-gray)}
+.form-input,.form-select,.form-textarea{width:100%;padding:0.85rem 1rem;border:1px solid var(--light-gray);background:var(--white);font-family:var(--font-body);font-size:0.72rem;color:var(--black);outline:none;transition:border-color 0.3s;appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--mid-gray)}
+.form-textarea{resize:vertical;min-height:130px}
+.form-select-wrap{position:relative}
+.form-select-wrap::after{content:'\f107';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:var(--mid-gray);pointer-events:none;font-size:0.7rem}
+.btn-submit{padding:1.1rem 2.5rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;gap:0.7rem;position:relative;overflow:hidden;align-self:flex-start}
+.btn-submit::before{content:'';position:absolute;inset:0;background:var(--gold);transform:translateX(-100%);transition:transform 0.4s cubic-bezier(0.76,0,0.24,1)}
+.btn-submit:hover::before{transform:translateX(0)}
+.btn-submit span{position:relative;z-index:1;display:flex;align-items:center;gap:0.7rem}
+.btn-submit:disabled{opacity:0.5;cursor:not-allowed}
+.btn-submit:disabled::before{display:none}
+
+.success-msg{display:none;background:#f0faf5;border:1px solid rgba(26,110,60,0.2);border-left:3px solid #1a6e3c;padding:1rem 1.2rem;font-size:0.65rem;color:#1a6e3c;letter-spacing:0.04em;line-height:1.7}
+.success-msg.show{display:block}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:2rem;right:2rem;z-index:800;width:52px;height:52px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:1.4rem;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:transform 0.3s}
+.wa-float:hover{transform:scale(1.1)}
+
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid rgba(255,255,255,0.08);padding:2.5rem 5%;color:rgba(255,255,255,0.45)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--white);letter-spacing:0.1em}
+.footer-logo span{color:var(--gold)}
+.footer-copy{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase}
+.footer-links-row{display:flex;gap:1.5rem}
+.footer-links-row a{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.3s}
+.footer-links-row a:hover{color:var(--gold)}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--black);color:var(--white);padding:0.9rem 1.8rem;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;transition:transform 0.4s ease;z-index:9999;display:flex;align-items:center;gap:0.6rem;border-bottom:2px solid var(--gold)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast i{color:var(--gold)}
+
+@media(max-width:1024px){.contact-wrap{grid-template-columns:1fr}.contact-left{padding:9rem 5% 4rem}.contact-right{padding:4rem 5%}}
+@media(max-width:768px){nav{padding:0 1.2rem}.nav-center{display:none}.hamburger{display:flex}.form-row{grid-template-columns:1fr}}
+@media(max-width:480px){.footer-bottom{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">4<span>4</span>4</a>
+  <ul class="nav-center">
+    <li><a href="shop.html">New Drops</a></li>
+    <li><a href="collections.html">Collections</a></li>
+    <li><a href="lookbook.html">Lookbook</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="shop.html" class="nav-btn"><i class="fas fa-shopping-bag"></i></a>
+    <a href="auth.html" class="nav-btn"><i class="fas fa-user"></i></a>
+    <button class="hamburger" id="menuBtn"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="overlay" id="overlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="menuClose"><i class="fas fa-times"></i></button>
+  <ul class="mobile-links">
+    <li><a href="shop.html">New Drops</a></li>
+    <li><a href="collections.html">Collections</a></li>
+    <li><a href="lookbook.html">Lookbook</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</div>
+
+<div class="contact-wrap">
+
+  <!-- LEFT -->
+  <div class="contact-left">
+    <div class="cl-top">
+      <p class="cl-eyebrow">Get in Touch</p>
+      <h1 class="cl-title">Let's<br><em>Talk.</em></h1>
+      <p class="cl-desc">Whether it's an order query, a collaboration idea, or just to say something — we're here and we respond fast.</p>
+
+      <div class="contact-channels">
+        <a href="https://wa.me/233530399523" target="_blank" class="channel">
+          <div class="ch-icon"><i class="fab fa-whatsapp"></i></div>
+          <div class="ch-info"><p class="ch-label">WhatsApp</p><p class="ch-value">+233 53 039 9523</p></div>
+        </a>
+        <a href="mailto:444brandgh@gmail.com" class="channel">
+          <div class="ch-icon"><i class="fas fa-envelope"></i></div>
+          <div class="ch-info"><p class="ch-label">Email</p><p class="ch-value">444brandgh@gmail.com</p></div>
+        </a>
+        <div class="channel">
+          <div class="ch-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="ch-info"><p class="ch-label">Location</p><p class="ch-value">Ghana 🇬🇭</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cl-socials">
+      <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-x-twitter"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="contact-right">
+    <div class="form-heading">
+      <h2>Send Us a <em>Message</em></h2>
+      <p>We'll get back to you within 24 hours.</p>
+    </div>
+
+    <div class="success-msg" id="successMsg">
+      <i class="fas fa-check-circle" style="margin-right:.5rem"></i>
+      Message sent successfully! We'll be in touch shortly.
+    </div>
+
+    <form class="contact-form" id="contactForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name *</label>
+          <input class="form-input" id="f-fname" type="text" placeholder="Kwame" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name *</label>
+          <input class="form-input" id="f-lname" type="text" placeholder="Asante" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email *</label>
+        <input class="form-input" id="f-email" type="email" placeholder="you@email.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" id="f-phone" type="tel" placeholder="+233 24 000 0000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subject *</label>
+        <div class="form-select-wrap">
+          <select class="form-select" id="f-subject" required>
+            <option value="">Select a subject</option>
+            <option>Order Enquiry</option>
+            <option>Returns & Exchanges</option>
+            <option>Collaboration</option>
+            <option>Wholesale / Stockist</option>
+            <option>Press & Media</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message *</label>
+        <textarea class="form-textarea" id="f-message" placeholder="Tell us what's on your mind…" required></textarea>
+      </div>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span><i class="fas fa-paper-plane"></i> Send Message</span>
+      </button>
+    </form>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <div class="footer-logo">4<span>4</span>4</div>
+    <p class="footer-copy">© 2025 444 Brand. All rights reserved.</p>
+    <div class="footer-links-row">
+      <a href="about.html">About</a>
+      <a href="shop.html">Shop</a>
+      <a href="collections.html">Collections</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/233530399523" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
+
+<script>
+// Nav
+document.getElementById('menuBtn').onclick = () => {
+  document.getElementById('mobileMenu').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+};
+const closeNav = () => {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+};
+document.getElementById('menuClose').onclick = closeNav;
+document.getElementById('overlay').onclick = closeNav;
+
+// Form submit via Web3Forms
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
+
+  const payload = {
+    access_key: '0e5b085f-92af-4efa-b205-a10c0e898294',
+    subject: `444 Brand Contact — ${document.getElementById('f-subject').value}`,
+    from_name: '444 Brand Website',
+    name: `${document.getElementById('f-fname').value} ${document.getElementById('f-lname').value}`,
+    email: document.getElementById('f-email').value,
+    phone: document.getElementById('f-phone').value || 'Not provided',
+    subject_type: document.getElementById('f-subject').value,
+    message: document.getElementById('f-message').value,
+  };
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('successMsg').classList.add('show');
+      document.getElementById('contactForm').reset();
+      showToast('Message sent successfully!');
+    } else {
+      throw new Error(data.message);
+    }
+  } catch {
+    showToast('Something went wrong. Try WhatsApp instead.', false);
+  } finally {
+    btn.disabled = false;
+    btn.querySelector('span').innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+  }
+});
+
+function showToast(msg, ok = true) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.querySelector('i').style.color = ok ? 'var(--gold)' : '#e74c3c';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
