@@ -1493,15 +1493,15 @@ window.submitCheckoutAndPay = async () => {
   showFormErrors([]);
   if (!cart.length) { showToast('Your cart is empty', false); return; }
 
-  const btn          = document.getElementById('btnPayNow');
-  btn.disabled       = true;
+  const btn      = document.getElementById('btnPayNow');
+  btn.disabled   = true;
 
   const cartSnapshot = cart.map(i => ({ ...i }));
   const subtotal     = cartSnapshot.reduce((a, i) => a + i.price * i.qty, 0);
   const delivery     = calcDelivery(subtotal);
   const total        = subtotal + delivery;
   const amountPes    = Math.round(total * 100);
-  const uid          = currentUser ? currentUser.uid   : null;
+  const uid          = currentUser ? currentUser.uid  : null;
   const authEmail    = currentUser ? currentUser.email : form.email.trim().toLowerCase();
   const ref          = `444-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
 
@@ -1523,36 +1523,65 @@ window.submitCheckoutAndPay = async () => {
     console.log('✅ Order email sent to', ADMIN_EMAIL);
   } catch(err) {
     console.warn('⚠️ Email failed (order still saved):', err);
-    // Don't block — order is saved, email is best-effort
   }
 
-  /* ── STEP 3: Open Paystack popup ── */
   setProcessing(false);
   btn.disabled = false;
 
-  const handler = PaystackPop.setup({
-    key:      PAYSTACK_PUBLIC_KEY,   // ✅ now defined
+  /* ── STEP 3: Build item summary for Paystack receipt ── */
+  const itemSummary = cartSnapshot.map(i => {
+    const lbl = i.colorLabel || i.colorHex || '';
+    return `${i.name} (${i.size}${lbl ? ', ' + lbl : ''}) x${i.qty}`;
+  }).join(' | ');
+
+  /* ── STEP 4: Paystack popup ──
+     • callback fires on successful payment
+     • onClose fires when popup closes (whether paid or cancelled)
+     • We use a flag so onClose only shows "cancelled" toast if NOT already paid
+  ── */
+  let paymentCompleted = false;
+
+  const handler = window.PaystackPop.setup({
+    key:      PAYSTACK_PUBLIC_KEY,
     email:    authEmail,
     amount:   amountPes,
     currency: 'GHS',
     ref,
     label:    '444 Brand Order',
 
-    onSuccess: () => {
-      /* ✅ Success screen ONLY shows here — after real payment */
-      cart = [];
-      saveCart();
-      showPaymentSuccess(ref, form, cartSnapshot, total);
+    metadata: {
+      custom_fields: [
+        { display_name: 'Order Ref',        variable_name: 'order_ref',  value: ref },
+        { display_name: 'Customer Name',    variable_name: 'cust_name',  value: form.name.trim() },
+        { display_name: 'Phone',            variable_name: 'phone',      value: form.phone.trim() },
+        { display_name: 'Delivery Address', variable_name: 'address',    value: `${form.address.trim()}, ${form.city.trim()}, ${form.country.trim()}` },
+        { display_name: 'GPS',              variable_name: 'gps',        value: form.gps?.trim() || 'N/A' },
+        { display_name: 'Items Ordered',    variable_name: 'items',      value: itemSummary },
+        { display_name: 'Order Total',      variable_name: 'total',      value: `GH₵ ${total.toLocaleString()}` },
+        { display_name: 'Notes',            variable_name: 'notes',      value: form.notes?.trim() || 'None' },
+      ]
     },
 
-    onCancel: () => {
-      showToast('Payment cancelled. Your order is saved — complete payment when ready.', false);
+    callback: function(response) {
+      paymentCompleted = true;
+      /* ✅ Small delay lets Paystack iframe fully unmount before we open success overlay */
+      setTimeout(() => {
+        cart = [];
+        saveCart();
+        showPaymentSuccess(ref, form, cartSnapshot, total);
+      }, 500);
+    },
+
+    onClose: function() {
+      if (!paymentCompleted) {
+        showToast('Payment cancelled. Your order is saved — complete payment when ready.', false);
+        btn.disabled = false;
+      }
     }
   });
 
   handler.openIframe();
 };
-
 /* ── SAVE ORDER TO FIRESTORE ── */
 async function saveOrderToFirestore(form, items, ref, subtotal, shipping, total, uid, authEmail) {
   const orderData = {
