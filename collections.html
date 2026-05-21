@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections — 444 Brand</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#0a0a0a;--white:#fff;--off-white:#f7f5f1;--cream:#f0ede6;
+  --light-gray:#e6e2db;--mid-gray:#a09890;--dark-gray:#302b26;
+  --gold:#c8a96e;--gold-light:#e8d4a8;--gold-dark:#9a7a45;
+  --font-display:'Cormorant Garamond',serif;--font-body:'Montserrat',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--off-white);color:var(--black);overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--off-white)}::-webkit-scrollbar-thumb{background:var(--black)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,169,110,0.15)}
+.nav-logo{font-family:var(--font-display);font-size:1.9rem;font-weight:700;letter-spacing:0.15em;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--gold)}
+.nav-center{display:flex;gap:2.5rem;list-style:none;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-center a{font-size:0.65rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.65);text-decoration:none;transition:color 0.3s}
+.nav-center a:hover,.nav-center a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.2rem}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,0.75);font-size:0.95rem;cursor:pointer;transition:color 0.3s;text-decoration:none}
+.nav-btn:hover{color:var(--gold)}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:1px;background:rgba(255,255,255,0.8)}
+.mobile-menu{position:fixed;top:0;right:-100%;width:min(340px,100%);height:100vh;background:var(--black);z-index:2000;display:flex;flex-direction:column;padding:5rem 2.5rem 2.5rem;transition:right 0.5s cubic-bezier(0.76,0,0.24,1)}
+.mobile-menu.open{right:0}
+.mobile-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--white);font-size:1.3rem;cursor:pointer}
+.mobile-links{list-style:none;display:flex;flex-direction:column;gap:1.8rem}
+.mobile-links a{font-family:var(--font-display);font-size:2.2rem;font-weight:300;color:var(--white);text-decoration:none;transition:color 0.3s}
+.mobile-links a:hover{color:var(--gold)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1999;opacity:0;pointer-events:none;transition:opacity 0.4s}
+.overlay.open{opacity:1;pointer-events:all}
+
+/* PAGE HERO */
+.page-hero{margin-top:72px;height:55vh;min-height:400px;position:relative;overflow:hidden;background:var(--black);display:flex;align-items:flex-end;}
+.page-hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a1209 0%,#0a0a0a 50%,#1a1209 100%)}
+.page-hero-pattern{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(200,169,110,0.03) 0px,rgba(200,169,110,0.03) 1px,transparent 1px,transparent 50px);background-size:50px 50px}
+.page-hero-content{position:relative;z-index:2;padding:0 6% 5%}
+.page-eyebrow{font-size:0.6rem;font-weight:600;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:1rem}
+.page-eyebrow::before{content:'';width:40px;height:1px;background:var(--gold)}
+.page-title{font-family:var(--font-display);font-size:clamp(3.5rem,8vw,7rem);font-weight:300;color:var(--white);line-height:0.9;letter-spacing:-0.01em}
+.page-title em{font-style:italic;font-weight:700;color:var(--gold-light)}
+
+/* COLLECTIONS */
+.collections-section{padding:5rem 0 7rem;background:var(--off-white)}
+.container{width:92%;max-width:1320px;margin:0 auto}
+
+.collections-intro{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:5rem;padding-bottom:4rem;border-bottom:1px solid var(--light-gray)}
+.intro-text h2{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.1;margin-bottom:1.2rem}
+.intro-text h2 em{font-style:italic;color:var(--gold-dark)}
+.intro-text p{font-size:0.72rem;line-height:2.1;color:rgba(0,0,0,0.55);letter-spacing:0.03em;max-width:420px}
+.intro-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.stat-item{padding:1.5rem;border:1px solid var(--light-gray);background:var(--white)}
+.stat-num{font-family:var(--font-display);font-size:2.8rem;font-weight:700;color:var(--black);line-height:1;margin-bottom:0.3rem}
+.stat-label{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid-gray)}
+
+/* COLLECTION GRID */
+.collections-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem}
+.col-card-large{grid-column:span 2}
+
+.collection-card{position:relative;overflow:hidden;cursor:pointer;background:var(--cream)}
+.collection-card .card-img{position:relative;overflow:hidden}
+.col-card-large .card-img{aspect-ratio:21/9}
+.col-card-small .card-img{aspect-ratio:4/5}
+.collection-card img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.7);transition:transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94),filter 0.5s}
+.collection-card:hover img{transform:scale(1.06);filter:brightness(0.55)}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%);display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem}
+.card-season{font-size:0.58rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-light);margin-bottom:0.6rem}
+.card-name{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3.2rem);font-weight:400;color:var(--white);line-height:1;margin-bottom:0.8rem}
+.card-name em{font-style:italic;font-weight:700}
+.card-count{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:1.2rem}
+.card-cta{display:inline-flex;align-items:center;gap:0.6rem;font-size:0.6rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--white);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.4);padding-bottom:2px;transition:all 0.3s;transform:translateY(10px);opacity:0}
+.collection-card:hover .card-cta{transform:translateY(0);opacity:1}
+.card-cta i{font-size:0.65rem;transition:transform 0.3s}
+.card-cta:hover i{transform:translateX(4px)}
+
+/* BOTTOM ROW */
+.collections-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:2rem}
+.col-mini .card-img{aspect-ratio:3/4}
+
+/* CTA STRIP */
+.cta-strip{background:var(--black);padding:4rem 0;text-align:center;margin-top:5rem}
+.cta-strip h2{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--white);margin-bottom:0.5rem}
+.cta-strip h2 em{font-style:italic;color:var(--gold-light)}
+.cta-strip p{font-size:0.68rem;letter-spacing:0.1em;color:rgba(255,255,255,0.45);margin-bottom:2rem}
+.btn-gold{display:inline-flex;align-items:center;gap:0.6rem;padding:1rem 2.5rem;background:var(--gold);color:var(--black);text-decoration:none;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;transition:background 0.3s}
+.btn-gold:hover{background:var(--gold-light)}
+
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid rgba(255,255,255,0.08);padding:3rem 0 2rem;color:rgba(255,255,255,0.45)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--white);letter-spacing:0.1em}
+.footer-logo span{color:var(--gold)}
+.footer-copy{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase}
+.footer-links-row{display:flex;gap:1.5rem}
+.footer-links-row a{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.3s}
+.footer-links-row a:hover{color:var(--gold)}
+
+@media(max-width:1024px){.collections-intro{grid-template-columns:1fr}.intro-text p{max-width:100%}.collections-bottom{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){nav{padding:0 1.2rem}.nav-center{display:none}.hamburger{display:flex}.collections-grid{grid-template-columns:1fr}.col-card-large{grid-column:span 1}.col-card-large .card-img{aspect-ratio:3/4}.collections-bottom{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.collections-bottom{grid-template-columns:1fr}.footer-bottom{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">4<span>4</span>4</a>
+  <ul class="nav-center">
+    <li><a href="shop.html">New Drops</a></li>
+    <li><a href="collections.html" class="active">Collections</a></li>
+    <li><a href="lookbook.html">Lookbook</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="shop.html" class="nav-btn"><i class="fas fa-shopping-bag"></i></a>
+    <a href="auth.html" class="nav-btn"><i class="fas fa-user"></i></a>
+    <button class="hamburger" id="menuBtn"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="overlay" id="overlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="menuClose"><i class="fas fa-times"></i></button>
+  <ul class="mobile-links">
+    <li><a href="shop.html">New Drops</a></li>
+    <li><a href="collections.html">Collections</a></li>
+    <li><a href="lookbook.html">Lookbook</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-pattern"></div>
+  <div class="page-hero-content">
+    <p class="page-eyebrow">444 Brand</p>
+    <h1 class="page-title">The <em>Collections</em></h1>
+  </div>
+</div>
+
+<!-- COLLECTIONS -->
+<section class="collections-section">
+  <div class="container">
+
+    <div class="collections-intro">
+      <div class="intro-text">
+        <h2>Pieces Built for<br><em>Those Who Lead</em></h2>
+        <p>Each 444 collection is a deliberate statement — crafted at the intersection of luxury and raw street identity. We don't follow seasons. We set them.</p>
+      </div>
+      <div class="intro-stats">
+        <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Active Collections</div></div>
+        <div class="stat-item"><div class="stat-num">444</div><div class="stat-label">Brand Identity</div></div>
+        <div class="stat-item"><div class="stat-num">GH</div><div class="stat-label">Made for Ghana</div></div>
+        <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">Culture Driven</div></div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="collections-grid">
+      <div class="collection-card col-card-large" onclick="window.location.href='shop.html'">
+        <div class="card-img">
+          <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/main.jpg" alt="Negative Spaces"
+               onerror="this.src='https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=1400&q=80'">
+        </div>
+        <div class="card-overlay">
+          <p class="card-season">Season 01 · 2025</p>
+          <h2 class="card-name">Negative <em>Spaces</em></h2>
+          <p class="card-count">6 Pieces · Limited Run</p>
+          <a href="shop.html" class="card-cta">Shop Collection <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="collection-card col-card-small" onclick="window.location.href='shop.html'">
+        <div class="card-img">
+          <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/bwf.jpg" alt="Angel 444"
+               onerror="this.src='https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&q=80'">
+        </div>
+        <div class="card-overlay">
+          <p class="card-season">Drop 02 · 2025</p>
+          <h2 class="card-name"><em>Angel</em> 444</h2>
+          <p class="card-count">4 Pieces · Exclusive</p>
+          <a href="shop.html" class="card-cta">Shop Collection <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="collection-card col-card-small" onclick="window.location.href='shop.html'">
+        <div class="card-img">
+          <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/bwbm.jpg" alt="Black & White"
+               onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=800&q=80'">
+        </div>
+        <div class="card-overlay">
+          <p class="card-season">Drop 03 · 2025</p>
+          <h2 class="card-name">Black &amp; <em>White</em></h2>
+          <p class="card-count">5 Pieces · Available Now</p>
+          <a href="shop.html" class="card-cta">Shop Collection <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="collections-bottom">
+      <div class="collection-card col-mini" onclick="window.location.href='shop.html'">
+        <div class="card-img">
+          <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/1.jpg" alt="Tees"
+               onerror="this.src='https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=600&q=80'">
+        </div>
+        <div class="card-overlay">
+          <p class="card-season">Category</p>
+          <h2 class="card-name" style="font-size:1.6rem">Tees</h2>
+          <a href="shop.html" class="card-cta">Shop <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="collection-card col-mini" onclick="window.location.href='shop.html'">
+        <div class="card-img">
+          <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/sf.jpg" alt="Long Sleeves"
+               onerror="this.src='https://images.unsplash.com/photo-1516826957135-700dedea698c?w=600&q=80'">
+        </div>
+        <div class="card-overlay">
+          <p class="card-season">Category</p>
+          <h2 class="card-name" style="font-size:1.6rem">Long Sleeves</h2>
+          <a href="shop.html" class="card-cta">Shop <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="collection-card col-mini" onclick="window.location.href='shop.html'">
+        <div class="card-img">
+          <img src="https://raw.githubusercontent.com/fourfourfourbrand444/444brand/main/2.jpg" alt="Accessories"
+               onerror="this.src='https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80'">
+        </div>
+        <div class="card-overlay">
+          <p class="card-season">Category</p>
+          <h2 class="card-name" style="font-size:1.6rem">Accessories</h2>
+          <a href="shop.html" class="card-cta">Shop <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-strip">
+    <div class="container">
+      <h2>Can't Decide? <em>See Everything.</em></h2>
+      <p>Browse all drops in one place — new pieces added regularly.</p>
+      <a href="shop.html" class="btn-gold">Shop All Drops <i class="fas fa-arrow-right" style="margin-left:.4rem;font-size:.6rem"></i></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">
+      <div class="footer-logo">4<span>4</span>4</div>
+      <p class="footer-copy">© 2025 444 Brand. All rights reserved.</p>
+      <div class="footer-links-row">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="shop.html">Shop</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('menuBtn').onclick = () => {
+  document.getElementById('mobileMenu').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+};
+const closeNav = () => {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+};
+document.getElementById('menuClose').onclick = closeNav;
+document.getElementById('overlay').onclick = closeNav;
+</script>
+</body>
+</html>
