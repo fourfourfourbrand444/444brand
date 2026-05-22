@@ -13,6 +13,7 @@
   --light:#e2ddd6;--mid:#9a9088;--dark:#2a2520;
   --gold:#c8a96e;--gold-l:#e8d4a8;--gold-d:#9a7a45;
   --red:#c0392b;--green:#1e7e34;--green-light:#e8f5ec;
+  --purple:#5b3a8e;--purple-light:#f0ebf9;--purple-mid:#7c5cb4;
   --panel:#1a1612;--panel2:#221e19;--panel3:#2c2620;
   --font-d:'Cormorant Garamond',serif;--font-b:'Montserrat',sans-serif;
   --tr:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
@@ -60,12 +61,13 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .page-content{padding:2rem;flex:1}
 
 /* ── STATS ── */
-.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2rem}
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;margin-bottom:2rem}
 .stat-card{background:var(--white);padding:1.5rem;border-bottom:2px solid var(--light);transition:border-color 0.3s}
 .stat-card:hover{border-color:var(--gold)}
 .stat-icon{width:38px;height:38px;background:var(--black);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.9rem;margin-bottom:0.8rem}
 .stat-icon.red-icon{background:var(--red)}
 .stat-icon.green-icon{background:var(--green)}
+.stat-icon.purple-icon{background:var(--purple)}
 .stat-val{font-family:var(--font-d);font-size:2rem;font-weight:700;line-height:1;margin-bottom:0.2rem}
 .stat-lbl{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);font-weight:500}
 .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -77,9 +79,9 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 
 /* ── TABLE ── */
 .products-table{background:var(--white);overflow:hidden}
-.table-head{display:grid;grid-template-columns:80px 1fr 100px 100px 90px 120px 100px;padding:0.8rem 1.2rem;border-bottom:1px solid var(--light);background:var(--off-white)}
+.table-head{display:grid;grid-template-columns:80px 1fr 100px 130px 90px 120px 110px;padding:0.8rem 1.2rem;border-bottom:1px solid var(--light);background:var(--off-white)}
 .table-head span{font-size:0.52rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid)}
-.prod-row{display:grid;grid-template-columns:80px 1fr 100px 100px 90px 120px 100px;padding:0.8rem 1.2rem;border-bottom:1px solid var(--light);align-items:center;transition:background 0.2s}
+.prod-row{display:grid;grid-template-columns:80px 1fr 100px 130px 90px 120px 110px;padding:0.8rem 1.2rem;border-bottom:1px solid var(--light);align-items:center;transition:background 0.2s}
 .prod-row:hover{background:var(--off-white)}
 .prod-row-img{width:56px;height:70px;object-fit:cover;object-position:top;background:var(--cream)}
 .prod-row-name{font-family:var(--font-d);font-size:0.95rem;font-weight:500;margin-bottom:0.15rem}
@@ -91,11 +93,14 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .badge-pill.none{background:var(--light);color:var(--mid)}
 
 /* ── STOCK STATUS PILL ── */
-.stock-pill{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.5rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.28rem 0.65rem;white-space:nowrap}
+.stock-pill{display:inline-flex;align-items:center;gap:0.35rem;font-size:0.5rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.28rem 0.65rem;white-space:nowrap}
+.stock-pill::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
 .stock-pill.in-stock{background:var(--green-light);color:var(--green);border:1px solid rgba(30,126,52,0.25)}
-.stock-pill.in-stock::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+.stock-pill.in-stock::before{background:var(--green)}
 .stock-pill.sold-out{background:#fef0f0;color:var(--red);border:1px solid rgba(192,57,43,0.25)}
-.stock-pill.sold-out::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0}
+.stock-pill.sold-out::before{background:var(--red)}
+.stock-pill.coming-soon{background:var(--purple-light);color:var(--purple);border:1px solid rgba(91,58,142,0.25)}
+.stock-pill.coming-soon::before{background:var(--purple)}
 .stock-qty-label{font-size:0.58rem;color:var(--mid);margin-top:0.25rem;letter-spacing:0.06em}
 
 .prod-row-actions{display:flex;gap:0.4rem;flex-wrap:wrap}
@@ -104,6 +109,8 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .act-btn.del:hover,.act-btn.del:active{background:var(--red);border-color:var(--red)}
 .act-btn.sold-out-btn:hover,.act-btn.sold-out-btn:active{background:var(--red);border-color:var(--red);color:var(--white)}
 .act-btn.restock-btn:hover,.act-btn.restock-btn:active{background:var(--green);border-color:var(--green);color:var(--white)}
+.act-btn.coming-soon-btn:hover,.act-btn.coming-soon-btn:active{background:var(--purple);border-color:var(--purple);color:var(--white)}
+.act-btn.undo-coming-soon-btn:hover,.act-btn.undo-coming-soon-btn:active{background:var(--purple-mid);border-color:var(--purple-mid);color:var(--white)}
 
 /* ── IMAGE URLS ── */
 .url-input-row{display:flex;gap:0.5rem;margin-bottom:0.6rem}
@@ -145,12 +152,13 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .color-chip-rm:hover{color:var(--red)}
 .color-no-items{font-size:0.6rem;color:var(--mid);letter-spacing:0.1em;padding:0.8rem;border:1px dashed var(--light);background:var(--off-white);text-align:center}
 
-/* ── STOCK / SOLD-OUT SECTION IN FORM ── */
+/* ── STOCK / SOLD-OUT / COMING-SOON SECTION IN FORM ── */
 .stock-section{background:var(--off-white);border:1px solid var(--light);padding:1.2rem;margin-top:0.2rem}
 .stock-section-title{font-size:0.58rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--dark);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
 .stock-section-title i{color:var(--gold-d)}
-.stock-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+.stock-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;align-items:start}
 .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0.8rem 1rem;background:var(--white);border:1px solid var(--light)}
+.toggle-row.coming-soon-toggle-row{border-color:rgba(91,58,142,0.25)}
 .toggle-label-group{display:flex;flex-direction:column;gap:0.2rem}
 .toggle-main-label{font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--dark)}
 .toggle-sub-label{font-size:0.55rem;color:var(--mid);letter-spacing:0.06em}
@@ -159,8 +167,18 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .toggle-switch input{opacity:0;width:0;height:0}
 .toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--light);transition:0.3s;border-radius:24px}
 .toggle-slider:before{position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:var(--white);transition:0.3s;border-radius:50%}
-input:checked + .toggle-slider{background:var(--red)}
-input:checked + .toggle-slider:before{transform:translateX(20px)}
+/* Sold-out toggle = red */
+#fSoldOut:checked + .toggle-slider{background:var(--red)}
+#fSoldOut:checked + .toggle-slider:before{transform:translateX(20px)}
+/* Coming Soon toggle = purple */
+#fComingSoon:checked + .toggle-slider{background:var(--purple)}
+#fComingSoon:checked + .toggle-slider:before{transform:translateX(20px)}
+/* Quick stock modal toggles */
+#qsSoldOutToggle:checked + .toggle-slider{background:var(--red)}
+#qsSoldOutToggle:checked + .toggle-slider:before{transform:translateX(20px)}
+#qsComingSoonToggle:checked + .toggle-slider{background:var(--purple)}
+#qsComingSoonToggle:checked + .toggle-slider:before{transform:translateX(20px)}
+
 .qty-input-group{display:flex;flex-direction:column;gap:0.5rem}
 .qty-input-row{display:flex;align-items:center;gap:0.5rem}
 .qty-stepper{display:flex;align-items:center;border:1px solid var(--light)}
@@ -169,6 +187,15 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
 .qty-stepper-val{width:60px;height:38px;border:none;border-left:1px solid var(--light);border-right:1px solid var(--light);text-align:center;font-family:var(--font-b);font-size:0.78rem;font-weight:700;color:var(--black);background:var(--white);outline:none}
 .qty-note{font-size:0.54rem;color:var(--mid);letter-spacing:0.06em;line-height:1.6}
 .qty-unlimited-note{font-size:0.54rem;color:var(--mid);letter-spacing:0.06em;font-style:italic;margin-top:0.3rem}
+
+/* Coming Soon panel (launch date input) */
+.coming-soon-extra{margin-top:0.75rem;padding:0.9rem 1rem;background:var(--purple-light);border:1px solid rgba(91,58,142,0.2);display:none}
+.coming-soon-extra.show{display:block}
+.coming-soon-extra-label{font-size:0.56rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--purple);margin-bottom:0.5rem}
+.coming-soon-date-input{width:100%;padding:0.7rem 0.9rem;border:1px solid rgba(91,58,142,0.3);background:var(--white);font-family:var(--font-b);font-size:0.72rem;color:var(--black);outline:none;transition:border-color 0.3s}
+.coming-soon-date-input:focus{border-color:var(--purple)}
+.coming-soon-date-input::placeholder{color:var(--mid)}
+.coming-soon-note{font-size:0.54rem;color:var(--purple);letter-spacing:0.06em;margin-top:0.4rem;opacity:0.75;line-height:1.6}
 
 /* ── FORM OVERLAY ── */
 .form-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:4000;opacity:0;pointer-events:none;transition:opacity 0.4s;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -203,7 +230,7 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
 /* ── QUICK STOCK MODAL ── */
 .quick-stock-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:6000;opacity:0;pointer-events:none;transition:opacity 0.3s;display:flex;align-items:center;justify-content:center;padding:1rem}
 .quick-stock-overlay.open{opacity:1;pointer-events:all}
-.quick-stock-box{background:var(--white);padding:2rem;width:min(420px,92%);transform:scale(0.96);transition:transform 0.3s}
+.quick-stock-box{background:var(--white);padding:2rem;width:min(480px,92%);transform:scale(0.96);transition:transform 0.3s;max-height:90vh;overflow-y:auto}
 .quick-stock-overlay.open .quick-stock-box{transform:scale(1)}
 .quick-stock-box h3{font-family:var(--font-d);font-size:1.5rem;font-weight:400;margin-bottom:0.3rem}
 .quick-stock-box h3 em{font-style:italic;color:var(--gold-d)}
@@ -218,12 +245,22 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
 .qty-big-btn{width:44px;height:48px;border:none;background:var(--off-white);cursor:pointer;font-size:1rem;color:var(--dark);display:flex;align-items:center;justify-content:center;transition:var(--tr);font-family:var(--font-b)}
 .qty-big-btn:hover{background:var(--black);color:var(--white)}
 .qty-big-val{width:80px;height:48px;border:none;border-left:1px solid var(--light);border-right:1px solid var(--light);text-align:center;font-family:var(--font-d);font-size:1.5rem;font-weight:700;color:var(--black);background:var(--white);outline:none}
-.quick-stock-soldout-row{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1rem;background:var(--off-white);border:1px solid var(--light);margin-bottom:1.5rem}
+.quick-stock-toggles{display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem}
+.quick-stock-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1rem;background:var(--off-white);border:1px solid var(--light)}
+.quick-stock-toggle-row.cs-row{border-color:rgba(91,58,142,0.25);background:var(--purple-light)}
 .quick-stock-actions{display:flex;gap:0.6rem}
 .btn-qs-save{flex:1;padding:0.85rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-b);font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.5rem}
 .btn-qs-save:hover{background:var(--gold);color:var(--black)}
 .btn-qs-cancel{padding:0.85rem 1.2rem;background:transparent;border:1px solid var(--light);font-family:var(--font-b);font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:var(--tr);color:var(--dark)}
 .btn-qs-cancel:hover{background:var(--off-white)}
+
+/* Coming Soon date field in quick stock */
+.qs-cs-date-wrap{margin-top:0.5rem;padding:0.8rem 1rem;background:var(--purple-light);border:1px solid rgba(91,58,142,0.2);display:none}
+.qs-cs-date-wrap.show{display:block}
+.qs-cs-date-label{font-size:0.54rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--purple);margin-bottom:0.4rem}
+.qs-cs-date-input{width:100%;padding:0.65rem 0.8rem;border:1px solid rgba(91,58,142,0.3);background:var(--white);font-family:var(--font-b);font-size:0.72rem;color:var(--black);outline:none}
+.qs-cs-date-input:focus{border-color:var(--purple)}
+.qs-cs-date-input::placeholder{color:var(--mid)}
 
 /* ── CONFIRM DELETE ── */
 .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:5000;opacity:0;pointer-events:none;transition:opacity 0.3s;display:flex;align-items:center;justify-content:center;padding:1rem}
@@ -257,11 +294,11 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
 .sidebar-toggle{display:none}
 .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:499;opacity:0;transition:opacity 0.3s;pointer-events:none}
 .sidebar-backdrop.open{opacity:1;pointer-events:all}
-@media(max-width:1100px){
+@media(max-width:1200px){
   .stats-row{grid-template-columns:repeat(3,1fr)}
-  .table-head{grid-template-columns:70px 1fr 90px 90px 80px}
+  .table-head{grid-template-columns:70px 1fr 90px 110px 80px}
   .table-head span:nth-child(6),.table-head span:nth-child(7){display:none}
-  .prod-row{grid-template-columns:70px 1fr 90px 90px 80px}
+  .prod-row{grid-template-columns:70px 1fr 90px 110px 80px}
   .prod-row>div:nth-child(6){display:none}
 }
 @media(max-width:900px){
@@ -270,16 +307,16 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
   .sidebar-backdrop{display:block}
   .sidebar-toggle{display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:var(--black);color:var(--white);border:none;cursor:pointer;font-size:0.9rem;flex-shrink:0}
   .stats-row{grid-template-columns:repeat(2,1fr)}
-  .table-head{grid-template-columns:60px 1fr 80px 80px}
+  .table-head{grid-template-columns:60px 1fr 80px 100px}
   .table-head span:nth-child(4),.table-head span:nth-child(5),.table-head span:nth-child(6),.table-head span:nth-child(7){display:none}
-  .prod-row{grid-template-columns:60px 1fr 80px 80px}
+  .prod-row{grid-template-columns:60px 1fr 80px 100px}
   .prod-row>div:nth-child(4),.prod-row>div:nth-child(5),.prod-row>div:nth-child(6){display:none}
   .form-grid{grid-template-columns:1fr}
   .form-box{padding:1.5rem}
   .form-submit{flex-direction:column}
   .color-add-row{flex-direction:column;align-items:stretch}
   .color-hex-input{width:100%}
-  .stock-row{grid-template-columns:1fr}
+  .stock-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
   .stats-row{grid-template-columns:1fr 1fr}
@@ -341,12 +378,13 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
       </div>
 
       <div class="page-content">
-        <!-- STATS ROW — now 5 cards including sold-out count -->
+        <!-- STATS ROW — 6 cards including Coming Soon count -->
         <div class="stats-row">
           <div class="stat-card"><div class="stat-icon"><i class="fas fa-box"></i></div><p class="stat-val" id="statProducts">—</p><p class="stat-lbl">Total Products</p></div>
           <div class="stat-card"><div class="stat-icon"><i class="fas fa-tag"></i></div><p class="stat-val" id="statCategories">—</p><p class="stat-lbl">Categories</p></div>
           <div class="stat-card"><div class="stat-icon green-icon"><i class="fas fa-check-circle"></i></div><p class="stat-val" id="statInStock">—</p><p class="stat-lbl">In Stock</p></div>
           <div class="stat-card"><div class="stat-icon red-icon"><i class="fas fa-ban"></i></div><p class="stat-val" id="statSoldOut">—</p><p class="stat-lbl">Sold Out</p></div>
+          <div class="stat-card"><div class="stat-icon purple-icon"><i class="fas fa-clock"></i></div><p class="stat-val" id="statComingSoon">—</p><p class="stat-lbl">Coming Soon</p></div>
           <div class="stat-card"><div class="stat-icon"><i class="fas fa-coins"></i></div><p class="stat-val" id="statRange">—</p><p class="stat-lbl">Price Range (GH₵)</p></div>
         </div>
 
@@ -367,7 +405,7 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
               <span>Image</span>
               <span>Product</span>
               <span>Price</span>
-              <span>Stock Status</span>
+              <span>Status</span>
               <span>Badge</span>
               <span>Qty</span>
               <span>Actions</span>
@@ -460,18 +498,19 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
           </div>
         </div>
 
-        <!-- ── STOCK & SOLD OUT ── -->
+        <!-- ── STOCK, SOLD OUT & COMING SOON ── -->
         <div class="form-group form-full">
           <label class="form-label"><i class="fas fa-warehouse" style="margin-right:0.4rem;color:var(--gold-d)"></i>Stock & Availability</label>
           <div class="stock-section">
-            <div class="stock-row">
+            <div class="stock-grid">
+
               <!-- Sold Out Toggle -->
               <div>
-                <p class="stock-section-title"><i class="fas fa-ban"></i> Sold Out Status</p>
+                <p class="stock-section-title"><i class="fas fa-ban"></i> Sold Out</p>
                 <div class="toggle-row">
                   <div class="toggle-label-group">
                     <span class="toggle-main-label">Mark as Sold Out</span>
-                    <span class="toggle-sub-label" id="soldOutToggleNote">Product is available for purchase</span>
+                    <span class="toggle-sub-label" id="soldOutToggleNote">Available for purchase</span>
                   </div>
                   <label class="toggle-switch">
                     <input type="checkbox" id="fSoldOut">
@@ -479,6 +518,28 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
                   </label>
                 </div>
               </div>
+
+              <!-- Coming Soon Toggle -->
+              <div>
+                <p class="stock-section-title"><i class="fas fa-clock" style="color:var(--purple)"></i> Coming Soon</p>
+                <div class="toggle-row coming-soon-toggle-row">
+                  <div class="toggle-label-group">
+                    <span class="toggle-main-label">Mark as Coming Soon</span>
+                    <span class="toggle-sub-label" id="comingSoonToggleNote">Not marked as coming soon</span>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="fComingSoon">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <!-- Launch date — shown when Coming Soon is ON -->
+                <div class="coming-soon-extra" id="comingSoonDateWrap">
+                  <p class="coming-soon-extra-label"><i class="fas fa-calendar-alt" style="margin-right:0.3rem"></i>Expected Launch Date <span style="font-weight:400;opacity:0.6">(optional)</span></p>
+                  <input type="text" class="coming-soon-date-input" id="fLaunchDate" placeholder="e.g. July 2025, Q3 2025, TBA…">
+                  <p class="coming-soon-note">This text appears on the product card in the shop. Leave blank to show no date.</p>
+                </div>
+              </div>
+
               <!-- Stock Quantity -->
               <div>
                 <p class="stock-section-title"><i class="fas fa-cubes"></i> Stock Quantity</p>
@@ -494,6 +555,7 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
                   <p class="qty-unlimited-note" id="qtyUnlimitedNote">Currently: stock not tracked</p>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -544,18 +606,38 @@ input:checked + .toggle-slider:before{transform:translateX(20px)}
       <p class="quick-stock-hint">0 = unlimited / untracked</p>
     </div>
 
-    <div class="quick-stock-soldout-row">
-      <div class="toggle-label-group">
-        <span class="toggle-main-label">Sold Out</span>
-        <span class="toggle-sub-label">Hides product from shop / disables purchase</span>
+    <div class="quick-stock-toggles">
+      <!-- Sold Out -->
+      <div class="quick-stock-toggle-row">
+        <div class="toggle-label-group">
+          <span class="toggle-main-label">Sold Out</span>
+          <span class="toggle-sub-label">Disables purchase on the shop</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="qsSoldOutToggle">
+          <span class="toggle-slider"></span>
+        </label>
       </div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="qsSoldOutToggle">
-        <span class="toggle-slider"></span>
-      </label>
+      <!-- Coming Soon -->
+      <div class="quick-stock-toggle-row cs-row">
+        <div class="toggle-label-group">
+          <span class="toggle-main-label" style="color:var(--purple)"><i class="fas fa-clock" style="margin-right:0.3rem;font-size:0.75rem"></i>Coming Soon</span>
+          <span class="toggle-sub-label">Shows purple "Coming Soon" badge on shop</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="qsComingSoonToggle">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
     </div>
 
-    <div class="quick-stock-actions">
+    <!-- Launch date for quick-stock Coming Soon -->
+    <div class="qs-cs-date-wrap" id="qsCSDateWrap">
+      <p class="qs-cs-date-label"><i class="fas fa-calendar-alt" style="margin-right:0.3rem"></i>Expected Launch Date <span style="font-weight:400;opacity:0.6">(optional)</span></p>
+      <input type="text" class="qs-cs-date-input" id="qsLaunchDate" placeholder="e.g. July 2025, Q3 2025, TBA…">
+    </div>
+
+    <div class="quick-stock-actions" style="margin-top:1.5rem">
       <button class="btn-qs-save" id="qsSaveBtn"><i class="fas fa-save"></i> Save Changes</button>
       <button class="btn-qs-cancel" id="qsCancelBtn">Cancel</button>
     </div>
@@ -603,11 +685,11 @@ let allProducts   = [];
 let editingId     = null;
 let imageUrls     = [];
 let productColors = [];
-let quickStockId  = null;   // product being edited in quick-stock modal
+let quickStockId  = null;
 
 // ── BUILD SIZES ───────────────────────────────────────────────
 const SIZES = ['XS','S','M','L','XL','2XL','3XL'];
-document.getElementById('sizesWrap') && SIZES.forEach(s => {
+SIZES.forEach(s => {
   const label = document.createElement('label');
   label.className = 'size-check';
   label.innerHTML = `<input type="checkbox" value="${s}" class="sizeCheck"><span class="size-check-box">${s}</span>`;
@@ -637,7 +719,44 @@ function updateQtyNote(val) {
 document.getElementById('fSoldOut').addEventListener('change', function() {
   document.getElementById('soldOutToggleNote').textContent = this.checked
     ? 'Product is hidden / purchase disabled'
-    : 'Product is available for purchase';
+    : 'Available for purchase';
+  // If marking sold out, uncheck coming soon
+  if (this.checked) {
+    document.getElementById('fComingSoon').checked = false;
+    syncComingSoonUI(false);
+  }
+});
+
+// ── COMING SOON TOGGLE (form) ─────────────────────────────────
+document.getElementById('fComingSoon').addEventListener('change', function() {
+  syncComingSoonUI(this.checked);
+  // If marking coming soon, uncheck sold out
+  if (this.checked) {
+    document.getElementById('fSoldOut').checked = false;
+    document.getElementById('soldOutToggleNote').textContent = 'Available for purchase';
+  }
+});
+
+function syncComingSoonUI(isCS) {
+  const note = document.getElementById('comingSoonToggleNote');
+  const dateWrap = document.getElementById('comingSoonDateWrap');
+  note.textContent = isCS ? 'Showing Coming Soon badge on shop' : 'Not marked as coming soon';
+  dateWrap.classList.toggle('show', isCS);
+}
+
+// ── QUICK STOCK COMING SOON TOGGLE ───────────────────────────
+document.getElementById('qsComingSoonToggle').addEventListener('change', function() {
+  document.getElementById('qsCSDateWrap').classList.toggle('show', this.checked);
+  if (this.checked) {
+    // Uncheck sold out if coming soon is ticked
+    document.getElementById('qsSoldOutToggle').checked = false;
+  }
+});
+document.getElementById('qsSoldOutToggle').addEventListener('change', function() {
+  if (this.checked) {
+    document.getElementById('qsComingSoonToggle').checked = false;
+    document.getElementById('qsCSDateWrap').classList.remove('show');
+  }
 });
 
 // ── AUTH ──────────────────────────────────────────────────────
@@ -704,11 +823,13 @@ async function loadProducts() {
 }
 
 function updateStats(list) {
-  const soldOutCount = list.filter(p => p.soldOut).length;
+  const soldOutCount    = list.filter(p => p.soldOut).length;
+  const comingSoonCount = list.filter(p => p.comingSoon).length;
   document.getElementById('statProducts').textContent   = list.length;
   document.getElementById('statCategories').textContent = new Set(list.map(p=>p.category).filter(Boolean)).size;
-  document.getElementById('statInStock').textContent    = list.length - soldOutCount;
+  document.getElementById('statInStock').textContent    = list.filter(p => !p.soldOut && !p.comingSoon).length;
   document.getElementById('statSoldOut').textContent    = soldOutCount;
+  document.getElementById('statComingSoon').textContent = comingSoonCount;
   if (list.length) {
     const prices = list.map(p=>Number(p.price)).filter(Boolean);
     if (prices.length) {
@@ -716,6 +837,12 @@ function updateStats(list) {
       document.getElementById('statRange').textContent = mn===mx ? mn.toLocaleString() : `${mn.toLocaleString()}–${mx.toLocaleString()}`;
     }
   } else document.getElementById('statRange').textContent = '—';
+}
+
+function getProductStatePill(p) {
+  if (p.comingSoon) return `<span class="stock-pill coming-soon"><i class="fas fa-clock" style="font-size:0.45rem"></i>&nbsp;Coming Soon</span>`;
+  if (p.soldOut)    return `<span class="stock-pill sold-out"><i class="fas fa-ban" style="font-size:0.45rem"></i>&nbsp;Sold Out</span>`;
+  return `<span class="stock-pill in-stock">In Stock</span>`;
 }
 
 function renderTable(list) {
@@ -727,16 +854,31 @@ function renderTable(list) {
   body.innerHTML = list.map(p => {
     const img       = (p.images&&p.images[0]) || p.image || '';
     const isSoldOut = !!p.soldOut;
+    const isCS      = !!p.comingSoon;
     const qty       = p.stockQty !== undefined ? Number(p.stockQty) : 0;
-    const stockPill = isSoldOut
-      ? `<span class="stock-pill sold-out"><i class="fas fa-ban" style="font-size:0.45rem"></i> Sold Out</span>`
-      : `<span class="stock-pill in-stock">In Stock</span>`;
+    const statusPill = getProductStatePill(p);
     const qtyLabel  = qty === 0
       ? `<p class="stock-qty-label">Unlimited</p>`
       : `<p class="stock-qty-label">${qty} unit${qty!==1?'s':''}</p>`;
     const colorDots = (p.colors&&p.colors.length)
       ? p.colors.map(c=>`<span title="${escHtml(c.label)}" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${escHtml(c.hex)};border:1px solid rgba(0,0,0,0.15);margin-right:2px"></span>`).join('')
       : '<span style="font-size:0.55rem;color:var(--mid)">—</span>';
+
+    // Action buttons vary by state:
+    // Coming Soon: clock btn (undo) | edit | stock | delete
+    // Sold Out: undo btn | edit | stock | delete
+    // In Stock: sold-out btn | coming-soon btn | edit | stock | delete
+    let stateButtons = '';
+    if (isCS) {
+      stateButtons = `<button class="act-btn undo-coming-soon-btn" data-undo-cs="${p.id}" title="Remove Coming Soon"><i class="fas fa-clock"></i></button>`;
+    } else if (isSoldOut) {
+      stateButtons = `<button class="act-btn restock-btn" data-stock="${p.id}" title="Manage stock / restock"><i class="fas fa-undo"></i></button>`;
+    } else {
+      stateButtons = `
+        <button class="act-btn sold-out-btn" data-quick-soldout="${p.id}" title="Mark Sold Out"><i class="fas fa-ban"></i></button>
+        <button class="act-btn coming-soon-btn" data-quick-cs="${p.id}" title="Mark Coming Soon"><i class="fas fa-clock"></i></button>`;
+    }
+
     return `
     <div class="prod-row">
       <div>${img ? `<img class="prod-row-img" src="${img}" alt="${escHtml(p.name)}" loading="lazy" onerror="this.style.display='none'">` : `<div class="prod-row-img"></div>`}</div>
@@ -746,28 +888,65 @@ function renderTable(list) {
         <div style="margin-top:0.3rem">${colorDots}</div>
       </div>
       <div><p class="prod-row-price">GH₵ ${Number(p.price||0).toLocaleString()}</p></div>
-      <div>${stockPill}</div>
+      <div>${statusPill}</div>
       <div>${qtyLabel}</div>
       <div>
         <span class="badge-pill ${(!p.badge)?'none':(p.badge==='Limited'||p.badge==='Exclusive')?'gold':'new'}">${escHtml(p.badge||'None')}</span>
       </div>
       <div class="prod-row-actions">
+        ${stateButtons}
         <button class="act-btn" data-edit="${p.id}" title="Edit product"><i class="fas fa-pen"></i></button>
-        <button class="act-btn ${isSoldOut?'restock-btn':'sold-out-btn'}" data-stock="${p.id}" title="${isSoldOut?'Manage stock / restock':'Manage stock / sold out'}">
-          <i class="fas ${isSoldOut?'fa-undo':'fa-warehouse'}"></i>
-        </button>
+        <button class="act-btn" data-stockmodal="${p.id}" title="Update stock / status"><i class="fas fa-warehouse"></i></button>
         <button class="act-btn del" data-delete="${p.id}" data-name="${escHtml(p.name||'')}" title="Delete product"><i class="fas fa-trash"></i></button>
       </div>
     </div>`;
   }).join('');
 
-  body.querySelectorAll('[data-edit]').forEach(btn   => btn.addEventListener('click', () => editProduct(btn.dataset.edit)));
-  body.querySelectorAll('[data-stock]').forEach(btn  => btn.addEventListener('click', () => openQuickStock(btn.dataset.stock)));
+  // Wire up buttons
+  body.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => editProduct(btn.dataset.edit)));
+  body.querySelectorAll('[data-stockmodal]').forEach(btn => btn.addEventListener('click', () => openQuickStock(btn.dataset.stockmodal)));
+  body.querySelectorAll('[data-stock]').forEach(btn => btn.addEventListener('click', () => openQuickStock(btn.dataset.stock)));
   body.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', () => askDelete(btn.dataset.delete, btn.dataset.name)));
+
+  // Quick sold-out toggle (one click from table)
+  body.querySelectorAll('[data-quick-soldout]').forEach(btn => btn.addEventListener('click', async () => {
+    const p = allProducts.find(x => x.id === btn.dataset.quickSoldout);
+    if (!p) return;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+    try {
+      await updateDoc(doc(db,'products', p.id), { soldOut: true, comingSoon: false, updatedAt: serverTimestamp() });
+      showToast(`${p.name} marked as sold out`);
+      await loadProducts();
+    } catch(e) { showToast('Error: '+e.message, false); }
+  }));
+
+  // Quick coming-soon toggle (one click from table)
+  body.querySelectorAll('[data-quick-cs]').forEach(btn => btn.addEventListener('click', async () => {
+    const p = allProducts.find(x => x.id === btn.dataset.quickCs);
+    if (!p) return;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+    try {
+      await updateDoc(doc(db,'products', p.id), { comingSoon: true, soldOut: false, updatedAt: serverTimestamp() });
+      showToast(`${p.name} marked as Coming Soon`);
+      await loadProducts();
+    } catch(e) { showToast('Error: '+e.message, false); }
+  }));
+
+  // Undo coming-soon (one click)
+  body.querySelectorAll('[data-undo-cs]').forEach(btn => btn.addEventListener('click', async () => {
+    const p = allProducts.find(x => x.id === btn.dataset.undoCs);
+    if (!p) return;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+    try {
+      await updateDoc(doc(db,'products', p.id), { comingSoon: false, launchDate: '', updatedAt: serverTimestamp() });
+      showToast(`${p.name} — Coming Soon removed`);
+      await loadProducts();
+    } catch(e) { showToast('Error: '+e.message, false); }
+  }));
 }
 
 function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 // ── SEARCH ────────────────────────────────────────────────────
@@ -786,10 +965,13 @@ function openQuickStock(id) {
   if (!p) return;
   quickStockId = id;
   const qty = p.stockQty !== undefined ? Number(p.stockQty) : 0;
-  document.getElementById('qsProductName').textContent  = p.name || '—';
-  document.getElementById('qsCurrentQty').textContent   = qty === 0 ? 'Unlimited / Not tracked' : `${qty} unit${qty!==1?'s':''}`;
-  document.getElementById('qsQtyInput').value            = qty;
-  document.getElementById('qsSoldOutToggle').checked     = !!p.soldOut;
+  document.getElementById('qsProductName').textContent    = p.name || '—';
+  document.getElementById('qsCurrentQty').textContent     = qty === 0 ? 'Unlimited / Not tracked' : `${qty} unit${qty!==1?'s':''}`;
+  document.getElementById('qsQtyInput').value             = qty;
+  document.getElementById('qsSoldOutToggle').checked      = !!p.soldOut;
+  document.getElementById('qsComingSoonToggle').checked   = !!p.comingSoon;
+  document.getElementById('qsLaunchDate').value           = p.launchDate || '';
+  document.getElementById('qsCSDateWrap').classList.toggle('show', !!p.comingSoon);
   document.getElementById('quickStockOverlay').classList.add('open');
 }
 
@@ -814,18 +996,26 @@ document.getElementById('qsBigPlus').addEventListener('click', () => {
 
 document.getElementById('qsSaveBtn').addEventListener('click', async () => {
   if (!quickStockId) return;
-  const newQty      = Math.max(0, parseInt(document.getElementById('qsQtyInput').value||0));
-  const newSoldOut  = document.getElementById('qsSoldOutToggle').checked;
-  const btn         = document.getElementById('qsSaveBtn');
-  btn.innerHTML     = '<i class="fas fa-circle-notch fa-spin"></i> Saving...';
-  btn.disabled      = true;
+  const newQty        = Math.max(0, parseInt(document.getElementById('qsQtyInput').value||0));
+  const newSoldOut    = document.getElementById('qsSoldOutToggle').checked;
+  const newComingSoon = document.getElementById('qsComingSoonToggle').checked;
+  const launchDate    = document.getElementById('qsLaunchDate').value.trim();
+  const btn           = document.getElementById('qsSaveBtn');
+  btn.innerHTML       = '<i class="fas fa-circle-notch fa-spin"></i> Saving...';
+  btn.disabled        = true;
   try {
     await updateDoc(doc(db,'products',quickStockId), {
-      stockQty:  newQty,
-      soldOut:   newSoldOut,
-      updatedAt: serverTimestamp()
+      stockQty:   newQty,
+      soldOut:    newSoldOut,
+      comingSoon: newComingSoon,
+      launchDate: newComingSoon ? launchDate : '',
+      updatedAt:  serverTimestamp()
     });
-    showToast(newSoldOut ? 'Marked as sold out' : `Stock updated — ${newQty===0?'Unlimited':newQty+' units'}`);
+    let msg = 'Stock updated';
+    if (newComingSoon) msg = `Marked as Coming Soon${launchDate ? ` · ${launchDate}` : ''}`;
+    else if (newSoldOut) msg = 'Marked as sold out';
+    else msg = `Stock updated — ${newQty===0?'Unlimited':newQty+' units'}`;
+    showToast(msg);
     closeQuickStock();
     await loadProducts();
   } catch(e) {
@@ -952,12 +1142,17 @@ function openForm(product=null) {
   document.getElementById('colorLabelInput').value      = '';
 
   // Stock fields
-  const isSoldOut = product ? !!product.soldOut : false;
-  const qty       = product?.stockQty !== undefined ? Number(product.stockQty) : 0;
+  const isSoldOut   = product ? !!product.soldOut : false;
+  const isComingSoon= product ? !!product.comingSoon : false;
+  const qty         = product?.stockQty !== undefined ? Number(product.stockQty) : 0;
+
   document.getElementById('fSoldOut').checked           = isSoldOut;
   document.getElementById('soldOutToggleNote').textContent = isSoldOut
     ? 'Product is hidden / purchase disabled'
-    : 'Product is available for purchase';
+    : 'Available for purchase';
+  document.getElementById('fComingSoon').checked        = isComingSoon;
+  document.getElementById('fLaunchDate').value          = product?.launchDate || '';
+  syncComingSoonUI(isComingSoon);
   document.getElementById('fStockQty').value            = qty;
   updateQtyNote(qty);
 
@@ -995,9 +1190,11 @@ async function saveProduct() {
   if (!name || !price) { showToast('Name and price are required', false); return; }
   if (!imageUrls.length) { showToast('Please add at least one image URL', false); return; }
 
-  const sizes    = [...document.querySelectorAll('.sizeCheck:checked')].map(c => c.value);
-  const isSoldOut = document.getElementById('fSoldOut').checked;
-  const stockQty  = Math.max(0, parseInt(document.getElementById('fStockQty').value||0));
+  const sizes       = [...document.querySelectorAll('.sizeCheck:checked')].map(c => c.value);
+  const isSoldOut   = document.getElementById('fSoldOut').checked;
+  const isComingSoon= document.getElementById('fComingSoon').checked;
+  const launchDate  = document.getElementById('fLaunchDate').value.trim();
+  const stockQty    = Math.max(0, parseInt(document.getElementById('fStockQty').value||0));
 
   const data = {
     name,
@@ -1010,6 +1207,8 @@ async function saveProduct() {
     sizes,
     colors:      productColors,
     soldOut:     isSoldOut,
+    comingSoon:  isComingSoon,
+    launchDate:  isComingSoon ? launchDate : '',
     stockQty:    stockQty,
     updatedAt:   serverTimestamp()
   };
