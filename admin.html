@@ -12,7 +12,7 @@
   --black:#080808;--white:#ffffff;--off-white:#f4f2ee;--cream:#eeeae3;
   --light:#e2ddd6;--mid:#9a9088;--dark:#2a2520;
   --gold:#c8a96e;--gold-l:#e8d4a8;--gold-d:#9a7a45;
-  --red:#c0392b;--green:#1e7e34;
+  --red:#c0392b;--green:#1e7e34;--green-light:#e8f5ec;
   --panel:#1a1612;--panel2:#221e19;--panel3:#2c2620;
   --font-d:'Cormorant Garamond',serif;--font-b:'Montserrat',sans-serif;
   --tr:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
@@ -21,7 +21,7 @@ html,body{height:100%;font-family:var(--font-b)}
 body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--gold)}
 
-/* LOGIN */
+/* ── LOGIN ── */
 #loginScreen{position:fixed;inset:0;background:var(--panel);display:flex;align-items:center;justify-content:center;z-index:9999}
 .login-box{width:min(400px,90%);padding:3rem 2.5rem;border:1px solid rgba(200,169,110,0.2);background:var(--panel2);text-align:center}
 .login-logo{font-family:var(--font-d);font-size:3rem;font-weight:700;color:var(--white);letter-spacing:0.15em;margin-bottom:0.3rem}
@@ -34,7 +34,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .login-btn:hover{background:var(--gold-l)}
 .login-err{font-size:0.62rem;color:#e74c3c;margin-top:0.75rem;letter-spacing:0.08em;min-height:18px}
 
-/* MAIN */
+/* ── LAYOUT ── */
 #adminApp{display:none}
 .admin-wrap{display:flex;min-height:100vh}
 .sidebar{width:240px;flex-shrink:0;background:var(--panel);display:flex;flex-direction:column;border-right:1px solid rgba(200,169,110,0.1);position:sticky;top:0;height:100vh;overflow-y:auto}
@@ -58,10 +58,14 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .top-bar-right{display:flex;align-items:center;gap:1rem}
 .admin-tag{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;background:var(--black);color:var(--gold);padding:0.3rem 0.8rem;font-weight:600}
 .page-content{padding:2rem;flex:1}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2rem}
 .stat-card{background:var(--white);padding:1.5rem;border-bottom:2px solid var(--light);transition:border-color 0.3s}
 .stat-card:hover{border-color:var(--gold)}
 .stat-icon{width:38px;height:38px;background:var(--black);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.9rem;margin-bottom:0.8rem}
+.stat-icon.red-icon{background:var(--red)}
+.stat-icon.green-icon{background:var(--green)}
 .stat-val{font-family:var(--font-d);font-size:2rem;font-weight:700;line-height:1;margin-bottom:0.2rem}
 .stat-lbl{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);font-weight:500}
 .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -70,25 +74,38 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .section-hdr-left p{font-size:0.6rem;letter-spacing:0.1em;color:var(--mid);margin-top:0.2rem;text-transform:uppercase}
 .btn-add-product{display:flex;align-items:center;gap:0.6rem;padding:0.7rem 1.4rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-b);font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
 .btn-add-product:hover{background:var(--gold);color:var(--black)}
+
+/* ── TABLE ── */
 .products-table{background:var(--white);overflow:hidden}
-.table-head{display:grid;grid-template-columns:80px 1fr 120px 120px 100px 100px;padding:0.8rem 1.2rem;border-bottom:1px solid var(--light);background:var(--off-white)}
+.table-head{display:grid;grid-template-columns:80px 1fr 100px 100px 90px 120px 100px;padding:0.8rem 1.2rem;border-bottom:1px solid var(--light);background:var(--off-white)}
 .table-head span{font-size:0.52rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid)}
-.prod-row{display:grid;grid-template-columns:80px 1fr 120px 120px 100px 100px;padding:0.8rem 1.2rem;border-bottom:1px solid var(--light);align-items:center;transition:background 0.2s}
+.prod-row{display:grid;grid-template-columns:80px 1fr 100px 100px 90px 120px 100px;padding:0.8rem 1.2rem;border-bottom:1px solid var(--light);align-items:center;transition:background 0.2s}
 .prod-row:hover{background:var(--off-white)}
 .prod-row-img{width:56px;height:70px;object-fit:cover;object-position:top;background:var(--cream)}
 .prod-row-name{font-family:var(--font-d);font-size:0.95rem;font-weight:500;margin-bottom:0.15rem}
 .prod-row-cat{font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid)}
 .prod-row-price{font-size:0.8rem;font-weight:700;letter-spacing:0.04em}
-.badge-pill{font-size:0.5rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.25rem 0.6rem}
+.badge-pill{font-size:0.5rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.25rem 0.6rem;display:inline-block}
 .badge-pill.new{background:var(--black);color:var(--white)}
 .badge-pill.gold{background:var(--gold);color:var(--black)}
 .badge-pill.none{background:var(--light);color:var(--mid)}
-.prod-row-actions{display:flex;gap:0.5rem}
-.act-btn{width:36px;height:36px;border:1px solid var(--light);background:transparent;cursor:pointer;font-size:0.75rem;color:var(--dark);display:flex;align-items:center;justify-content:center;transition:var(--tr);touch-action:manipulation}
+
+/* ── STOCK STATUS PILL ── */
+.stock-pill{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.5rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.28rem 0.65rem;white-space:nowrap}
+.stock-pill.in-stock{background:var(--green-light);color:var(--green);border:1px solid rgba(30,126,52,0.25)}
+.stock-pill.in-stock::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+.stock-pill.sold-out{background:#fef0f0;color:var(--red);border:1px solid rgba(192,57,43,0.25)}
+.stock-pill.sold-out::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0}
+.stock-qty-label{font-size:0.58rem;color:var(--mid);margin-top:0.25rem;letter-spacing:0.06em}
+
+.prod-row-actions{display:flex;gap:0.4rem;flex-wrap:wrap}
+.act-btn{width:32px;height:32px;border:1px solid var(--light);background:transparent;cursor:pointer;font-size:0.72rem;color:var(--dark);display:flex;align-items:center;justify-content:center;transition:var(--tr);touch-action:manipulation;flex-shrink:0}
 .act-btn:hover,.act-btn:active{background:var(--black);color:var(--white);border-color:var(--black)}
 .act-btn.del:hover,.act-btn.del:active{background:var(--red);border-color:var(--red)}
+.act-btn.sold-out-btn:hover,.act-btn.sold-out-btn:active{background:var(--red);border-color:var(--red);color:var(--white)}
+.act-btn.restock-btn:hover,.act-btn.restock-btn:active{background:var(--green);border-color:var(--green);color:var(--white)}
 
-/* IMAGE URLS */
+/* ── IMAGE URLS ── */
 .url-input-row{display:flex;gap:0.5rem;margin-bottom:0.6rem}
 .url-input-row input{flex:1;padding:0.75rem 1rem;border:1px solid var(--light);background:var(--off-white);font-family:var(--font-b);font-size:0.72rem;color:var(--black);outline:none;transition:border-color 0.3s}
 .url-input-row input:focus{border-color:var(--gold);background:var(--white)}
@@ -107,66 +124,57 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .img-preview-item .primary-tag{position:absolute;bottom:0;left:0;right:0;background:var(--gold);color:var(--black);font-size:0.45rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;text-align:center;padding:0.2rem}
 .img-no-items{font-size:0.6rem;color:var(--mid);letter-spacing:0.1em;text-align:center;padding:1.5rem;border:1px dashed var(--light);background:var(--off-white)}
 
-/* ══════════════════════════════════════
-   COLOR MANAGER SECTION
-══════════════════════════════════════ */
+/* ── COLOR MANAGER ── */
 .color-manager{margin-top:0.4rem}
 .color-help{font-size:0.56rem;color:var(--mid);letter-spacing:0.06em;line-height:1.7;margin-bottom:0.8rem}
-/* Row to add new color */
 .color-add-row{display:flex;gap:0.5rem;align-items:center;margin-bottom:0.8rem;flex-wrap:wrap}
 .color-picker-wrap{display:flex;align-items:center;gap:0.4rem}
-.color-picker-input{
-  width:40px;height:40px;padding:2px;cursor:pointer;
-  border:1px solid var(--light);background:var(--off-white);
-  border-radius:0;outline:none;
-}
-.color-hex-input{
-  width:100px;padding:0.6rem 0.7rem;border:1px solid var(--light);
-  background:var(--off-white);font-family:var(--font-b);font-size:0.72rem;
-  color:var(--black);outline:none;letter-spacing:0.05em;
-}
+.color-picker-input{width:40px;height:40px;padding:2px;cursor:pointer;border:1px solid var(--light);background:var(--off-white);border-radius:0;outline:none}
+.color-hex-input{width:100px;padding:0.6rem 0.7rem;border:1px solid var(--light);background:var(--off-white);font-family:var(--font-b);font-size:0.72rem;color:var(--black);outline:none;letter-spacing:0.05em}
 .color-hex-input:focus{border-color:var(--gold);background:var(--white)}
-.color-label-input{
-  flex:1;min-width:120px;padding:0.6rem 0.8rem;border:1px solid var(--light);
-  background:var(--off-white);font-family:var(--font-b);font-size:0.72rem;
-  color:var(--black);outline:none;
-}
+.color-label-input{flex:1;min-width:120px;padding:0.6rem 0.8rem;border:1px solid var(--light);background:var(--off-white);font-family:var(--font-b);font-size:0.72rem;color:var(--black);outline:none}
 .color-label-input:focus{border-color:var(--gold);background:var(--white)}
 .color-label-input::placeholder{color:var(--mid)}
-.btn-add-color{
-  padding:0.6rem 1rem;background:var(--black);color:var(--white);border:none;
-  cursor:pointer;font-size:0.68rem;font-family:var(--font-b);font-weight:600;
-  letter-spacing:0.1em;white-space:nowrap;transition:background 0.3s;
-  display:flex;align-items:center;gap:0.4rem;
-}
+.btn-add-color{padding:0.6rem 1rem;background:var(--black);color:var(--white);border:none;cursor:pointer;font-size:0.68rem;font-family:var(--font-b);font-weight:600;letter-spacing:0.1em;white-space:nowrap;transition:background 0.3s;display:flex;align-items:center;gap:0.4rem}
 .btn-add-color:hover{background:var(--gold);color:var(--black)}
-/* Color chips list */
 .color-chips{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem}
-.color-chip{
-  display:flex;align-items:center;gap:0.4rem;
-  padding:0.3rem 0.5rem 0.3rem 0.4rem;
-  border:1px solid var(--light);background:var(--white);
-  font-size:0.6rem;font-family:var(--font-b);letter-spacing:0.06em;
-  color:var(--dark);
-}
-.color-chip-dot{
-  width:16px;height:16px;border-radius:50%;
-  border:1px solid rgba(0,0,0,0.15);flex-shrink:0;
-}
+.color-chip{display:flex;align-items:center;gap:0.4rem;padding:0.3rem 0.5rem 0.3rem 0.4rem;border:1px solid var(--light);background:var(--white);font-size:0.6rem;font-family:var(--font-b);letter-spacing:0.06em;color:var(--dark)}
+.color-chip-dot{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0}
 .color-chip-label{font-weight:500}
-.color-chip-rm{
-  background:none;border:none;cursor:pointer;color:var(--mid);
-  font-size:0.65rem;padding:0;line-height:1;transition:color 0.2s;
-  margin-left:2px;
-}
+.color-chip-rm{background:none;border:none;cursor:pointer;color:var(--mid);font-size:0.65rem;padding:0;line-height:1;transition:color 0.2s;margin-left:2px}
 .color-chip-rm:hover{color:var(--red)}
 .color-no-items{font-size:0.6rem;color:var(--mid);letter-spacing:0.1em;padding:0.8rem;border:1px dashed var(--light);background:var(--off-white);text-align:center}
 
-/* FORM OVERLAY */
+/* ── STOCK / SOLD-OUT SECTION IN FORM ── */
+.stock-section{background:var(--off-white);border:1px solid var(--light);padding:1.2rem;margin-top:0.2rem}
+.stock-section-title{font-size:0.58rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--dark);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.stock-section-title i{color:var(--gold-d)}
+.stock-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0.8rem 1rem;background:var(--white);border:1px solid var(--light)}
+.toggle-label-group{display:flex;flex-direction:column;gap:0.2rem}
+.toggle-main-label{font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--dark)}
+.toggle-sub-label{font-size:0.55rem;color:var(--mid);letter-spacing:0.06em}
+/* iOS-style toggle */
+.toggle-switch{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--light);transition:0.3s;border-radius:24px}
+.toggle-slider:before{position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:var(--white);transition:0.3s;border-radius:50%}
+input:checked + .toggle-slider{background:var(--red)}
+input:checked + .toggle-slider:before{transform:translateX(20px)}
+.qty-input-group{display:flex;flex-direction:column;gap:0.5rem}
+.qty-input-row{display:flex;align-items:center;gap:0.5rem}
+.qty-stepper{display:flex;align-items:center;border:1px solid var(--light)}
+.qty-stepper-btn{width:34px;height:38px;border:none;background:var(--off-white);cursor:pointer;font-size:0.85rem;color:var(--dark);display:flex;align-items:center;justify-content:center;transition:var(--tr);font-family:var(--font-b)}
+.qty-stepper-btn:hover{background:var(--black);color:var(--white)}
+.qty-stepper-val{width:60px;height:38px;border:none;border-left:1px solid var(--light);border-right:1px solid var(--light);text-align:center;font-family:var(--font-b);font-size:0.78rem;font-weight:700;color:var(--black);background:var(--white);outline:none}
+.qty-note{font-size:0.54rem;color:var(--mid);letter-spacing:0.06em;line-height:1.6}
+.qty-unlimited-note{font-size:0.54rem;color:var(--mid);letter-spacing:0.06em;font-style:italic;margin-top:0.3rem}
+
+/* ── FORM OVERLAY ── */
 .form-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:4000;opacity:0;pointer-events:none;transition:opacity 0.4s;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .form-overlay.open{opacity:1;pointer-events:all}
 .form-overlay-inner{min-height:100%;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem}
-.form-box{background:var(--white);width:100%;max-width:680px;transform:translateY(30px);transition:transform 0.4s ease;padding:2.5rem;position:relative}
+.form-box{background:var(--white);width:100%;max-width:720px;transform:translateY(30px);transition:transform 0.4s ease;padding:2.5rem;position:relative}
 .form-overlay.open .form-box{transform:translateY(0)}
 .form-close{position:absolute;top:1rem;right:1rem;width:36px;height:36px;background:var(--black);color:var(--white);border:none;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;transition:background 0.3s;z-index:5}
 .form-close:hover{background:var(--gold);color:var(--black)}
@@ -181,20 +189,43 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold);background:var(--white)}
 .form-textarea{resize:vertical;min-height:90px;line-height:1.7}
 .form-select{cursor:pointer}
-/* SIZES */
 .sizes-wrap{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem}
 .size-check{display:flex;align-items:center;gap:0.3rem;cursor:pointer}
 .size-check input{display:none}
 .size-check-box{width:44px;height:44px;border:1px solid var(--light);font-size:0.62rem;font-weight:600;letter-spacing:0.06em;display:flex;align-items:center;justify-content:center;transition:var(--tr);background:var(--off-white);color:var(--dark);cursor:pointer}
 .size-check input:checked + .size-check-box{background:var(--black);color:var(--white);border-color:var(--black)}
-/* FORM SUBMIT */
 .form-submit{display:flex;gap:0.75rem;margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid var(--light)}
 .btn-save{flex:1;padding:0.95rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-b);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.6rem}
 .btn-save:hover{background:var(--gold);color:var(--black)}
 .btn-cancel{padding:0.95rem 1.5rem;background:transparent;border:1px solid var(--light);font-family:var(--font-b);font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:var(--tr);color:var(--dark)}
 .btn-cancel:hover{background:var(--off-white)}
 
-/* CONFIRM DELETE */
+/* ── QUICK STOCK MODAL ── */
+.quick-stock-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:6000;opacity:0;pointer-events:none;transition:opacity 0.3s;display:flex;align-items:center;justify-content:center;padding:1rem}
+.quick-stock-overlay.open{opacity:1;pointer-events:all}
+.quick-stock-box{background:var(--white);padding:2rem;width:min(420px,92%);transform:scale(0.96);transition:transform 0.3s}
+.quick-stock-overlay.open .quick-stock-box{transform:scale(1)}
+.quick-stock-box h3{font-family:var(--font-d);font-size:1.5rem;font-weight:400;margin-bottom:0.3rem}
+.quick-stock-box h3 em{font-style:italic;color:var(--gold-d)}
+.quick-stock-product-name{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:1.5rem}
+.quick-stock-current{display:flex;align-items:center;gap:0.6rem;padding:0.8rem 1rem;background:var(--off-white);border:1px solid var(--light);margin-bottom:1.2rem}
+.quick-stock-current .label{font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);flex:1}
+.quick-stock-current .val{font-family:var(--font-d);font-size:1.1rem;font-weight:700}
+.quick-stock-row{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.5rem}
+.quick-stock-label{font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--dark)}
+.quick-stock-hint{font-size:0.54rem;color:var(--mid);letter-spacing:0.06em;margin-top:0.2rem}
+.qty-big-stepper{display:flex;align-items:center;border:1px solid var(--light);width:fit-content}
+.qty-big-btn{width:44px;height:48px;border:none;background:var(--off-white);cursor:pointer;font-size:1rem;color:var(--dark);display:flex;align-items:center;justify-content:center;transition:var(--tr);font-family:var(--font-b)}
+.qty-big-btn:hover{background:var(--black);color:var(--white)}
+.qty-big-val{width:80px;height:48px;border:none;border-left:1px solid var(--light);border-right:1px solid var(--light);text-align:center;font-family:var(--font-d);font-size:1.5rem;font-weight:700;color:var(--black);background:var(--white);outline:none}
+.quick-stock-soldout-row{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1rem;background:var(--off-white);border:1px solid var(--light);margin-bottom:1.5rem}
+.quick-stock-actions{display:flex;gap:0.6rem}
+.btn-qs-save{flex:1;padding:0.85rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-b);font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.5rem}
+.btn-qs-save:hover{background:var(--gold);color:var(--black)}
+.btn-qs-cancel{padding:0.85rem 1.2rem;background:transparent;border:1px solid var(--light);font-family:var(--font-b);font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:var(--tr);color:var(--dark)}
+.btn-qs-cancel:hover{background:var(--off-white)}
+
+/* ── CONFIRM DELETE ── */
 .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:5000;opacity:0;pointer-events:none;transition:opacity 0.3s;display:flex;align-items:center;justify-content:center;padding:1rem}
 .confirm-overlay.open{opacity:1;pointer-events:all}
 .confirm-box{background:var(--white);padding:2.5rem;width:min(400px,90%);transform:scale(0.95);transition:transform 0.3s;text-align:center}
@@ -208,7 +239,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .btn-confirm-cancel{padding:0.8rem 1.4rem;background:transparent;border:1px solid var(--light);font-family:var(--font-b);font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:var(--tr);color:var(--dark)}
 .btn-confirm-cancel:hover{background:var(--off-white)}
 
-/* TOAST */
+/* ── TOAST ── */
 .toast{position:fixed;bottom:2rem;right:2rem;transform:translateY(80px);opacity:0;background:var(--panel);color:var(--white);padding:0.9rem 1.6rem;font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;transition:all 0.4s ease;z-index:9999;display:flex;align-items:center;gap:0.6rem;border-bottom:2px solid var(--gold);min-width:220px;pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
 .table-loading{text-align:center;padding:4rem;color:var(--mid)}
@@ -222,25 +253,33 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
 .search-bar input{flex:1;padding:0.7rem 0.5rem 0.7rem 0;border:none;font-family:var(--font-b);font-size:0.72rem;outline:none;background:transparent;color:var(--black);letter-spacing:0.04em}
 .search-bar input::placeholder{color:var(--mid)}
 
-/* MOBILE */
+/* ── MOBILE ── */
 .sidebar-toggle{display:none}
 .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:499;opacity:0;transition:opacity 0.3s;pointer-events:none}
 .sidebar-backdrop.open{opacity:1;pointer-events:all}
+@media(max-width:1100px){
+  .stats-row{grid-template-columns:repeat(3,1fr)}
+  .table-head{grid-template-columns:70px 1fr 90px 90px 80px}
+  .table-head span:nth-child(6),.table-head span:nth-child(7){display:none}
+  .prod-row{grid-template-columns:70px 1fr 90px 90px 80px}
+  .prod-row>div:nth-child(6){display:none}
+}
 @media(max-width:900px){
   .sidebar{position:fixed;left:-260px;z-index:500;transition:left 0.35s ease;top:0;height:100%;width:240px}
   .sidebar.open{left:0;box-shadow:4px 0 30px rgba(0,0,0,0.5)}
   .sidebar-backdrop{display:block}
   .sidebar-toggle{display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:var(--black);color:var(--white);border:none;cursor:pointer;font-size:0.9rem;flex-shrink:0}
   .stats-row{grid-template-columns:repeat(2,1fr)}
-  .table-head{grid-template-columns:60px 1fr 90px 80px}
-  .table-head span:nth-child(4),.table-head span:nth-child(5),.table-head span:nth-child(6){display:none}
-  .prod-row{grid-template-columns:60px 1fr 90px 80px}
-  .prod-row > div:nth-child(4),.prod-row > div:nth-child(5){display:none}
+  .table-head{grid-template-columns:60px 1fr 80px 80px}
+  .table-head span:nth-child(4),.table-head span:nth-child(5),.table-head span:nth-child(6),.table-head span:nth-child(7){display:none}
+  .prod-row{grid-template-columns:60px 1fr 80px 80px}
+  .prod-row>div:nth-child(4),.prod-row>div:nth-child(5),.prod-row>div:nth-child(6){display:none}
   .form-grid{grid-template-columns:1fr}
   .form-box{padding:1.5rem}
   .form-submit{flex-direction:column}
   .color-add-row{flex-direction:column;align-items:stretch}
   .color-hex-input{width:100%}
+  .stock-row{grid-template-columns:1fr}
 }
 @media(max-width:600px){
   .stats-row{grid-template-columns:1fr 1fr}
@@ -302,10 +341,12 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
       </div>
 
       <div class="page-content">
+        <!-- STATS ROW — now 5 cards including sold-out count -->
         <div class="stats-row">
           <div class="stat-card"><div class="stat-icon"><i class="fas fa-box"></i></div><p class="stat-val" id="statProducts">—</p><p class="stat-lbl">Total Products</p></div>
           <div class="stat-card"><div class="stat-icon"><i class="fas fa-tag"></i></div><p class="stat-val" id="statCategories">—</p><p class="stat-lbl">Categories</p></div>
-          <div class="stat-card"><div class="stat-icon"><i class="fas fa-fire"></i></div><p class="stat-val" id="statFeatured">—</p><p class="stat-lbl">Featured / Badged</p></div>
+          <div class="stat-card"><div class="stat-icon green-icon"><i class="fas fa-check-circle"></i></div><p class="stat-val" id="statInStock">—</p><p class="stat-lbl">In Stock</p></div>
+          <div class="stat-card"><div class="stat-icon red-icon"><i class="fas fa-ban"></i></div><p class="stat-val" id="statSoldOut">—</p><p class="stat-lbl">Sold Out</p></div>
           <div class="stat-card"><div class="stat-icon"><i class="fas fa-coins"></i></div><p class="stat-val" id="statRange">—</p><p class="stat-lbl">Price Range (GH₵)</p></div>
         </div>
 
@@ -323,8 +364,13 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
           </div>
           <div class="products-table">
             <div class="table-head">
-              <span>Image</span><span>Product</span><span>Price</span>
-              <span>Badge</span><span>Category</span><span>Actions</span>
+              <span>Image</span>
+              <span>Product</span>
+              <span>Price</span>
+              <span>Stock Status</span>
+              <span>Badge</span>
+              <span>Qty</span>
+              <span>Actions</span>
             </div>
             <div id="tableBody">
               <div class="table-loading"><i class="fas fa-circle-notch"></i><p style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase">Loading products...</p></div>
@@ -393,7 +439,7 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
           <div class="sizes-wrap" id="sizesWrap"></div>
         </div>
 
-        <!-- ══ COLORS ══ -->
+        <!-- COLORS -->
         <div class="form-group form-full">
           <label class="form-label">Available Colors</label>
           <div class="color-manager">
@@ -404,17 +450,50 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
             </p>
             <div class="color-add-row">
               <div class="color-picker-wrap">
-                <!-- Native color picker -->
                 <input type="color" id="colorPickerInput" class="color-picker-input" value="#000000" title="Pick a color">
-                <!-- Hex text sync -->
                 <input type="text" id="colorHexInput" class="color-hex-input" placeholder="#000000" maxlength="7" value="#000000">
               </div>
               <input type="text" id="colorLabelInput" class="color-label-input" placeholder="Color name e.g. Jet Black, Chalk White…">
               <button class="btn-add-color" id="addColorBtn"><i class="fas fa-plus"></i> Add Color</button>
             </div>
-            <!-- Live chips list -->
-            <div id="colorChipsList">
-              <div class="color-no-items">No colors added yet</div>
+            <div id="colorChipsList"><div class="color-no-items">No colors added yet</div></div>
+          </div>
+        </div>
+
+        <!-- ── STOCK & SOLD OUT ── -->
+        <div class="form-group form-full">
+          <label class="form-label"><i class="fas fa-warehouse" style="margin-right:0.4rem;color:var(--gold-d)"></i>Stock & Availability</label>
+          <div class="stock-section">
+            <div class="stock-row">
+              <!-- Sold Out Toggle -->
+              <div>
+                <p class="stock-section-title"><i class="fas fa-ban"></i> Sold Out Status</p>
+                <div class="toggle-row">
+                  <div class="toggle-label-group">
+                    <span class="toggle-main-label">Mark as Sold Out</span>
+                    <span class="toggle-sub-label" id="soldOutToggleNote">Product is available for purchase</span>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="fSoldOut">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <!-- Stock Quantity -->
+              <div>
+                <p class="stock-section-title"><i class="fas fa-cubes"></i> Stock Quantity</p>
+                <div class="qty-input-group">
+                  <div class="qty-input-row">
+                    <div class="qty-stepper">
+                      <button class="qty-stepper-btn" id="qtyMinus" type="button">−</button>
+                      <input type="number" class="qty-stepper-val" id="fStockQty" value="0" min="0" max="9999">
+                      <button class="qty-stepper-btn" id="qtyPlus" type="button">+</button>
+                    </div>
+                  </div>
+                  <p class="qty-note">Set to <strong>0</strong> for unlimited / untracked stock.</p>
+                  <p class="qty-unlimited-note" id="qtyUnlimitedNote">Currently: stock not tracked</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -440,6 +519,45 @@ body{background:var(--off-white);color:var(--black);overflow-x:hidden}
         <button class="btn-save" id="saveBtn"><i class="fas fa-save"></i> Save Product</button>
         <button class="btn-cancel" id="cancelBtn">Cancel</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK STOCK MODAL -->
+<div class="quick-stock-overlay" id="quickStockOverlay">
+  <div class="quick-stock-box">
+    <h3>Update <em>Stock</em></h3>
+    <p class="quick-stock-product-name" id="qsProductName">—</p>
+
+    <div class="quick-stock-current">
+      <span class="label">Current Stock</span>
+      <span class="val" id="qsCurrentQty">—</span>
+    </div>
+
+    <div class="quick-stock-row">
+      <label class="quick-stock-label">New Quantity</label>
+      <div class="qty-big-stepper">
+        <button class="qty-big-btn" id="qsBigMinus" type="button">−</button>
+        <input type="number" class="qty-big-val" id="qsQtyInput" value="0" min="0" max="9999">
+        <button class="qty-big-btn" id="qsBigPlus" type="button">+</button>
+      </div>
+      <p class="quick-stock-hint">0 = unlimited / untracked</p>
+    </div>
+
+    <div class="quick-stock-soldout-row">
+      <div class="toggle-label-group">
+        <span class="toggle-main-label">Sold Out</span>
+        <span class="toggle-sub-label">Hides product from shop / disables purchase</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="qsSoldOutToggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="quick-stock-actions">
+      <button class="btn-qs-save" id="qsSaveBtn"><i class="fas fa-save"></i> Save Changes</button>
+      <button class="btn-qs-cancel" id="qsCancelBtn">Cancel</button>
     </div>
   </div>
 </div>
@@ -481,36 +599,59 @@ const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-let allProducts = [];
-let editingId   = null;
-let imageUrls   = [];
-// ── Colors state: array of {hex, label}
+let allProducts   = [];
+let editingId     = null;
+let imageUrls     = [];
 let productColors = [];
+let quickStockId  = null;   // product being edited in quick-stock modal
 
 // ── BUILD SIZES ───────────────────────────────────────────────
 const SIZES = ['XS','S','M','L','XL','2XL','3XL'];
-const sizesWrap = document.getElementById('sizesWrap');
-SIZES.forEach(s => {
+document.getElementById('sizesWrap') && SIZES.forEach(s => {
   const label = document.createElement('label');
   label.className = 'size-check';
   label.innerHTML = `<input type="checkbox" value="${s}" class="sizeCheck"><span class="size-check-box">${s}</span>`;
-  sizesWrap.appendChild(label);
+  document.getElementById('sizesWrap').appendChild(label);
 });
 
-// ── AUTH STATE ────────────────────────────────────────────────
+// ── QTY STEPPER (form) ────────────────────────────────────────
+document.getElementById('qtyMinus').addEventListener('click', () => {
+  const el = document.getElementById('fStockQty');
+  const v = Math.max(0, parseInt(el.value||0) - 1);
+  el.value = v; updateQtyNote(v);
+});
+document.getElementById('qtyPlus').addEventListener('click', () => {
+  const el = document.getElementById('fStockQty');
+  const v = Math.min(9999, parseInt(el.value||0) + 1);
+  el.value = v; updateQtyNote(v);
+});
+document.getElementById('fStockQty').addEventListener('input', () => {
+  updateQtyNote(parseInt(document.getElementById('fStockQty').value||0));
+});
+function updateQtyNote(val) {
+  const note = document.getElementById('qtyUnlimitedNote');
+  note.textContent = val === 0 ? 'Currently: stock not tracked' : `Currently: ${val} unit${val!==1?'s':''} in stock`;
+}
+
+// ── SOLD-OUT TOGGLE LABEL (form) ──────────────────────────────
+document.getElementById('fSoldOut').addEventListener('change', function() {
+  document.getElementById('soldOutToggleNote').textContent = this.checked
+    ? 'Product is hidden / purchase disabled'
+    : 'Product is available for purchase';
+});
+
+// ── AUTH ──────────────────────────────────────────────────────
 onAuthStateChanged(auth, user => {
   if (user) {
     document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminApp').style.display = 'block';
-    document.getElementById('adminEmail').textContent = user.email;
+    document.getElementById('adminApp').style.display    = 'block';
+    document.getElementById('adminEmail').textContent    = user.email;
     loadProducts();
   } else {
     document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('adminApp').style.display = 'none';
+    document.getElementById('adminApp').style.display    = 'none';
   }
 });
-
-// ── LOGIN ─────────────────────────────────────────────────────
 document.getElementById('loginBtn').addEventListener('click', doLogin);
 document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 async function doLogin() {
@@ -524,8 +665,8 @@ async function doLogin() {
 }
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-// ── SIDEBAR MOBILE ────────────────────────────────────────────
-const sidebar         = document.getElementById('sidebar');
+// ── SIDEBAR ───────────────────────────────────────────────────
+const sidebar = document.getElementById('sidebar');
 const sidebarBackdrop = document.getElementById('sidebarBackdrop');
 document.getElementById('sidebarToggle').addEventListener('click', () => {
   sidebar.classList.add('open'); sidebarBackdrop.classList.add('open');
@@ -551,27 +692,30 @@ document.getElementById('navAnalytics').addEventListener('click', () => showSect
 async function loadProducts() {
   try {
     let snap;
-    try { const q = query(collection(db,'products'), orderBy('createdAt','desc')); snap = await getDocs(q); }
+    try { snap = await getDocs(query(collection(db,'products'), orderBy('createdAt','desc'))); }
     catch { snap = await getDocs(collection(db,'products')); }
     allProducts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
     renderTable(allProducts);
     updateStats(allProducts);
   } catch(e) {
-    document.getElementById('tableBody').innerHTML = `<div class="table-loading" style="color:#e74c3c"><i class="fas fa-exclamation-triangle"></i><p style="font-size:0.62rem">Error: ${e.message}</p></div>`;
+    document.getElementById('tableBody').innerHTML =
+      `<div class="table-loading" style="color:#e74c3c"><i class="fas fa-exclamation-triangle"></i><p style="font-size:0.62rem">Error: ${e.message}</p></div>`;
   }
 }
 
 function updateStats(list) {
+  const soldOutCount = list.filter(p => p.soldOut).length;
   document.getElementById('statProducts').textContent   = list.length;
   document.getElementById('statCategories').textContent = new Set(list.map(p=>p.category).filter(Boolean)).size;
-  document.getElementById('statFeatured').textContent   = list.filter(p=>p.badge).length;
+  document.getElementById('statInStock').textContent    = list.length - soldOutCount;
+  document.getElementById('statSoldOut').textContent    = soldOutCount;
   if (list.length) {
     const prices = list.map(p=>Number(p.price)).filter(Boolean);
     if (prices.length) {
       const mn=Math.min(...prices), mx=Math.max(...prices);
-      document.getElementById('statRange').textContent = mn===mx?mn.toLocaleString():`${mn.toLocaleString()}–${mx.toLocaleString()}`;
+      document.getElementById('statRange').textContent = mn===mx ? mn.toLocaleString() : `${mn.toLocaleString()}–${mx.toLocaleString()}`;
     }
-  } else document.getElementById('statRange').textContent='—';
+  } else document.getElementById('statRange').textContent = '—';
 }
 
 function renderTable(list) {
@@ -581,31 +725,45 @@ function renderTable(list) {
     return;
   }
   body.innerHTML = list.map(p => {
-    const img = (p.images&&p.images[0])||p.image||'';
-    const bc  = (!p.badge)?'none':(p.badge==='Limited'||p.badge==='Exclusive')?'gold':'new';
-    // Show color dots in table
+    const img       = (p.images&&p.images[0]) || p.image || '';
+    const isSoldOut = !!p.soldOut;
+    const qty       = p.stockQty !== undefined ? Number(p.stockQty) : 0;
+    const stockPill = isSoldOut
+      ? `<span class="stock-pill sold-out"><i class="fas fa-ban" style="font-size:0.45rem"></i> Sold Out</span>`
+      : `<span class="stock-pill in-stock">In Stock</span>`;
+    const qtyLabel  = qty === 0
+      ? `<p class="stock-qty-label">Unlimited</p>`
+      : `<p class="stock-qty-label">${qty} unit${qty!==1?'s':''}</p>`;
     const colorDots = (p.colors&&p.colors.length)
       ? p.colors.map(c=>`<span title="${escHtml(c.label)}" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${escHtml(c.hex)};border:1px solid rgba(0,0,0,0.15);margin-right:2px"></span>`).join('')
       : '<span style="font-size:0.55rem;color:var(--mid)">—</span>';
     return `
     <div class="prod-row">
-      <div>${img?`<img class="prod-row-img" src="${img}" alt="${escHtml(p.name)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="prod-row-img"></div>`}</div>
+      <div>${img ? `<img class="prod-row-img" src="${img}" alt="${escHtml(p.name)}" loading="lazy" onerror="this.style.display='none'">` : `<div class="prod-row-img"></div>`}</div>
       <div>
         <p class="prod-row-name">${escHtml(p.name||'—')}</p>
         <p class="prod-row-cat">${escHtml(p.category||'Uncategorised')}</p>
         <div style="margin-top:0.3rem">${colorDots}</div>
       </div>
       <div><p class="prod-row-price">GH₵ ${Number(p.price||0).toLocaleString()}</p></div>
-      <div><span class="badge-pill ${bc}">${escHtml(p.badge||'None')}</span></div>
-      <div><p class="prod-row-cat">${escHtml(p.category||'—')}</p></div>
+      <div>${stockPill}</div>
+      <div>${qtyLabel}</div>
+      <div>
+        <span class="badge-pill ${(!p.badge)?'none':(p.badge==='Limited'||p.badge==='Exclusive')?'gold':'new'}">${escHtml(p.badge||'None')}</span>
+      </div>
       <div class="prod-row-actions">
-        <button class="act-btn" data-edit="${p.id}" title="Edit"><i class="fas fa-pen"></i></button>
-        <button class="act-btn del" data-delete="${p.id}" data-name="${escHtml(p.name||'')}" title="Delete"><i class="fas fa-trash"></i></button>
+        <button class="act-btn" data-edit="${p.id}" title="Edit product"><i class="fas fa-pen"></i></button>
+        <button class="act-btn ${isSoldOut?'restock-btn':'sold-out-btn'}" data-stock="${p.id}" title="${isSoldOut?'Manage stock / restock':'Manage stock / sold out'}">
+          <i class="fas ${isSoldOut?'fa-undo':'fa-warehouse'}"></i>
+        </button>
+        <button class="act-btn del" data-delete="${p.id}" data-name="${escHtml(p.name||'')}" title="Delete product"><i class="fas fa-trash"></i></button>
       </div>
     </div>`;
   }).join('');
-  body.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', ()=>editProduct(btn.dataset.edit)));
-  body.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', ()=>askDelete(btn.dataset.delete, btn.dataset.name)));
+
+  body.querySelectorAll('[data-edit]').forEach(btn   => btn.addEventListener('click', () => editProduct(btn.dataset.edit)));
+  body.querySelectorAll('[data-stock]').forEach(btn  => btn.addEventListener('click', () => openQuickStock(btn.dataset.stock)));
+  body.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', () => askDelete(btn.dataset.delete, btn.dataset.name)));
 }
 
 function escHtml(str) {
@@ -615,7 +773,67 @@ function escHtml(str) {
 // ── SEARCH ────────────────────────────────────────────────────
 document.getElementById('searchInput').addEventListener('input', () => {
   const q = document.getElementById('searchInput').value.toLowerCase();
-  renderTable(allProducts.filter(p => (p.name||'').toLowerCase().includes(q)||(p.category||'').toLowerCase().includes(q)));
+  renderTable(allProducts.filter(p =>
+    (p.name||'').toLowerCase().includes(q) || (p.category||'').toLowerCase().includes(q)
+  ));
+});
+
+// ══════════════════════════════════════════════════════════════
+// QUICK STOCK MODAL
+// ══════════════════════════════════════════════════════════════
+function openQuickStock(id) {
+  const p = allProducts.find(x => x.id === id);
+  if (!p) return;
+  quickStockId = id;
+  const qty = p.stockQty !== undefined ? Number(p.stockQty) : 0;
+  document.getElementById('qsProductName').textContent  = p.name || '—';
+  document.getElementById('qsCurrentQty').textContent   = qty === 0 ? 'Unlimited / Not tracked' : `${qty} unit${qty!==1?'s':''}`;
+  document.getElementById('qsQtyInput').value            = qty;
+  document.getElementById('qsSoldOutToggle').checked     = !!p.soldOut;
+  document.getElementById('quickStockOverlay').classList.add('open');
+}
+
+document.getElementById('qsCancelBtn').addEventListener('click', closeQuickStock);
+document.getElementById('quickStockOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('quickStockOverlay')) closeQuickStock();
+});
+function closeQuickStock() {
+  document.getElementById('quickStockOverlay').classList.remove('open');
+  quickStockId = null;
+}
+
+// Quick stock qty steppers
+document.getElementById('qsBigMinus').addEventListener('click', () => {
+  const el = document.getElementById('qsQtyInput');
+  el.value = Math.max(0, parseInt(el.value||0) - 1);
+});
+document.getElementById('qsBigPlus').addEventListener('click', () => {
+  const el = document.getElementById('qsQtyInput');
+  el.value = Math.min(9999, parseInt(el.value||0) + 1);
+});
+
+document.getElementById('qsSaveBtn').addEventListener('click', async () => {
+  if (!quickStockId) return;
+  const newQty      = Math.max(0, parseInt(document.getElementById('qsQtyInput').value||0));
+  const newSoldOut  = document.getElementById('qsSoldOutToggle').checked;
+  const btn         = document.getElementById('qsSaveBtn');
+  btn.innerHTML     = '<i class="fas fa-circle-notch fa-spin"></i> Saving...';
+  btn.disabled      = true;
+  try {
+    await updateDoc(doc(db,'products',quickStockId), {
+      stockQty:  newQty,
+      soldOut:   newSoldOut,
+      updatedAt: serverTimestamp()
+    });
+    showToast(newSoldOut ? 'Marked as sold out' : `Stock updated — ${newQty===0?'Unlimited':newQty+' units'}`);
+    closeQuickStock();
+    await loadProducts();
+  } catch(e) {
+    showToast('Error: ' + e.message, false);
+  } finally {
+    btn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+    btn.disabled  = false;
+  }
 });
 
 // ══════════════════════════════════════════════════════════════
@@ -625,16 +843,10 @@ const colorPickerInput = document.getElementById('colorPickerInput');
 const colorHexInput    = document.getElementById('colorHexInput');
 const colorLabelInput  = document.getElementById('colorLabelInput');
 
-// Keep picker and hex field in sync
-colorPickerInput.addEventListener('input', () => {
-  colorHexInput.value = colorPickerInput.value;
-});
+colorPickerInput.addEventListener('input', () => { colorHexInput.value = colorPickerInput.value; });
 colorHexInput.addEventListener('input', () => {
-  // Validate and sync to picker if valid hex
   const hex = colorHexInput.value.trim();
-  if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
-    colorPickerInput.value = hex;
-  }
+  if (/^#[0-9a-fA-F]{6}$/.test(hex)) colorPickerInput.value = hex;
 });
 
 document.getElementById('addColorBtn').addEventListener('click', addColor);
@@ -643,23 +855,17 @@ colorLabelInput.addEventListener('keydown', e => { if(e.key==='Enter'){e.prevent
 function addColor() {
   const hex   = colorHexInput.value.trim();
   const label = colorLabelInput.value.trim();
-  if (!hex) { showToast('Pick or enter a hex color first', false); return; }
-  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) { showToast('Invalid hex — use format #RRGGBB', false); return; }
-  if (!label) { showToast('Enter a color name (e.g. Jet Black)', false); return; }
-  if (productColors.some(c => c.hex.toLowerCase()===hex.toLowerCase())) {
-    showToast('This color is already added', false); return;
-  }
-  if (productColors.length >= 12) { showToast('Maximum 12 colors reached', false); return; }
-
+  if (!hex)                               { showToast('Pick or enter a hex color first', false); return; }
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex))    { showToast('Invalid hex — use format #RRGGBB', false); return; }
+  if (!label)                             { showToast('Enter a color name (e.g. Jet Black)', false); return; }
+  if (productColors.some(c => c.hex.toLowerCase()===hex.toLowerCase())) { showToast('This color is already added', false); return; }
+  if (productColors.length >= 12)         { showToast('Maximum 12 colors reached', false); return; }
   productColors.push({ hex: hex.toLowerCase(), label });
   colorLabelInput.value = '';
   renderColorChips();
 }
 
-function removeColor(idx) {
-  productColors.splice(idx, 1);
-  renderColorChips();
-}
+function removeColor(idx) { productColors.splice(idx,1); renderColorChips(); }
 
 function renderColorChips() {
   const container = document.getElementById('colorChipsList');
@@ -688,10 +894,10 @@ document.getElementById('urlInput').addEventListener('keydown', e => { if(e.key=
 function addImageUrl() {
   const input = document.getElementById('urlInput');
   const url   = input.value.trim();
-  if (!url) { showToast('Please enter an image URL', false); return; }
-  if (!url.match(/^https?:\/\/.+/i)) { showToast('URL must start with http:// or https://', false); return; }
-  if (imageUrls.length >= 8) { showToast('Maximum 8 images reached', false); return; }
-  if (imageUrls.includes(url)) { showToast('This URL is already added', false); return; }
+  if (!url)                              { showToast('Please enter an image URL', false); return; }
+  if (!url.match(/^https?:\/\/.+/i))    { showToast('URL must start with http:// or https://', false); return; }
+  if (imageUrls.length >= 8)            { showToast('Maximum 8 images reached', false); return; }
+  if (imageUrls.includes(url))          { showToast('This URL is already added', false); return; }
   imageUrls.push(url);
   input.value = '';
   renderPreviews();
@@ -721,9 +927,9 @@ function renderPreviews() {
 
 // ── FORM OPEN / CLOSE ─────────────────────────────────────────
 document.getElementById('addProductBtn').addEventListener('click', () => openForm());
-document.getElementById('formCloseBtn').addEventListener('click', closeForm);
-document.getElementById('cancelBtn').addEventListener('click', closeForm);
-document.getElementById('saveBtn').addEventListener('click', saveProduct);
+document.getElementById('formCloseBtn').addEventListener('click',  closeForm);
+document.getElementById('cancelBtn').addEventListener('click',     closeForm);
+document.getElementById('saveBtn').addEventListener('click',       saveProduct);
 
 function openForm(product=null) {
   editingId     = product ? product.id : null;
@@ -731,31 +937,40 @@ function openForm(product=null) {
   productColors = [];
   const isEdit  = !!product;
 
-  document.getElementById('formTitle').innerHTML    = isEdit ? 'Edit <em>Product</em>' : 'Add New <em>Product</em>';
-  document.getElementById('formSubtitle').textContent = isEdit ? 'Update product details' : 'Fill in all product details';
-  document.getElementById('saveBtn').innerHTML      = isEdit ? '<i class="fas fa-save"></i> Update Product' : '<i class="fas fa-save"></i> Save Product';
+  document.getElementById('formTitle').innerHTML        = isEdit ? 'Edit <em>Product</em>' : 'Add New <em>Product</em>';
+  document.getElementById('formSubtitle').textContent   = isEdit ? 'Update product details' : 'Fill in all product details';
+  document.getElementById('saveBtn').innerHTML          = isEdit ? '<i class="fas fa-save"></i> Update Product' : '<i class="fas fa-save"></i> Save Product';
 
-  document.getElementById('fName').value    = product?.name        || '';
-  document.getElementById('fPrice').value   = product?.price       || '';
-  document.getElementById('fCat').value     = product?.category    || '';
-  document.getElementById('fBadge').value   = product?.badge       || '';
-  document.getElementById('fDesc').value    = product?.description || '';
-  document.getElementById('urlInput').value = '';
-  document.getElementById('colorHexInput').value  = '#000000';
-  document.getElementById('colorPickerInput').value = '#000000';
-  document.getElementById('colorLabelInput').value  = '';
+  document.getElementById('fName').value                = product?.name        || '';
+  document.getElementById('fPrice').value               = product?.price       || '';
+  document.getElementById('fCat').value                 = product?.category    || '';
+  document.getElementById('fBadge').value               = product?.badge       || '';
+  document.getElementById('fDesc').value                = product?.description || '';
+  document.getElementById('urlInput').value             = '';
+  document.getElementById('colorHexInput').value        = '#000000';
+  document.getElementById('colorPickerInput').value     = '#000000';
+  document.getElementById('colorLabelInput').value      = '';
 
-  // Load existing sizes
+  // Stock fields
+  const isSoldOut = product ? !!product.soldOut : false;
+  const qty       = product?.stockQty !== undefined ? Number(product.stockQty) : 0;
+  document.getElementById('fSoldOut').checked           = isSoldOut;
+  document.getElementById('soldOutToggleNote').textContent = isSoldOut
+    ? 'Product is hidden / purchase disabled'
+    : 'Product is available for purchase';
+  document.getElementById('fStockQty').value            = qty;
+  updateQtyNote(qty);
+
+  // Sizes
   document.querySelectorAll('.sizeCheck').forEach(cb => {
     cb.checked = product?.sizes ? product.sizes.includes(cb.value) : false;
   });
 
-  // Load existing images
+  // Images
   imageUrls = [...((product?.images || (product?.image ? [product.image] : [])))];
   renderPreviews();
 
-  // ── Load existing colors ──────────────────────────────────
-  // Saved as [{hex:"#xxxxxx", label:"Name"}, ...]
+  // Colors
   productColors = Array.isArray(product?.colors) ? [...product.colors] : [];
   renderColorChips();
 
@@ -780,7 +995,9 @@ async function saveProduct() {
   if (!name || !price) { showToast('Name and price are required', false); return; }
   if (!imageUrls.length) { showToast('Please add at least one image URL', false); return; }
 
-  const sizes = [...document.querySelectorAll('.sizeCheck:checked')].map(c => c.value);
+  const sizes    = [...document.querySelectorAll('.sizeCheck:checked')].map(c => c.value);
+  const isSoldOut = document.getElementById('fSoldOut').checked;
+  const stockQty  = Math.max(0, parseInt(document.getElementById('fStockQty').value||0));
 
   const data = {
     name,
@@ -791,7 +1008,9 @@ async function saveProduct() {
     images:      imageUrls,
     image:       imageUrls[0] || '',
     sizes,
-    colors:      productColors,   // ← [{hex, label}, ...]  saved to Firestore
+    colors:      productColors,
+    soldOut:     isSoldOut,
+    stockQty:    stockQty,
     updatedAt:   serverTimestamp()
   };
 
