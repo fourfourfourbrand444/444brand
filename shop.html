@@ -14,6 +14,7 @@
   --light-gray:#e6e2db;--mid-gray:#a09890;--dark-gray:#302b26;
   --gold:#c8a96e;--gold-light:#e8d4a8;--gold-dark:#9a7a45;
   --green:#1a6e3c;--green-light:#e6f4ed;--red:#c0392b;
+  --coming-soon:#5b3a8e;--coming-soon-light:#f0ebf9;
   --font-display:'Cormorant Garamond',serif;--font-body:'Montserrat',sans-serif;
   --transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
 }
@@ -77,40 +78,41 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 /* ── PRODUCT GRID ── */
 .products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem}
 
-/* Normal card */
+/* ── PRODUCT CARD BASE ── */
 .product-card{background:var(--white);cursor:pointer;transition:transform 0.4s ease,box-shadow 0.4s ease;position:relative}
 .product-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.12)}
 
-/* Sold-out card overrides */
-.product-card.sold-out{cursor:default}
-.product-card.sold-out:hover{transform:none;box-shadow:none}
-.product-card.sold-out .card-img-wrap img{filter:grayscale(0.4) brightness(0.88)}
-.product-card.sold-out .card-hover-cta{display:none}
+/* Sold-out card — still clickable, just subtle visual treatment */
+.product-card.sold-out .card-img-wrap img{filter:grayscale(0.35) brightness(0.9)}
+.product-card.sold-out .card-hover-cta{background:rgba(8,8,8,0.75)}
+
+/* Coming Soon card */
+.product-card.coming-soon .card-img-wrap img{filter:grayscale(0.2) brightness(0.88) saturate(0.7)}
 
 .card-img-wrap{position:relative;overflow:hidden;aspect-ratio:3/4;background:var(--cream)}
 .card-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:transform 0.7s ease}
-.product-card:not(.sold-out):hover .card-img-wrap img{transform:scale(1.07)}
+.product-card:hover .card-img-wrap img{transform:scale(1.07)}
 
+/* ── CARD BADGES ── */
 .card-badge{position:absolute;top:0.85rem;left:0.85rem;padding:0.3rem 0.65rem;font-size:0.52rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;z-index:2}
 .badge-new{background:var(--black);color:var(--white)}
 .badge-gold{background:var(--gold);color:var(--black)}
-.badge-sold-out{background:rgba(8,8,8,0.85);color:var(--white)}
+.badge-sold-out{background:rgba(8,8,8,0.88);color:var(--white)}
+.badge-coming-soon{background:var(--coming-soon);color:var(--white)}
 
-/* Sold-out overlay on image */
-.card-sold-overlay{
+/* Subtle overlay indicators on images (non-blocking, no pointer events) */
+.card-status-overlay{
   position:absolute;inset:0;
-  background:rgba(8,8,8,0.38);
-  display:flex;align-items:center;justify-content:center;
-  z-index:2;pointer-events:none;
+  display:flex;align-items:flex-end;justify-content:flex-start;
+  z-index:2;pointer-events:none;padding:0.8rem;
 }
-.card-sold-overlay-text{
-  background:var(--white);color:var(--black);
-  font-size:0.52rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;
-  padding:0.45rem 1.1rem;border:1px solid rgba(0,0,0,0.12);
-}
+/* Sold-out dim wash */
+.card-sold-dim{position:absolute;inset:0;background:rgba(8,8,8,0.18);z-index:1;pointer-events:none}
+/* Coming soon purple wash */
+.card-coming-dim{position:absolute;inset:0;background:rgba(91,58,142,0.12);z-index:1;pointer-events:none}
 
-.card-hover-cta{position:absolute;inset-x:0;bottom:0;padding:0.9rem;background:rgba(8,8,8,0.82);backdrop-filter:blur(8px);color:var(--white);font-size:0.58rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;text-align:center;transform:translateY(100%);transition:transform 0.35s ease;z-index:1}
-.product-card:not(.sold-out):hover .card-hover-cta{transform:translateY(0)}
+.card-hover-cta{position:absolute;inset-x:0;bottom:0;padding:0.9rem;background:rgba(8,8,8,0.82);backdrop-filter:blur(8px);color:var(--white);font-size:0.58rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;text-align:center;transform:translateY(100%);transition:transform 0.35s ease;z-index:3}
+.product-card:hover .card-hover-cta{transform:translateY(0)}
 
 .card-body{padding:1.1rem 1rem 1.2rem}
 .card-name{font-family:var(--font-display);font-size:1.05rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;line-height:1.2}
@@ -120,6 +122,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .card-price.dimmed{color:var(--mid-gray)}
 .card-stars{color:var(--gold);font-size:0.65rem}
 .card-sold-label{font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--mid-gray)}
+.card-coming-label{font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--coming-soon)}
+
+/* ── STOCK INDICATOR ON CARD ── */
+.card-stock-strip{
+  display:flex;align-items:center;gap:0.4rem;
+  font-size:0.53rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+  padding:0.3rem 0.6rem;margin-bottom:0.4rem;
+  width:fit-content;
+}
+.card-stock-strip.low{background:#fff8ed;color:#b8620a;border:1px solid #f5d9a8}
+.card-stock-strip.low::before{content:'';width:5px;height:5px;background:#b8620a;border-radius:50%}
+.card-stock-strip.sold{background:var(--cream);color:var(--mid-gray)}
+.card-stock-strip.pre{background:var(--coming-soon-light);color:var(--coming-soon);border:1px solid rgba(91,58,142,0.2)}
 
 /* Skeleton */
 .skeleton{background:var(--white);overflow:hidden;position:relative}
@@ -150,8 +165,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .thumb.active{border-color:var(--black);opacity:1}
 .thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 
-/* Sold-out dim on modal image */
-.modal-images.is-sold-out .modal-main-img img{filter:grayscale(0.35) brightness(0.88)}
+/* Modal image treatments by state */
+.modal-images.is-sold-out .modal-main-img img{filter:grayscale(0.3) brightness(0.9)}
+.modal-images.is-coming-soon .modal-main-img img{filter:grayscale(0.15) brightness(0.88) saturate(0.75)}
 
 .modal-info{padding:2.5rem 2rem 2rem;display:flex;flex-direction:column;max-height:calc(100vh - 2rem);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--light-gray) transparent}
 .modal-info::-webkit-scrollbar{width:3px}
@@ -181,13 +197,37 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .color-selected-label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark-gray);margin-top:0.5rem;font-weight:600;min-height:1em}
 .color-hint{font-size:0.58rem;letter-spacing:0.08em;color:var(--mid-gray);margin-top:0.4rem;font-style:italic}
 
-/* ── STOCK STATUS BADGES ── */
+/* ── STOCK STATUS BADGES (modal) ── */
 .in-stock-badge{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);margin-bottom:0.8rem;font-weight:600}
 .in-stock-badge::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
 
+.low-stock-badge{display:inline-flex;align-items:center;gap:0.5rem;background:#fff8ed;border:1px solid #f5d9a8;color:#b8620a;padding:0.45rem 0.9rem;margin-bottom:0.9rem;font-size:0.56rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;width:fit-content}
+.low-stock-badge i{color:#b8620a;font-size:0.6rem}
+
 .sold-out-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--black);color:var(--white);padding:0.45rem 0.9rem;margin-bottom:0.9rem;font-size:0.56rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;width:fit-content}
 .sold-out-badge i{color:var(--gold);font-size:0.6rem}
+
+/* Coming soon badge + pre-order panel */
+.coming-soon-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--coming-soon);color:var(--white);padding:0.45rem 0.9rem;margin-bottom:0.9rem;font-size:0.56rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;width:fit-content}
+.coming-soon-badge i{color:rgba(255,255,255,0.7);font-size:0.6rem}
+
+/* Pre-order notify panel */
+.preorder-panel{background:var(--coming-soon-light);border:1px solid rgba(91,58,142,0.2);padding:1.4rem 1.2rem;margin-bottom:1.4rem}
+.preorder-title{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--coming-soon);margin-bottom:0.4rem}
+.preorder-desc{font-size:0.63rem;line-height:1.9;color:rgba(91,58,142,0.75);margin-bottom:1rem;letter-spacing:0.02em}
+.preorder-input-row{display:flex;gap:0.5rem}
+.preorder-email-input{flex:1;padding:0.7rem 0.9rem;border:1px solid rgba(91,58,142,0.3);background:var(--white);font-family:var(--font-body);font-size:0.68rem;color:var(--black);outline:none;transition:border-color 0.3s}
+.preorder-email-input:focus{border-color:var(--coming-soon)}
+.preorder-email-input::placeholder{color:var(--mid-gray)}
+.btn-preorder-notify{padding:0.7rem 1.1rem;background:var(--coming-soon);color:var(--white);border:none;font-family:var(--font-body);font-size:0.58rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;white-space:nowrap;display:flex;align-items:center;gap:0.4rem}
+.btn-preorder-notify:hover{background:#4a2e78}
+.preorder-success-msg{font-size:0.6rem;color:var(--coming-soon);margin-top:0.6rem;font-weight:600;letter-spacing:0.05em;display:none}
+.preorder-success-msg.show{display:block}
+
+/* Estimated launch date */
+.launch-date-row{display:flex;align-items:center;gap:0.5rem;font-size:0.58rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--coming-soon);margin-top:0.7rem;opacity:0.75}
+.launch-date-row i{font-size:0.6rem}
 
 /* Modal qty selector */
 .modal-qty-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.6rem}
@@ -200,7 +240,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 .modal-actions{display:flex;gap:0.6rem;margin-top:auto;padding-top:1.2rem}
 .btn-add{flex:1;padding:0.95rem;background:var(--black);color:var(--white);border:none;font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.6rem}
 .btn-add:hover{background:var(--gold);color:var(--black)}
-.btn-add.sold-out-state{background:var(--mid-gray);cursor:not-allowed;pointer-events:none}
+.btn-add.sold-out-state{background:#888;cursor:not-allowed;pointer-events:none;opacity:0.8}
+.btn-add.coming-soon-state{background:var(--coming-soon);cursor:not-allowed;pointer-events:none;opacity:0.8}
 .btn-wish{width:46px;height:46px;border:1px solid var(--light-gray);background:transparent;cursor:pointer;font-size:0.95rem;color:var(--dark-gray);transition:var(--transition);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .btn-wish:hover{background:var(--black);color:var(--white);border-color:var(--black)}
 
@@ -467,6 +508,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
   .modal-info{padding:1.4rem 1.2rem 2rem;max-height:none;overflow-y:visible}
   .modal-name{font-size:1.5rem}
   .modal-actions{position:sticky;bottom:0;background:var(--white);padding:1rem 0 0.5rem;margin-top:1rem;border-top:1px solid var(--light-gray)}
+  .preorder-input-row{flex-direction:column}
 }
 @media(max-width:480px){
   .products-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem}.hero-title{font-size:2.6rem}.container{width:95%}
@@ -547,7 +589,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
     <div class="modal-info">
       <p class="modal-tag" id="mTag">New Drop</p>
       <h2 class="modal-name" id="mName">—</h2>
-      <div class="modal-stars-row"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>4.8 (128 reviews)</span></div>
+      <div class="modal-stars-row" id="mStarsRow"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>4.8 (128 reviews)</span></div>
       <p class="modal-price"><span class="cur">GH₵</span><span id="mPrice">—</span></p>
       <!-- Stock status (toggled by JS) -->
       <div id="mStockStatus"></div>
@@ -562,6 +604,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
         <div class="color-single-display" id="colorSingleDisplay" style="display:none"><span class="color-single-dot" id="colorSingleDot"></span><span class="color-single-label" id="colorSingleLabelText"></span></div>
         <p class="color-selected-label" id="colorSelectedLabel"></p>
         <p class="color-hint" id="colorHint" style="display:none">Please choose a color above</p>
+      </div>
+      <!-- Pre-order notify panel (Coming Soon only) -->
+      <div class="preorder-panel" id="preorderPanel" style="display:none">
+        <p class="preorder-title">Be the First to Know</p>
+        <p class="preorder-desc">This piece is coming soon. Drop your email and we'll notify you the moment it launches — before anyone else.</p>
+        <div class="preorder-input-row">
+          <input class="preorder-email-input" id="preorderEmail" type="email" placeholder="your@email.com">
+          <button class="btn-preorder-notify" onclick="submitPreorderNotify()"><i class="fas fa-bell"></i> Notify Me</button>
+        </div>
+        <p class="preorder-success-msg" id="preorderSuccessMsg"><i class="fas fa-check-circle"></i> You're on the list! We'll notify you when this drops.</p>
+        <div class="launch-date-row" id="launchDateRow" style="display:none"><i class="fas fa-calendar-alt"></i><span id="launchDateText"></span></div>
       </div>
       <!-- Quantity selector -->
       <div class="modal-qty-row" id="modalQtyRow">
@@ -704,7 +757,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;ali
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDocs, serverTimestamp, query, orderBy, where, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, getDocs, serverTimestamp, query, orderBy, where, deleteDoc, onSnapshot, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = { apiKey:"AIzaSyDE1KZtXElz9q6JsU65voYRfXuGNg6pDVE", authDomain:"brand-dc8f6.firebaseapp.com", projectId:"brand-dc8f6", storageBucket:"brand-dc8f6.firebasestorage.app", messagingSenderId:"473062980138", appId:"1:473062980138:web:1f6046bcc824589372e153" };
@@ -717,10 +770,12 @@ const PAYSTACK_PUBLIC_KEY  = 'pk_live_981ff8ce8cf5e116ac0d57bcca18dd557af89edc';
 const WEB3FORMS_KEY        = '0e5b085f-92af-4efa-b205-a10c0e898294';
 const DELIVERY_FEE         = 0;
 const FREE_DELIVERY_ABOVE  = 500;
-const MAX_QTY_PER_ITEM     = 10; // cap per line-item
+const MAX_QTY_PER_ITEM     = 10;
+// Low stock threshold — show warning if stock is between 1 and this value
+const LOW_STOCK_THRESHOLD  = 5;
 
 let allProducts = [], currentProduct = null, selectedSize = null, selectedColor = null;
-let modalQty = 1; // qty chosen in the modal before adding to cart
+let modalQty = 1;
 let cart = JSON.parse(localStorage.getItem('444cart') || '[]');
 let currentUser = null, ordersUnsubscribe = null, pendingDeleteRef = null;
 
@@ -880,43 +935,96 @@ window.setFilter = (btn,val) => {
 };
 function updateCount(n) { document.getElementById('itemCount').textContent=`${n} item${n!==1?'s':''}`; }
 
+// ── Stock helpers ─────────────────────────────────────────────
+function getProductState(p) {
+  // Priority order: comingSoon > soldOut > low stock > in stock
+  if (p.comingSoon) return 'coming-soon';
+  if (p.soldOut)    return 'sold-out';
+  // stock field is optional; if undefined we assume in-stock
+  const stock = typeof p.stock === 'number' ? p.stock : null;
+  if (stock !== null && stock === 0) return 'sold-out';
+  if (stock !== null && stock > 0 && stock <= LOW_STOCK_THRESHOLD) return 'low-stock';
+  return 'in-stock';
+}
+
+function getStockLabel(p) {
+  const stock = typeof p.stock === 'number' ? p.stock : null;
+  const state = getProductState(p);
+  if (state === 'coming-soon') return null; // handled by badge
+  if (state === 'sold-out') return { type:'sold', text:'Sold Out' };
+  if (state === 'low-stock') return { type:'low', text:`Only ${p.stock} left` };
+  if (stock !== null) return { type:'in', text:`${stock} in stock` };
+  return null;
+}
+
 function renderProducts(list) {
   const grid=document.getElementById('productsGrid');
   grid.innerHTML='';
   if(!list.length){grid.innerHTML=`<div class="empty-state"><i class="fas fa-box-open"></i><p>No products available yet</p></div>`;return;}
   list.forEach(p=>{
     const img=(p.images&&p.images[0])||p.image||'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=600&q=80';
-    const isSoldOut=!!p.soldOut;
-    const card=document.createElement('div');
-    card.className=`product-card${isSoldOut?' sold-out':''}`;
+    const state = getProductState(p);
+    const isSoldOut    = state === 'sold-out';
+    const isComingSoon = state === 'coming-soon';
+    const isLowStock   = state === 'low-stock';
 
-    // Badge logic: sold-out takes priority
+    const card=document.createElement('div');
+    card.className=`product-card${isSoldOut?' sold-out':''}${isComingSoon?' coming-soon':''}`;
+
+    // ── Badge logic ───────────────────────────────────────────
     let badgeHtml='';
-    if(isSoldOut){
+    if (isComingSoon) {
+      badgeHtml=`<span class="card-badge badge-coming-soon"><i class="fas fa-clock" style="margin-right:.3rem;font-size:.45rem"></i>Coming Soon</span>`;
+    } else if (isSoldOut) {
       badgeHtml=`<span class="card-badge badge-sold-out">Sold Out</span>`;
-    } else if(p.badge){
+    } else if (p.badge) {
       badgeHtml=`<span class="card-badge ${p.badge==='Limited'||p.badge==='Exclusive'?'badge-gold':'badge-new'}">${p.badge}</span>`;
+    }
+
+    // ── Hover CTA label ───────────────────────────────────────
+    let ctaLabel = 'Quick View';
+    if (isSoldOut)    ctaLabel = 'View Details';
+    if (isComingSoon) ctaLabel = 'Preview Drop';
+
+    // ── Stock strip on card ───────────────────────────────────
+    const stockInfo = getStockLabel(p);
+    let stockStripHtml = '';
+    if (stockInfo && stockInfo.type === 'low') {
+      stockStripHtml = `<div class="card-stock-strip low">${stockInfo.text}</div>`;
+    } else if (isComingSoon) {
+      stockStripHtml = `<div class="card-stock-strip pre"><i class="fas fa-clock" style="font-size:.5rem"></i> Pre-register</div>`;
+    }
+
+    // ── Card footer right side ────────────────────────────────
+    let cardFooterRight = '';
+    if (isSoldOut) {
+      cardFooterRight = `<span class="card-sold-label">Unavailable</span>`;
+    } else if (isComingSoon) {
+      cardFooterRight = `<span class="card-coming-label"><i class="fas fa-clock" style="font-size:.5rem"></i> Soon</span>`;
+    } else {
+      cardFooterRight = `<span class="card-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>`;
     }
 
     card.innerHTML=`
       <div class="card-img-wrap">
         <img src="${img}" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80'">
         ${badgeHtml}
-        ${isSoldOut?`<div class="card-sold-overlay"><span class="card-sold-overlay-text">Sold Out</span></div>`:''}
-        ${isSoldOut?'':`<div class="card-hover-cta"><i class="fas fa-eye" style="margin-right:.4rem"></i>Quick View</div>`}
+        ${isSoldOut ? '<div class="card-sold-dim"></div>' : ''}
+        ${isComingSoon ? '<div class="card-coming-dim"></div>' : ''}
+        <div class="card-hover-cta"><i class="fas fa-eye" style="margin-right:.4rem"></i>${ctaLabel}</div>
       </div>
       <div class="card-body">
+        ${stockStripHtml}
         <p class="card-name">${p.name}</p>
         <p class="card-sub">${p.category||'444 Collection'}</p>
         <div class="card-footer">
-          <span class="card-price${isSoldOut?' dimmed':''}">GH₵ ${Number(p.price).toLocaleString()}</span>
-          ${isSoldOut
-            ? `<span class="card-sold-label">Unavailable</span>`
-            : `<span class="card-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>`}
+          <span class="card-price${isSoldOut?' dimmed':''}">${isComingSoon?'<span style="font-size:.7rem;font-weight:400;color:var(--mid-gray)">From </span>':''}GH₵ ${Number(p.price).toLocaleString()}</span>
+          ${cardFooterRight}
         </div>
       </div>`;
-    // Only clickable when in stock
-    if(!isSoldOut) card.addEventListener('click', ()=>openModal(p));
+
+    // All cards are clickable — sold-out and coming-soon just open in view/preview mode
+    card.addEventListener('click', ()=>openModal(p));
     grid.appendChild(card);
   });
 }
@@ -925,41 +1033,85 @@ function renderProducts(list) {
 window.openModal = p => {
   currentProduct=p; selectedSize=null; selectedColor=null; modalQty=1;
   document.getElementById('modalQtyVal').textContent='1';
+  // Reset preorder form
+  document.getElementById('preorderEmail').value='';
+  document.getElementById('preorderSuccessMsg').classList.remove('show');
 
-  const isSoldOut=!!p.soldOut;
+  const state       = getProductState(p);
+  const isSoldOut   = state === 'sold-out';
+  const isComingSoon= state === 'coming-soon';
+  const isAvailable = !isSoldOut && !isComingSoon;
+
   const imgs=(p.images&&p.images.length)?p.images:[p.image||'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&q=80'];
 
   document.getElementById('mainImg').src=imgs[0];
   document.getElementById('mainImg').alt=p.name;
   document.getElementById('mTag').textContent=p.category||'New Drop';
   document.getElementById('mName').textContent=p.name;
-  document.getElementById('mPrice').textContent=Number(p.price).toLocaleString();
   document.getElementById('mDesc').textContent=p.description||'Premium quality luxury streetwear.';
+  document.getElementById('mPrice').textContent=Number(p.price).toLocaleString();
 
-  // ── Stock status badge ────────────────────────────────────
-  const stockEl=document.getElementById('mStockStatus');
-  const addBtn=document.getElementById('modalAddBtn');
-  const modalImagesEl=document.getElementById('modalImages');
-  const qtyRow=document.getElementById('modalQtyRow');
-  const sizeSec=document.getElementById('mSizeSection');
-  const colorSec=document.getElementById('colorSection');
+  // Stars — hide for coming soon (no reviews yet)
+  document.getElementById('mStarsRow').style.display = isComingSoon ? 'none' : 'flex';
 
-  if(isSoldOut){
-    stockEl.innerHTML=`<div class="sold-out-badge"><i class="fas fa-ban"></i> Sold Out — Currently Unavailable</div>`;
-    addBtn.className='btn-add sold-out-state';
-    addBtn.innerHTML='<i class="fas fa-ban"></i> Sold Out';
+  const stockEl        = document.getElementById('mStockStatus');
+  const addBtn         = document.getElementById('modalAddBtn');
+  const modalImagesEl  = document.getElementById('modalImages');
+  const qtyRow         = document.getElementById('modalQtyRow');
+  const sizeSec        = document.getElementById('mSizeSection');
+  const colorSec       = document.getElementById('colorSection');
+  const preorderPanel  = document.getElementById('preorderPanel');
+  const launchDateRow  = document.getElementById('launchDateRow');
+
+  modalImagesEl.classList.remove('is-sold-out','is-coming-soon');
+
+  if (isComingSoon) {
+    // ── Coming Soon state ─────────────────────────────────────
+    stockEl.innerHTML = `<div class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon — Not Yet Available</div>`;
+    addBtn.className  = 'btn-add coming-soon-state';
+    addBtn.innerHTML  = '<i class="fas fa-clock"></i> Coming Soon';
+    modalImagesEl.classList.add('is-coming-soon');
+    qtyRow.style.display    = 'none';
+    sizeSec.style.opacity   = '0.4';
+    sizeSec.style.pointerEvents = 'none';
+    colorSec.style.opacity  = '0.4';
+    colorSec.style.pointerEvents = 'none';
+    preorderPanel.style.display = 'block';
+    // Launch date (optional field in product)
+    if (p.launchDate) {
+      document.getElementById('launchDateText').textContent = `Expected: ${p.launchDate}`;
+      launchDateRow.style.display = 'flex';
+    } else {
+      launchDateRow.style.display = 'none';
+    }
+  } else if (isSoldOut) {
+    // ── Sold Out state ────────────────────────────────────────
+    stockEl.innerHTML = `<div class="sold-out-badge"><i class="fas fa-ban"></i> Sold Out — Currently Unavailable</div>`;
+    addBtn.className  = 'btn-add sold-out-state';
+    addBtn.innerHTML  = '<i class="fas fa-ban"></i> Sold Out';
     modalImagesEl.classList.add('is-sold-out');
-    qtyRow.style.display='none';
-    sizeSec.style.opacity='0.4';
-    colorSec.style.opacity='0.4';
+    qtyRow.style.display        = 'none';
+    sizeSec.style.opacity       = '0.4';
+    sizeSec.style.pointerEvents = 'none';
+    colorSec.style.opacity      = '0.4';
+    colorSec.style.pointerEvents= 'none';
+    preorderPanel.style.display = 'none';
   } else {
-    stockEl.innerHTML=`<p class="in-stock-badge">In Stock</p>`;
-    addBtn.className='btn-add';
-    addBtn.innerHTML='<i class="fas fa-shopping-bag"></i> Add to Cart';
-    modalImagesEl.classList.remove('is-sold-out');
-    qtyRow.style.display='flex';
-    sizeSec.style.opacity='1';
-    colorSec.style.opacity='1';
+    // ── In Stock (or Low Stock) ───────────────────────────────
+    const stock = typeof p.stock === 'number' ? p.stock : null;
+    if (stock !== null && stock <= LOW_STOCK_THRESHOLD && stock > 0) {
+      stockEl.innerHTML = `<div class="low-stock-badge"><i class="fas fa-fire"></i> Only ${stock} left — order soon</div>`;
+    } else {
+      stockEl.innerHTML = `<p class="in-stock-badge">In Stock${stock !== null ? ` · ${stock} available` : ''}</p>`;
+    }
+    addBtn.className  = 'btn-add';
+    addBtn.innerHTML  = '<i class="fas fa-shopping-bag"></i> Add to Cart';
+    qtyRow.style.display        = 'flex';
+    sizeSec.style.opacity       = '1';
+    sizeSec.style.pointerEvents = '';
+    colorSec.style.opacity      = '1';
+    colorSec.style.pointerEvents= '';
+    preorderPanel.style.display = 'none';
   }
 
   // ── Thumbnails ────────────────────────────────────────────
@@ -979,7 +1131,7 @@ window.openModal = p => {
   // ── Sizes ─────────────────────────────────────────────────
   const sg=document.getElementById('sizeGrid');
   const sizes=(p.sizes&&p.sizes.length)?p.sizes:['S','M','L','XL','2XL'];
-  sg.innerHTML=sizes.map(s=>`<button class="size-btn"${isSoldOut?' disabled':''} onclick="selSize(this)">${s}</button>`).join('');
+  sg.innerHTML=sizes.map(s=>`<button class="size-btn"${!isAvailable?' disabled':''} onclick="selSize(this)">${s}</button>`).join('');
 
   // ── Colors ────────────────────────────────────────────────
   const colors=Array.isArray(p.colors)?p.colors:[];
@@ -1007,7 +1159,7 @@ window.openModal = p => {
       btn.className='color-swatch';
       if(isLightColor(c.hex))btn.classList.add('light-swatch');
       btn.style.background=c.hex;btn.title=c.label||c.hex;
-      if(isSoldOut)btn.disabled=true;
+      if(!isAvailable)btn.disabled=true;
       btn.onclick=()=>{
         document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('sel'));
         btn.classList.add('sel');selectedColor=c;colorSelLbl.textContent=c.label||c.hex;colorHint.style.display='none';
@@ -1028,9 +1180,42 @@ document.getElementById('modalClose').onclick = closeModal;
 document.getElementById('modal').onclick = e => { if(e.target===document.getElementById('modal'))closeModal(); };
 function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow=''; }
 
+// ── PRE-ORDER NOTIFY ──────────────────────────────────────────
+window.submitPreorderNotify = async () => {
+  const emailInput = document.getElementById('preorderEmail');
+  const email = emailInput.value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    emailInput.style.borderColor = 'var(--red)';
+    setTimeout(() => emailInput.style.borderColor = '', 2000);
+    showToast('Please enter a valid email', false);
+    return;
+  }
+  const btn = document.querySelector('.btn-preorder-notify');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  try {
+    // Save to Firestore notify_list collection
+    await addDoc(collection(db, 'notify_list'), {
+      email,
+      productId: currentProduct?.id || '',
+      productName: currentProduct?.name || '',
+      createdAt: serverTimestamp(),
+      source: 'coming_soon_modal',
+    });
+    document.getElementById('preorderSuccessMsg').classList.add('show');
+    emailInput.value = '';
+    showToast('You\'re on the list — we\'ll notify you!');
+  } catch {
+    showToast('Could not save. Please try again.', false);
+  } finally {
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-bell"></i> Notify Me';
+  }
+};
+
 // ── ADD TO CART ───────────────────────────────────────────────
 window.addToCart = () => {
-  if(!currentProduct||currentProduct.soldOut) return;
+  if(!currentProduct) return;
+  const state = getProductState(currentProduct);
+  if(state !== 'in-stock' && state !== 'low-stock') return;
   if(!selectedSize){ showToast('Please select a size',false); return; }
   const colors=Array.isArray(currentProduct.colors)?currentProduct.colors:[];
   if(colors.length>=2&&!selectedColor){
@@ -1060,7 +1245,6 @@ window.addToCart = () => {
 };
 
 // ── CART QTY CONTROLS ─────────────────────────────────────────
-// called from rendered HTML via onclick
 window.incQty = idx => {
   if(cart[idx]&&cart[idx].qty<MAX_QTY_PER_ITEM){ cart[idx].qty++; saveCart(); }
 };
@@ -1176,8 +1360,6 @@ window.submitCheckoutAndPay = async () => {
   try { await sendAdminEmail(form,cartSnapshot,ref,total,subtotal,delivery); } catch{}
   setProcessing(false); btn.disabled=false;
 
-  // ── Build item summary string for Paystack metadata ───────
-  // Format: "Product (Size, Color) ×Qty @ GH₵Price each"
   const itemSummary=cartSnapshot.map(i=>{
     const lbl=i.colorLabel||i.colorHex||'';
     const attrs=[i.size,lbl].filter(Boolean).join(', ');
@@ -1232,7 +1414,6 @@ async function saveOrderToFirestore(form,items,ref,subtotal,shipping,total,uid,a
 }
 
 async function sendAdminEmail(form,items,ref,total,subtotal,shipping){
-  // ── Rich item list with qty clearly shown ─────────────────
   const itemsList=items.map(i=>{
     const lbl=i.colorLabel||(i.colorHex||'');
     const colorStr=lbl?` | Color: ${lbl}`:'';
